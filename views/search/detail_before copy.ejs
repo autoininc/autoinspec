@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<body>
+
+    
+
+    <blockquote class="row grid-margin stretch-card blockquote blockquote-dark" style="margin-left:  15px; margin-right: 15px;">
+
+        <div class="col-md-12 stretch-card" style="margin-bottom: 4rem;">
+            <div class="col-sm-6 mb-4 mb-xl-0">
+                <div class="d-lg-flex align-items-center">
+                    <div>
+                        <h3 class="text-dark font-weight-bold mb-2">Paid Data</h3>
+                        <h6 class="font-weight-normal mb-2">You can pick subscription or use coins to view below data.</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="col-sm-6 mb-4 mb-xl-0">
+            <div class="d-lg-flex align-items-center">
+                <div style="margin-right: 40px;">
+                    <h3 class="font-weight-bold mb-2">&nbsp;&nbsp;(1) Use coins</h3>
+                    <h6 class="font-weight-normal mb-2">&nbsp;&nbsp;click button after checkbox checked</h6>
+                </div>
+                <div class="mt-2">
+                    <button class="btn btn-outline-dark btn-icon-text" onclick="check();">
+                      <i class="mdi mdi-coin btn-icon-prepend mdi-36px"></i>
+                      <span class="d-inline-block text-left">
+                        <small class="font-weight-light d-block">use</small>
+                        Coins
+                      </span>
+                    </button>
+                  </div>
+            </div>
+            
+        </div>
+        <div class="col-sm-6">
+            <div class="d-flex align-items-center justify-content-md-end">
+                <div>
+                    <h3 class="font-weight-bold mb-2"> (2) Pick a Subscription</h3>
+                </div>
+                <div class="ml-lg-5 d-lg-flex d-none">
+                    <div class="mt-2">
+                        <button class="btn btn-outline-dark btn-icon-text" onclick="location.href='/pass/index'" >
+                            <i class="mdi mdi-ticket-confirmation btn-icon-prepend mdi-36px"></i>
+                            <span class="d-inline-block text-left">
+                              <small class="font-weight-light d-block">pick a</small>
+                              Subscription
+                            </span>
+                          </button>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="payForm">
+        <input type="hidden" id="company_id" value="<%= model.company.id %>" >
+        <div class="modal fade" id="coinModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
+                <input type="hidden" id=coin name="coin" value="<%= model.coin %>">
+                <input type="hidden" id="usingCoin" name="usingCoin" value="">
+                <input type="hidden" id="typeD" name="typeD" value="0">
+                <input type="hidden" id="typeC" name="typeC" value="0">
+
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="warning-modal-label" class="modal-title">pay <small>/ <%= model.company.name_eng %></small></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                        </div>
+                        <div class="modal-body pb-0">
+                            <div class="pb-1 mb-2">
+                                <p class="form-text text-primary font-weight-bold">SELECT SHEET</p>
+                                <p class="form-text text-dark" id="n_p" style="display: none;"> * Detailed data (1 Coins)</p>
+                                <p class="form-text text-dark" id="r_p" style="display: none;"> * Detailed data (5 Coins)</p>
+                                <p class="form-text text-dark" id="c_p" style="display: none;">* Component data (5 Coins)<p>
+                           </div>
+                            <table class="table" id="purchase-charge-table">
+                                <colgroup>
+                                    <col style="width:33%;">
+                                    <col style="width:34%;">
+                                    <col style="width:33%;">
+                                </colgroup>
+                                <thead class="thead-default">
+                                <tr>
+                                    <th class="text-center">Available coin</th>
+                                    <th></th>
+                                    <th class="text-center">Remaining coin</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center" data-value="0"><span id="point"><%= model.coin %></span></td>
+                                    <td class="text-center text-primary" data-value="1">-<span id="using_"></span></td>
+                                    <td class="text-center"><span id="r_c_"></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                                 <div class="alert alert-secondary" id="purchase-lack-point" data-gtm-vis-recent-on-screen-10067355_102="4852" data-gtm-vis-first-on-screen-10067355_102="4852" data-gtm-vis-total-visible-time-10067355_102="100" data-gtm-vis-has-fired-10067355_102="1">
+                                    <div class="mb-2">
+                                        You don't have enough of coin. Do you want to move the coin Filling page?  </div>
+                                    <a class="btn btn-secondary" href="/pass/coin">fill coin</a>
+                                </div>
+                                            
+                        </div>
+                        <div class="modal-footer justify-content-between bt-0">
+                                                <div class="custom-control-stacked">
+                                    
+                                </div>
+                                            <div>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+                                <button id="useBtn" class="btn btn-primary" onclick="pay();">use</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </form>
+
+        <% if (model.detailYN == 'Y') { if (model.auth_rm == 'false') { %>
+        <div class="col-md-12 stretch-card">
+            <div class="col-sm-6 mb-4 mb-xl-0">
+                <div class="d-lg-flex align-items-center">
+                    <div>
+                        <div class="form-check form-check-success">
+                            <label class="form-check-label font-weight-bold mb-2">
+                              <input type="checkbox" class="form-check-input" id="chk1" onclick="calc(this.id)">
+                              Detailed Data ( 5 Coins ) 
+                            <i class="input-helper"></i></label>
+                          </div>
+                        <!-- <h3 class="text-dark font-weight-bold mb-2"></h3> -->
+                        <!-- <h6 class="font-weight-normal mb-2">You can pick subscription or use 5 coins to view below data.</h6> -->
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-sm-6">
+                <div class="d-flex align-items-center justify-content-md-end">
+                    <div class="ml-lg-5 d-lg-flex d-none">
+                        <div class="mt-2">
+                            <button class="btn btn-outline-dark btn-icon-text">
+                              <i class="mdi mdi-ticket-confirmation btn-icon-prepend mdi-36px"></i>
+                              <span class="d-inline-block text-left">
+                                <small class="font-weight-light d-block">pick a</small>
+                                Subscription
+                              </span>
+                            </button>
+                            <button class="btn btn-outline-dark btn-icon-text" data-toggle="modal" data-target="#exampleModal">
+                              <i class="mdi mdi-coin btn-icon-prepend mdi-36px"></i>
+                              <span class="d-inline-block text-left">
+                                <small class="font-weight-light d-block">use</small>
+                                5 Coins
+                              </span>
+                            </button>
+                          </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="col-md-12 stretch-card">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <h4 class="card-title">BASIC</h4>
+                                        <ul class="graphl-legend-rectangle">
+                                            <li class="<% if (!model.check['email']) { %> blur <% } %>"><span class="bg-danger"></span><% if (model.check['email']) { %><mark>E-mail</mark><% } else { %>E-mail<% } %></li>
+                                            <li class="<% if (!model.check['website']) { %> blur <% } %>"><span class="bg-danger"></span><% if (model.check['website']) { %><mark>Website</mark><% } else { %>Website<% } %></li>
+                                            <li class="<% if (!model.check['opinion']) { %> blur <% } %>"><span class="bg-danger"></span><% if (model.check['opinion']) { %><mark>Opinion</mark><% } else { %>Opinion<% } %></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <h4 class="card-title">CREDIT</h4>
+                                        <ul class="graphl-legend-rectangle">
+                                            <li class="<% if (!model.check['creditRating']) { %> blur <% } %>"><span class="bg-warning"></span><% if (model.check['creditRating']) { %><mark>Credit Rating</mark><% } else { %>Credit Rating<% } %></li>
+                                            <li class="<% if (!model.check['cashFlowRating']) { %> blur <% } %>"><span class="bg-warning"></span><% if (model.check['cashFlowRating']) { %><mark>Cash Flow Rating</mark><% } else { %>Cash Flow Rating<% } %></li>
+                                            <li class="<% if (!model.check['watchRating']) { %> blur <% } %>"><span class="bg-warning"></span><% if (model.check['watchRating']) { %><mark>Watch Rating</mark><% } else { %>Watch Rating<% } %></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <h4 class="card-title">SHAREHOLDERS</h4>
+                                        <ul class="graphl-legend-rectangle">
+                                            <li class="<% if (!model.check['ms']) { %> blur <% } %>"><span class="bg-dark"></span><% if (model.check['ms']) { %><mark>Major Shareholders</mark><% } else { %>Major Shareholders<% } %></li>
+                                            <li class="<% if (!model.check['rc']) { %> blur <% } %>"><span class="bg-dark"></span><% if (model.check['rc']) { %><mark>Related Companies</mark><% } else { %>Related Companies<% } %></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h4 class="card-title">PARTNER</h4>
+                                        <ul class="graphl-legend-rectangle">
+                                            <li class="<% if (!model.check['msp']) { %> blur <% } %>"><span class="bg-success"></span><% if (model.check['msp']) { %><mark>Major Selling Partner</mark><% } else { %>Major Selling Partner<% } %></li>
+                                            <li class="<% if (!model.check['mpp']) { %> blur <% } %>"><span class="bg-success"></span><% if (model.check['mpp']) { %><mark>Major Purchasing Partner</mark><% } else { %>Major Purchasing Partner<% } %></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h4 class="card-title">FINANCE</h4>
+                                        <ul class="graphl-legend-rectangle">
+                                            <li class="<% if (!model.check['ssofp']) { %> blur <% } %>"><span class="bg-info"></span><% if (model.check['ssofp']) { %><mark>Summary Statement Of Financial Position</mark><% } else { %>Summary Statement Of Financial Position<% } %></li>
+                                            <li class="<% if (!model.check['cis']) { %> blur <% } %>"><span class="bg-info"></span><% if (model.check['cis']) { %><mark>Condensed Income Statement</mark><% } else { %>Condensed Income Statement<% } %></li>
+                                            <li class="<% if (!model.check['sfr']) { %> blur <% } %>"><span class="bg-info"></span><% if (model.check['sfr']) { %><mark>Summary Financial Ratio</mark><% } else { %>Summary Financial Ratio<% } %></li>
+                                        </ul>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        </div>  
+        <% } %>
+
+        <% if (model.auth_component == 'false') { %>
+        <div class="col-md-12 stretch-card">
+            <div class="col-sm-6 mb-4 mb-xl-0">
+                <div class="d-lg-flex align-items-center">
+                    <div>
+                        <!-- <h3 class="text-dark font-weight-bold mb-2">Paid Component Data ( 5 Coins )</h3> -->
+                        <div class="form-check form-check-success">
+                            <label class="form-check-label font-weight-bold mb-2">
+                              <input type="checkbox" class="form-check-input" id="chk2" onclick="calc(this.id)">
+                              Component Data ( 5 Coins )
+                            <i class="input-helper"></i></label>
+                          </div>
+                        <!-- <h6 class="font-weight-normal mb-2">You can pick subscription or use 5 coins to view below data.</h6> -->
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-sm-6">
+                <div class="d-flex align-items-center justify-content-md-end">
+                    <div class="ml-lg-5 d-lg-flex d-none">
+                        <div class="mt-2">
+                            <button class="btn btn-outline-dark btn-icon-text">
+                              <i class="mdi mdi-ticket-confirmation btn-icon-prepend mdi-36px"></i>
+                              <span class="d-inline-block text-left">
+                                <small class="font-weight-light d-block">pick a</small>
+                                Subscription
+                              </span>
+                            </button>
+                            <button class="btn btn-outline-dark btn-icon-text" data-toggle="modal" data-target="#exampleModal">
+                              <i class="mdi mdi-coin btn-icon-prepend mdi-36px"></i>
+                              <span class="d-inline-block text-left">
+                                <small class="font-weight-light d-block">use</small>
+                                5 Coins
+                              </span>
+                            </button>
+                          </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="col-md-12 stretch-card">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <h4 class="card-title"></h4>
+                                        <ul class="graphl-legend-rectangle">
+                                            <li class="<% if (!model.check['pr']) { %> blur <% } %>"><span class="bg-danger"></span><% if (model.check['pr']) { %><mark>Production Rate</mark><% } else { %>Production Rate<% } %></li>
+                                            <li class="<% if (!model.check['sr']) { %> blur <% } %>"><span class="bg-danger"></span><% if (model.check['sr']) { %><mark>Sales rate each part</mark><% } else { %>Sales rate each part<% } %></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <h4 class="card-title"></h4>
+                                        <ul class="graphl-legend-rectangle">
+                                            <li class="<% if (!model.check['cc']) { %> blur <% } %>"><span class="bg-warning"></span><% if (model.check['cc']) { %><mark>Division rate</mark><% } else { %>Division rate<% } %></li>
+                                            <li class="<% if (!model.check['mv']) { %> blur <% } %>"><span class="bg-warning"></span><% if (model.check['mv']) { %><mark>Major customers</mark><% } else { %>Major customers<% } %></li>
+                                            <li class="<% if (!model.check['for']) { %> blur <% } %>"><span class="bg-warning"></span><% if (model.check['for']) { %><mark>Process operation rate</mark><% } else { %>Process operation rate<% } %></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <h4 class="card-title"></h4>
+                                        <ul class="graphl-legend-rectangle">
+                                            <li class="<% if (!model.check['es']) { %> blur <% } %>"><span class="bg-dark"></span><% if (model.check['es']) { %><mark>Employee </mark><% } else { %>Employee <% } %></li>
+                                            <li class="<% if (!model.check['certification']) { %> blur <% } %>"><span class="bg-dark"></span><% if (model.check['certification']) { %><mark>Certification</mark><% } else { %>Certification<% } %></li>
+                                        </ul>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div> 
+    <% }} else { %>
+        <div class="col-md-12 stretch-card">
+            <div class="col-sm-6 mb-4 mb-xl-0">
+                <div class="d-lg-flex align-items-center">
+                    <div>
+                        <div class="form-check form-check-success">
+                            <label class="form-check-label font-weight-bold mb-2">
+                              <input type="checkbox" class="form-check-input" id="chk3" onclick="calc(this.id)">
+                              Detailed Data ( 1 Coin ) 
+                            <i class="input-helper"></i></label>
+                          </div>
+                        <!-- <h3 class="text-dark font-weight-bold mb-2"></h3> -->
+                        <!-- <h6 class="font-weight-normal mb-2">You can pick subscription or use 5 coins to view below data.</h6> -->
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-sm-6">
+                <div class="d-flex align-items-center justify-content-md-end">
+                    <div class="ml-lg-5 d-lg-flex d-none">
+                        <div class="mt-2">
+                            <button class="btn btn-outline-dark btn-icon-text">
+                              <i class="mdi mdi-ticket-confirmation btn-icon-prepend mdi-36px"></i>
+                              <span class="d-inline-block text-left">
+                                <small class="font-weight-light d-block">pick a</small>
+                                Subscription
+                              </span>
+                            </button>
+                            <button class="btn btn-outline-dark btn-icon-text" data-toggle="modal" data-target="#exampleModal">
+                              <i class="mdi mdi-coin btn-icon-prepend mdi-36px"></i>
+                              <span class="d-inline-block text-left">
+                                <small class="font-weight-light d-block">use</small>
+                                5 Coins
+                              </span>
+                            </button>
+                          </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="col-md-12 stretch-card">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h4 class="card-title"></h4>
+                                        <ul class="graphl-legend-rectangle">
+                                            <li class="<% if (!model.check['email']) { %> blur <% } %>"><span class="bg-danger"></span><% if (model.check['email']) { %><mark>E-mail</mark><% } else { %>E-mail<% } %></li>
+                                            <li class="<% if (!model.check['website']) { %> blur <% } %>"><span class="bg-danger"></span><% if (model.check['website']) { %><mark>Website</mark><% } else { %>Website<% } %></li>
+                                        </ul>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>  
+        
+    <% } %>
+</blockquote>
+<script>
+
+    var total = 0;
+
+    //체크박스 이벤트
+    function calc(id) {
+        if (document.getElementById(id).checked) {
+
+            //modal 항목 수정
+            if (id == "chk1") {
+                document.getElementById("r_p").style.display = "block";
+                $("#typeD").val(1);
+                total += 5;
+            }
+            if (id == "chk2") {
+                document.getElementById("c_p").style.display = "block";
+                $("#typeC").val(1);
+                total += 5;
+            }
+            if (id == "chk3") {
+                document.getElementById("n_p").style.display = "block";
+                $("#typeD").val(1);
+                total += 1;
+            }
+
+        } else {
+
+            //modal 항목 수정
+            if (id == "chk1") {
+                document.getElementById("r_p").style.display = "none";
+                $("#typeD").val(0);
+                total -= 5;
+            }
+            if (id == "chk2") {
+                document.getElementById("c_p").style.display = "none";
+                $("#typeC").val(0);
+                total -= 5;
+            }
+            if (id == "chk3") {
+                document.getElementById("n_p").style.display = "none";
+                $("#typeD").val(0);
+                total -= 1;
+            }
+
+            
+        }
+    }
+
+    function check() {
+    
+        if (total == 0) {
+            alert("No selected item!");
+            return;
+        }
+
+        $.ajax({
+          type: "POST",
+          url: "/user/loginCheck",
+          dataType: "json",
+          data: {url: '/company/detail/' + $("#company_id").val()},
+          success: function (data) {
+              if(data.result) {
+                openModal();
+              } else {
+                if (confirm('Sign in is required. You will be moved to sign in page.')) {
+                  window.location.href = data.fullUrl;
+                }
+              }
+          },
+          error: function (e) {
+              alert(e.responseJSON.msg)
+          }
+      });
+
+    }
+
+    function openModal() {
+    
+        var caltot = parseInt($("#coin").val()) - total; 
+        $("#r_c_").html(caltot);
+        $("#using_").html( '' + total);
+        $("#usingCoin").val(total);
+        if (caltot < 0) {
+            document.getElementById("purchase-lack-point").style.display = "block";
+            document.getElementById("useBtn").style.display = "none";
+            
+        } else {
+            document.getElementById("purchase-lack-point").style.display = "none";
+            document.getElementById("useBtn").style.display = "inline";
+        }
+        $("#coinModal").modal('show');
+    }
+
+    function pay() {
+
+        document.getElementById('spinner').style.display = 'block';
+        var form = $('#payForm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            type: "POST",
+            url: "/pass/useCoin",
+            dataType: "json",
+            data: {companyId: $("#company_id").val(), coin: $("#usingCoin").val(), typeD: $("#typeD").val(), typeC: $("#typeC").val() },
+            success: function (data) {
+                alert(data.msg);
+                $("#coinModal").modal('hide');
+                document.getElementById('spinner').style.display = 'none';
+                window.location.href = '/company/detail/' + $("#company_id").val();
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+</script>
+
+<style>
+
+    .graphl-legend-rectangle li {
+        margin-top: 5px;
+    }
+
+    .blur {
+        opacity: 0.1;
+    }
+
+</style>
+
+</body>
+</html>

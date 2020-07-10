@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link href="/css/membership.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container-scroller">
+    <%- include ('../layout/header.ejs') -%>
+    
+      <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+          <div class="content-wrapper" style="padding-left: 15px; padding-right: 15px; background-color: #f0f3f6;">
+            <div class="row">
+              <div class="col-sm-12 d-flex stretch-card">
+                <div class="card">
+                  <div class="card-body" style="background-color: #343a40;">
+                    <!-- <div class="d-flex align-items-center justify-content-between">
+                      <h4 class="card-title mb-2 text-center">Point</h4>
+                    </div> -->
+                    <div>
+                      <ul class="nav nav-tabs tab-no-active-fill justify-content-center" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/pass/index" style="color: whitesmoke;">Subscription</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link active pl-2 pr-2" href="/pass/coin" style="color: whitesmoke;">Coin</a>
+                        </li>
+                      </ul>
+                     
+                      <div class="tab-content tab-no-active-fill-tab-content justify-content-center">
+                        <form name="form" id="form">
+                          <input id="pass_num" name="pass_num" type="hidden" value="group_000"/>
+                        <div class="tab-pane fade show active">
+                          <div class="row">
+                            <div class="ticket-coupon-wrap" style="width: 464px">
+                              <!-- <div class="ticket-coupon">
+                                <p class="ticket-coupon-tit">쿠폰등록</p>
+                                <img src="data:image/png;base64,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" alt="">
+                                <p class="ticket-coupon-text">쿠폰번호에 숫자 0,1은 없습니다.<br>영문자 O,I와 혼동하지 않도록 유의해주세요.</p>
+                                <div class="ticket-coupon-input">
+                                  <input type="text" title="쿠폰번호 입력영역" placeholder="쿠폰 번호를 등록하세요">
+                                  <button>등록하기</button>
+                                </div>
+                                <div class="coupon-noti">
+                                  <p class="dot-text">
+                                    <span>쿠폰으로 지급되는 상품은 기존 보유 상품과 중복되어 적용되므로 가급적<br>이용중인 상품이 만료 된 뒤에 쿠폰을 사용해 주세요.</span>
+                                  </p>
+                                  <p class="dot-text"><span>유효기간이 지난 쿠폰은 등록하실 수 없습니다.</span></p>
+                                  <p class="dot-text"><span>등록하신 쿠폰은 환불되지 않습니다.</span></p><p class="dot-text"><span>쿠폰은 상업적 용도로 사용하거나 매매하실 수 없습니다.</span></p></div>
+                                </div> -->
+                                <div class="ticket-coupon"><p class="ticket-coupon-tit">Fill Coin</p>
+                                  <img src="data:image/png;base64,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" alt="">
+                                  <p class="ticket-coupon-text">You can buy the data quickly and easily <br> if you charge the coin.</p><div class="ticket-coupon-input" style="margin-right: 116px;">
+                                    <button type="button" onclick="check();" style="border-style: none;">Fill</button></div><div class="coupon-noti"><p class="dot-text"><span>The charged coin has a validity period of 1 years. <br> The expired coin has expired and cannot be used.
+                                    </span></p></div></div></div>
+                              </div>
+                            </div>
+                          </form>
+                          </div>
+                        
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include ('../layout/footer.ejs') -%>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+</div>
+<script>
+
+    var oldVal;
+    var content = "";
+
+    $("document").ready(function() {
+
+      if ('<%= result %>' == 1) {
+        alert("Transaction Complete!");
+        window.location.href = '/point/deposit';
+      }
+
+    });
+
+    //로그인 체크부터
+  function check() {
+
+    $.ajax({
+          type: "POST",
+          url: "/user/loginCheck",
+          dataType: "json",
+          data: {url: '/pass/coin'},
+          success: function (data) {
+              if(data.result) {
+                payment();
+              } else {
+                if (confirm('Sign in is required. You will be moved to sign in page.')) {
+                  window.location.href = data.fullUrl;
+                }
+              }
+          },
+          error: function (e) {
+              alert(e.responseJSON.msg)
+          }
+      });
+
+  }
+
+  //결제창 열기
+  function payment() {
+
+    var frm = document.form;
+    var url    = "/pass/selMethod_coin" ;
+    var title  = "AUTOINPEC" ;
+    var status = "width = 710, height = 800, top = 100, left = 200, location = no" ;
+    window.open("", title,status); 
+                                              
+    frm.target = title;                   
+    frm.action = url;                    
+    frm.method = "post";
+    frm.submit();  
+  }
+
+</script>
+ 
+<style>
+
+.ticket-coupon-text {
+    font-size: 16px;
+    line-height: 1.5em;
+    letter-spacing: -0.3px;
+    color: rgb(165, 165, 165);
+    margin-bottom: 24px;
+}
+
+
+ </style>
+</body>
+</html>

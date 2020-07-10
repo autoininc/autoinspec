@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../../layout/head.ejs') -%>
+</head>
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <%- include ('../../layout/side.ejs') -%>
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>항목 설명</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <form class="forms-sample" id="addForm" enctype="multipart/form-data">
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Credit Rating</label>
+                            <textarea class="form-control" id="creditRating" name="creditRating" rows="8"><%= convert(data[0].creditRating) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Cash Flow Rating</label>
+                            <textarea class="form-control" id="cashFlowRating" name="cashFlowRating" rows="8"><%= convert(data[0].cashFlowRating) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Watch Rating</label>
+                            <textarea class="form-control" id="watchRating" name="watchRating" rows="8"><%= convert(data[0].watchRating) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Major Shareholders</label>
+                            <textarea class="form-control" id="ms" name="ms" rows="8"><%= convert(data[0].ms) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Related Companies</label>
+                            <textarea class="form-control" id="rc" name="rc" rows="8"><%= convert(data[0].rc) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Major Selling Partner</label>
+                            <textarea class="form-control" id="msp" name="msp" rows="8"><%= convert(data[0].msp) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Major Purchasing Partner</label>
+                            <textarea class="form-control" id="mpp" name="mpp" rows="8"><%= convert(data[0].mpp) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Summary Statement Of Financial Position</label>
+                            <textarea class="form-control" id="ssofp" name="ssofp" rows="8"><%= convert(data[0].ssofp) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Condensed Income Statement</label>
+                            <textarea class="form-control" id="cis" name="cis" rows="8"><%= convert(data[0].cis) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Summary Financial Ratio</label>
+                            <textarea class="form-control" id="sfr" name="sfr" rows="8"><%= convert(data[0].sfr) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Production Rate</label>
+                            <textarea class="form-control" id="pr" name="pr" rows="8"><%= convert(data[0].pr) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Sales Rate Each Part</label>
+                            <textarea class="form-control" id="sr" name="sr" rows="8"><%= convert(data[0].sr) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Division Rate</label>
+                            <textarea class="form-control" id="dr" name="dr" rows="8"><%= convert(data[0].dr) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Major Customers</label>
+                            <textarea class="form-control" id="mc" name="mc" rows="8"><%= convert(data[0].mc) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Process Operation Rate</label>
+                            <textarea class="form-control" id="por" name="por" rows="8"><%= convert(data[0].por) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Employee</label>
+                            <textarea class="form-control" id="es" name="es" rows="8"><%= convert(data[0].es) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Certification</label>
+                            <textarea class="form-control" id="certification" name="certification" rows="8"><%= convert(data[0].certification) %></textarea>
+                          </div>
+                          
+                          <button type="button" class="btn btn-primary mr-2" onclick="mod();">수정</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <%- include ('../../layout/footer.ejs') -%>
+          </div>
+        </div>
+    </div>
+
+    <script>
+
+    function mod() {
+ 
+      var creditRating = $("#creditRating").val().replace(/\n/g, "<br>");
+      var cashFlowRating = $("#cashFlowRating").val().replace(/\n/g, "<br>");
+      var watchRating = $("#watchRating").val().replace(/\n/g, "<br>");
+      var ms = $("#ms").val().replace(/\n/g, "<br>");
+      var rc = $("#rc").val().replace(/\n/g, "<br>");
+      var msp = $("#msp").val().replace(/\n/g, "<br>");
+      var mpp = $("#mpp").val().replace(/\n/g, "<br>");
+      var ssofp = $("#ssofp").val().replace(/\n/g, "<br>");
+      var cis = $("#cis").val().replace(/\n/g, "<br>");
+      var sfr = $("#sfr").val().replace(/\n/g, "<br>");
+      var pr = $("#pr").val().replace(/\n/g, "<br>");
+      var sr = $("#sr").val().replace(/\n/g, "<br>");
+      var dr = $("#dr").val().replace(/\n/g, "<br>");
+      var mc = $("#mc").val().replace(/\n/g, "<br>");
+      var por = $("#por").val().replace(/\n/g, "<br>");
+      var es = $("#es").val().replace(/\n/g, "<br>");
+      var certification = $("#certification").val().replace(/\n/g, "<br>");
+
+      $.ajax({
+          type: "POST",
+          url: '/admin/description/mod',
+          dataType: "json",
+          data: {creditRating: creditRating, cashFlowRating: cashFlowRating, watchRating: watchRating, ms: ms, rc: rc, msp: msp, mpp: mpp, ssofp: ssofp, cis: cis,
+            sfr: sfr, pr: pr, sr: sr, dr: dr, mc: mc, por: por, es: es, certification: certification},
+          success: function (data) {
+              alert(data.msg);
+              window.location.href = '/admin/description/view_description'
+          },
+          error: function (e) {
+              console.log("ERROR : ", e);
+          }
+      });
+      }
+    </script>
+</body>
+</html>

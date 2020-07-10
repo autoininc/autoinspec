@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../../layout/head.ejs') -%>
+</head>
+
+<body>
+    
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>Currencies 등록</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <form class="forms-sample" id="modForm" enctype="multipart/form-data">
+                            <input type="hidden" id="id" value="<%= data[0].id %>">
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Currency Title</label>
+                            <input id="title" name="title" type="text" class="form-control" aria-describedby="button-addon5" style="width: 80%;"  value="<%= data[0].title %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Code</label>
+                            <input id="code_" name="code_" type="text" class="form-control" aria-describedby="button-addon5" maxlength="3" style="width: 80%;" value="<%= data[0].code %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Symbol Native</label>
+                            <input id="symbolNative" name="symbolNative" type="text" class="form-control" aria-describedby="button-addon5" style="width: 80%;" value="<%= data[0].symbolNative %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Decimal Places</label>
+                            <input id="decimalPlaces" name="decimalPlaces" type="text" class="form-control" aria-describedby="button-addon5" style="width: 80%;" value="<%= data[0].decimalPlaces %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Value</label>
+                            <input id="value" name="value" type="text" class="form-control" aria-describedby="button-addon5" style="width: 80%;" value="<%= data[0].value %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Unit</label>
+                            <input id="unit" name="unit" type="text" class="form-control" aria-describedby="button-addon5" style="width: 80%;" value="<%= data[0].unit %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">useYN</label>
+                            <select id="useYN"  name="useYN" class="form-control" style="width: 80%;" value="<%= data[0].useYN %>">
+                              <option value='Y'>Y</option>
+                              <option value='N'>N</option>
+                            </select>
+                          </div>
+                          <button type="button" class="btn btn-primary mr-2" onclick="mod();">수정</button>
+                          <button type="button" class="btn btn-light" onclick="location.href='/admin/currency/list'">목록</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+
+<script>
+
+    $("document").ready(function() {  
+    });
+
+    function mod() {
+
+        var title = $("#title").val();
+        var code = $("#code_").val();
+        var value = $("#value").val();
+        if (title == '') { 
+            alert("Currency title을 입력해 주세요!");
+            $("#title").focus();
+            return;
+        }
+        if (code == '') { 
+            alert("Code를 입력해 주세요!");
+            $("#code").focus();
+            return;
+        }
+        if (value == '') { 
+            alert("value를 입력해 주세요!");
+            $("#value").focus();
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/currency/mod/" + $("#id").val(),
+            dataType: "json",
+            data: {title: title, code: code, value: value, symbolNative: $("#symbolNative").val(), decimalPlaces: $("#decimalPlaces").val(), unit: $("#unit").val(), useYN: $("#useYN").val()},
+            success: function (data) {
+                alert(data.msg);
+                window.location.href = '/admin/currency/list'
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>

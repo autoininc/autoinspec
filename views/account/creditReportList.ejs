@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container-scroller">
+    <%- include ('../layout/header.ejs') -%>
+
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+          <div class="content-wrapper" style="padding-left: 15px; padding-right: 15px; background-color: #f0f3f6;">
+            <div class="row">
+              <div class="col-sm-10 offset-sm-1 grid-margin d-flex stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <h4 class="card-title mb-2"></h4>
+                    </div>
+                    <div>
+                      <ul class="nav nav-tabs tab-no-active-fill" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/setting">My Account</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link active pl-2 pr-2 dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Purchase list</a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/account/purchaseList">Company information</a>
+                            <a class="dropdown-item" href="/account/creditReportList">Credit report</a>
+                          </div>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/subscriptionList">Subscription</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/transactions">Coin details</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/payList">Payment details</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2 dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">1:1 Inquiry</a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/account/qna/list">List</a>
+                            <a class="dropdown-item" href="/info/qnaForm">Ask</a>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="tab-content tab-no-active-fill-tab-content">
+                        <div class="tab-pane fade show active">
+                          <div class="row">
+                            <div class="col-lg-12 grid-margin">
+                              <h4 class="card-title" style="margin-top: 1.5rem;">Credit report</h4>
+                                  <p class="card-description">
+                                      Total <code><%=model.totalCount %></code >
+                                  </p>
+                                  <div class="table-responsive bd_pg" >
+                                    <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th>e-mail</th>
+                                          <th>company</th>
+                                          <th style="width: 15%;">coin</th>
+                                          <th style="width: 15%;">status</th>
+                                          <th style="width: 10%;">download</th>
+                                          <th style="width: 15%;">purchased date</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="tbd">	                                        
+                                          <%         
+                                          if (model.contents.length > 0) { %> 
+                                              <% for(let i=0; i<model.contents.length; i++) {        
+                                          %> 
+                                          <tr>   
+                                              <th><%= model.contents[i].email %></th>
+                                              <th><a href='/company/detail/<%=model.contents[i].company_id %>?first=1' style="color: #317376;"><%=model.contents[i].name_eng %></a></th>
+                                              <th><%= -1 * model.contents[i].coin %> Coins</th>
+                                              <th>
+                                                <% if (model.contents[i].status == 0) { %> <label class="badge badge-info">Waiting</label> <% } %>
+                                                <% if (model.contents[i].status == 1) { %> <label class="badge badge-success text-white">Complete</label> <% } %>
+                                                <% if (model.contents[i].status == 3) { %> <label class="badge badge-warning">Cancel Request</label> <% } %>
+                                                <% if (model.contents[i].status == 4) { %> <label class="badge badge-danger">Cancel</label> <% } %>
+                                              </th>
+                                              
+                                              <th><% if (model.contents[i].fileId != null) { %><a style="color: silver; font-size: 21px; border: 0px;" href='/download/creditreport_file/<%= model.contents[i].fileId %>'><i class="mdi mdi-download"></i></a><% } %></th>
+                                              <th><%= moment.utc(model.contents[i].createdAt).local().format('YYYY-MM-DD HH:mm')%></th>
+                                          </tr>                   
+                                          <%  
+                                          }
+                                          } else {  %> 
+                                              <tr>   
+                                                  <th colspan="7">No data to display.</th>
+                                              </tr> 
+                                              <% } %> 	
+                                        </tbody>	
+                                    </table>
+                                    <br>
+                                    <% if (model.contents.length != 0) { %>
+                                      <div class="col-lg-12" style="text-align:center;">
+                                        <ul class="pagination">
+                                          <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                              <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
+                                          </li>
+                                          <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                           <a <%if(model.pageNum > 1){%> href="javascript:search(<%=model.pageNum-1%>);" <%}%>>
+                                             <i class="fa fa-angle-left"> </i>
+                                           </a>
+                                         </li>
+                                        <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %> <li <%if(i===model.pageNum){%> class="active"
+                                            <%}%>><a class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%></a></li>
+                                          <% } %>
+                                          <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                              <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pageNum+1%>);" <%}%> class="waves-effect">
+                                                  <i class="fa fa-angle-right"></i>
+                                              </a>
+                                          </li>
+                                          <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                              <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                                  <i class="fas fa-angle-double-right">  </i>
+                                              </a>
+                                          </li>
+                                          <li><p class="card-description">
+                                              <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
+                                          </p></li>
+                                       </ul>
+                                      </div>
+                                      <% } %> 
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include ('../layout/footer.ejs') -%>
+        </div>
+      </div>
+</div>
+<script>
+    $("document").ready(function() {
+
+
+    });
+
+    function cancel(id) {
+
+      $.ajax({
+          type: "POST",
+          url: "/pass/cancelPaypal/" + id,
+          dataType: "json",
+          success: function (data) {
+              
+          },
+          error: function (e) {
+              alert(e.responseJSON.msg)
+          }
+      });
+    }
+
+</script>
+ 
+<style>
+
+    .bd_pg{text-align:center}
+    .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
+    .bd_pg a{color:#558421;text-decoration:none !important}
+    .bd_pg .this,.bd_pg a:hover,.bd_pg a:focus{background:#F9F9F9;border-color:#AAA;color:#555}
+    .bd_pg .frst_last{color:#555}
+    .bd_pg .direction{margin:0 4px;color:#555;letter-spacing:0;font-weight:400}
+    .bd_pg strong.direction{color:#999}
+    .bd .bd_go_page{left:-47px;padding:8px 2px;border-color:#AAA;*vertical-align:top}
+    .bd_go_page .itx,.bd_go_page .bd_btn{height:24px;margin:0 6px;padding:2px 8px;text-align:center;vertical-align:middle}
+    .bd_go_page .itx{width:32px;padding:2px 8px}
+
+ </style>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../../layout/head.ejs') -%>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script src="/js/jquery.minicolors.js"></script>
+    <link rel="stylesheet" href="/css/jquery.minicolors.css">
+
+</head>
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">수정폼</h4>
+                        <form class="forms-sample" id="modForm" enctype="multipart/form-data">
+                            <input type="hidden" id="id" value="<%= data[0].id %>">
+                            <div class="form-group">
+                              <label for="exampleTextarea1">이름</label>
+                              <input id="name" name="name" type="text" class="form-control" aria-describedby="button-addon5" style="width: 80%;" value="<%= data[0].name %>">
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleTextarea1">설명</label>
+                              <input id="discription" name="discription" type="text" class="form-control" aria-describedby="button-addon5" maxlength="200" style="width: 80%;" value="<%= data[0].discription %>">
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleTextarea1">가격</label>
+                              <input id="price" name="price" type="number" class="form-control" aria-describedby="button-addon5" style="width: 80%;" value="<%= data[0].price %>">
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleTextarea1">Months</label>
+                              <input id="months" name="months" type="number" class="form-control" aria-describedby="button-addon5" style="width: 80%;" value="<%= data[0].months %>">
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleTextarea1">showYN</label>
+                              <select id="showYN"  name="showYN" class="form-control" style="width: 80%;" value="<%= data[0].showYN %>">
+                                <option value='Y'>Y</option>
+                                <option value='N'>N</option>
+                              </select>
+                            </div>
+                          <button type="button" class="btn btn-primary mr-2" onclick="mod();">수정</button>
+                          <button type="button" class="btn btn-light" onclick="location.href='/homepage/main'">목록</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+    <script>
+
+    $("document").ready(function() { 
+
+      $('.minicolors').minicolors();
+
+        //파일 형식 체크
+        $("form").on("change", ".file-upload-default", function(){ 
+
+          var fileext = $(this).val();
+          fileext = fileext.slice(fileext.indexOf(".") + 1);
+          fileext = fileext.toLowerCase();
+
+          if (fileext != "jpg" && fileext != "png" && fileext != "gif" && fileext != "bmp") {
+              alert('이미지 파일(jpg, png, gif, bmp) 등록 가능합니다!');
+              $(this).parent(".form-control file-upload-info").attr("data-text", "");
+              $("#info").val("");
+              return;
+          }
+
+          $(this).parent(".form-control file-upload-info").attr("data-text", $(this).val().replace(/.*(\/|\\)/, '') );
+        });
+    });
+
+    function delFile() {
+      $("#new_file").val("");
+      $("#info").val("");
+    }
+
+    function mod() {
+
+      var name = $("#name").val();
+        var discription = $("#discription").val();
+        var price = $("#price").val();
+        var months = $("#months").val();
+        if (name == '') { 
+            alert("이름을 입력해 주세요!");
+            $("#name").focus();
+            return;
+        }
+        if (price == '') { 
+            alert("가격을 입력해 주세요!");
+            $("#price").focus();
+            return;
+        }
+        if (months == '') { 
+            alert("개월수를 입력해 주세요!");
+            $("#months").focus();
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/payment/subscriptionitem/mod/" + $("#id").val(),
+            dataType: "json",
+            data: {name: name, discription: discription, price: price, months: months, showYN: $("#showYN").val()},
+            success: function (data) {
+                alert(data.msg);
+                window.location.href = '/admin/payment/subscriptionitem'
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+     
+    </script>
+
+</body>
+</html>

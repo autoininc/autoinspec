@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../../layout/head.ejs') -%>
+<script src="/js/jquery.minicolors.js"></script>
+<link rel="stylesheet" href="/css/jquery.minicolors.css">
+</head>
+
+<body>
+    
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2><span id="title"><% if (type == 1) { %>Credit Rating 항목 수정 <% } else if (type == 2) { %>Cash Flow Rating 항목 수정 <% } else if (type == 3) { %> Watch Rating 항목 수정 <% } %></span></h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <form class="forms-sample" id="addForm" enctype="multipart/form-data">
+                          <input type="hidden" id="id" name="id" value="<%= data[0].id %>" >
+                          <input type="hidden" id="type" name="type" value="<%= type %>" >
+                          <div class="form-group">
+                            <label for="exampleTextarea1"><span class="text-danger">*</span>이름</label>
+                            <input id="name" name="name" type="text" class="form-control" aria-describedby="button-addon5" style="width: 80%;" value="<%= data[0].name %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">sub 이름</label>
+                            <input id="subname" name="subname" type="text" class="form-control" aria-describedby="button-addon5" style="width: 80%;" value="<%= data[0].subname %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">내용</label>
+                            <textarea class="form-control" id="contents" name="contents" rows="3"><%- data[0].contents %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">color</label>
+                            <input type="text" class="form-control minicolors" id="color" name="color" size="7" value="<%= data[0].color %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">useYN</label>
+                            <select id="useYN"  name="useYN" class="form-control" style="width: 80%;" value="<%= data[0].useYN %>">
+                              <option value='Y'>Y</option>
+                              <option value='N'>N</option>
+                            </select>
+                          </div>
+                          <button type="button" class="btn btn-primary mr-2" onclick="mod();">수정</button>
+                          <button type="button" class="btn btn-light" onclick="back();">목록</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+
+<script>
+
+    $("document").ready(function() { 
+      $('.minicolors').minicolors();
+    });
+
+    function mod() {
+
+        var name = $("#name").val();
+        var subname = $("#subname").val();
+        var useYN = $("#useYN").val();
+        var contents = $("#contents").val().replace(/\n/g, "<br>");
+        var color = $("#color").val();
+        if (name == '') { 
+            alert("이름을 입력해 주세요!");
+            $("#name").focus();
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/rating/mod/" + $("#id").val(),
+            dataType: "json",
+            data: {name: name, subname: subname, contents: contents, color: color, useYN: useYN},
+            success: function (data) {
+                alert(data.msg);
+                window.location.href = '/admin/rating/ratingItem/' + $("#type").val()
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+    function back() {
+      window.location.href = '/admin/rating/ratingItem/' + $("#type").val();
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../../layout/head.ejs') -%>
+</head>
+
+<body>
+    
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>Subscription 항목 등록</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <form class="forms-sample" id="addForm" enctype="multipart/form-data">
+                          <div class="form-group">
+                            <label for="exampleTextarea1">이름</label>
+                            <input id="name" name="name" type="text" class="form-control" aria-describedby="button-addon5" style="width: 80%;">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">설명</label>
+                            <input id="discription" name="discription" type="text" class="form-control" aria-describedby="button-addon5" maxlength="200" style="width: 80%;">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">가격</label>
+                            <input id="price" name="price" type="number" class="form-control" aria-describedby="button-addon5" style="width: 80%;">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Months</label>
+                            <input id="months" name="months" type="number" class="form-control" aria-describedby="button-addon5" style="width: 80%;">
+                          </div>
+                          <button type="button" class="btn btn-primary mr-2" onclick="add();">제출</button>
+                          <button type="button" class="btn btn-light" onclick="location.href='/admin/currency/list'">목록</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+
+<script>
+
+    $("document").ready(function() {  
+    });
+
+    function add() {
+
+        var name = $("#name").val();
+        var discription = $("#discription").val();
+        var price = $("#price").val();
+        var months = $("#months").val();
+        if (name == '') { 
+            alert("이름을 입력해 주세요!");
+            $("#name").focus();
+            return;
+        }
+        if (price == '') { 
+            alert("가격을 입력해 주세요!");
+            $("#price").focus();
+            return;
+        }
+        if (months == '') { 
+            alert("개월수를 입력해 주세요!");
+            $("#months").focus();
+            return;
+        }
+
+        var form = $('#addForm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/payment/subscriptionitem/add",
+            dataType: "json",
+            data: {name: name, discription: discription, price: price, months: months},
+            success: function (data) {
+                alert(data.msg);
+                window.location.href = '/admin/payment/subscriptionitem'
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+
+
+    }
+
+</script>
+
+</body>
+</html>

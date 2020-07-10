@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../layout/head.ejs') -%>
+
+    <!-- CSS Files -->
+    <link href="/assets/css/now-ui-dashboard.css?v=1.3.0" rel="stylesheet" />
+
+    <!-- Bootstrap CSS File -->
+    <link href="/assets/rapid/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries CSS Files -->
+    <link href="/assets/rapid/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/rapid/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="/assets/rapid/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Main Stylesheet File -->
+    <link href="/assets/rapid/css/style.css" rel="stylesheet">
+    <script src="/assets/js/core/jquery.min.js"></script>
+
+    
+    <!-- JavaScript Libraries -->
+    <script src="/assets/rapid/lib/lightbox/js/lightbox.min.js"></script>
+
+</head>
+
+<body>
+ 
+        <%- include ('../layout/header.ejs') -%>
+ 
+        <div class="container mt-5">
+        <!--==========================
+        Services Section
+        ============================-->
+        <section id="services" class="section-bg">
+            <div class="container">
+
+                <header class="section-header">
+                    <h3>Services</h3>                    
+                    <p>EASY TO CHECK</br>Reduce the Time, Cost and Risk ! </p>
+                </header>
+
+                <div class="row">
+
+                    <%         
+                        if (list.length > 0) { %> 
+                        <% for(let i=0; i<list.length; i++) {        
+                    %> 
+                    <div class="col-md-6 col-lg-4 wow bounceInUp" data-wow-duration="1.4s">
+                        <div class="box">
+                            <h4 class="title"><a href=""><%=list[i].title %></a></h4>
+                            <p class="description">
+                                <a href="/uploads/<%=list[i].file_name_new %>" data-lightbox="service"><img src="/uploads/<%=list[i].file_name_new %>" alt=""></a></p>
+                        </div>
+                    </div>            
+                    <%  }}  %>
+                </div>
+            </div>
+        </section><!-- #services -->
+    </div>
+ 
+    <%- include ('../layout/footer.ejs') -%>
+ 
+</body>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #f5f8fd;
+    }
+
+    #header, #footer{
+        padding: 0;
+    }
+</style>
+</html>

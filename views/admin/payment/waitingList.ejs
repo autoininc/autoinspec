@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container-scroller">
+    <%- include ('../layout/header.ejs') -%>
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <%- include ('../layout/side.ejs') -%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <div class="d-flex justify-content-between flex-wrap">
+                <div class="d-flex align-items-end flex-wrap">
+                  <div class="mr-md-3 mr-xl-5">
+                    <h2>대기</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+                <div class="row">
+                  <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                            
+                        <p class="card-description">
+                            Total <code><%=model.totalCount %></code >
+                        </p>
+                                  <div class="table-responsive bd_pg" >
+                                    <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th>email</th>
+                                          <th>구매항목 종류</th>
+                                          <th>결제 금액</th>
+                                          <th>결제 일시</th>
+                                          <th>remitter Name</th>
+                                          <th>contact Name</th>
+                                          <th>company Name</th>
+                                          <th>country</th>
+                                          <th>phone</th>
+                                          <th>승인 일시</th>
+                                          <th></th>
+                                        </tr>
+
+                                      </thead>
+                                      <tbody id="tbd">	                                        
+                                          <%         
+                                          if (model.contents.length > 0) { %> 
+                                              <% for(let i=0; i<model.contents.length; i++) {        
+                                          %> 
+                                          <tr>
+                                              <th><%=model.contents[i].email %></th>   
+                                              <th><% if (model.contents[i].itemType == 'C') { %>Coin<% } %>
+                                                <% if (model.contents[i].itemType == 'S') { %>Subscription<% } %></th>
+                                              <th>$ <%=model.contents[i].price %></th>
+                                              <th><%= moment.utc(model.contents[i].createdAt).local().format('YYYY-MM-DD HH:mm:ss') %></th>
+                                              <th><%=model.contents[i].remitterName %></th>
+                                              <th><%=model.contents[i].contactName %></th>
+                                              <th><%=model.contents[i].companyName %></th>
+                                              <th><%=model.contents[i].country %></th>
+                                              <th><%=model.contents[i].phone %></th>
+                                              <th><% if (model.contents[i].acceptedAt != '') { %><%= moment.utc(model.contents[i].acceptedAt).local().format('YYYY-MM-DD HH:mm:ss') %><% } %></th>
+                                              <th><% if (model.contents[i].status == 0) { %><button type="button" class="btn btn-primary" onclick="changeStatus('<%=model.contents[i].id %>');" >승인</button> <% } %>
+                                              </th>
+                                          </tr>
+                                          <%  
+                                          }
+                                          } else {  %> 
+                                              <tr>   
+                                                  <th colspan="11">No data to display.</th>
+                                              </tr> 
+                                              <% } %> 	
+                                        </tbody>	
+                                    </table>
+                                    <br>
+                                    <% if (model.contents.length != 0) { %>
+                                      <div class="col-lg-12" style="text-align:center;">
+                                        <ul class="pagination">
+                                          <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                              <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
+                                          </li>
+                                          <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                           <a <%if(model.pageNum > 1){%> href="javascript:search(<%=model.pageNum-1%>);" <%}%>>
+                                             <i class="fa fa-angle-left"> </i>
+                                           </a>
+                                         </li>
+                                        <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %> <li <%if(i===model.pageNum){%> class="active"
+                                            <%}%>><a class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%></a></li>
+                                          <% } %>
+                                          <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                              <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pageNum+1%>);" <%}%> class="waves-effect">
+                                                  <i class="fa fa-angle-right"></i>
+                                              </a>
+                                          </li>
+                                          <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                              <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                                  <i class="fas fa-angle-double-right">  </i>
+                                              </a>
+                                          </li>
+                                          <li><p class="card-description">
+                                              <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
+                                          </p></li>
+                                       </ul>
+                                      </div>
+                                      <% } %> 
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include ('../layout/footer.ejs') -%>
+        </div>
+      </div>
+</div>
+<script>
+    $("document").ready(function() {
+
+
+    });
+
+    function changeStatus(id) {
+
+
+      //content-type을 설정하고 데이터 송신
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/pass/approval/' + id);
+      xhr.setRequestHeader('Content-type', "application/json");
+      xhr.send(null);
+
+      // 데이터 수신이 완료되면 표시
+      xhr.addEventListener('load', function(){
+        alert('완료되었습니다.');
+        location.reload(true);
+      });
+    }
+
+</script>
+ 
+<style>
+
+    .bd_pg{text-align:center}
+    .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
+    .bd_pg a{color:#558421;text-decoration:none !important}
+    .bd_pg .this,.bd_pg a:hover,.bd_pg a:focus{background:#F9F9F9;border-color:#AAA;color:#555}
+    .bd_pg .frst_last{color:#555}
+    .bd_pg .direction{margin:0 4px;color:#555;letter-spacing:0;font-weight:400}
+    .bd_pg strong.direction{color:#999}
+    .bd .bd_go_page{left:-47px;padding:8px 2px;border-color:#AAA;*vertical-align:top}
+    .bd_go_page .itx,.bd_go_page .bd_btn{height:24px;margin:0 6px;padding:2px 8px;text-align:center;vertical-align:middle}
+    .bd_go_page .itx{width:32px;padding:2px 8px}
+
+ </style>
+</body>
+</html>

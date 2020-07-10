@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link href="/css/membership.css" rel="stylesheet" />
+<link href="/css/payment.css" rel="stylesheet" />
+<link href="/css/payment_method.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <form name="payForm" action="" method="POST">
+        <input id="subscriptionKey" name="subscriptionKey" type="hidden" value="<%= subscriptionKey %>"/>
+        <input id="title" name="title" type="hidden" value="<%= data.title %>"/>
+        <input name="months" type="hidden" value="<%= data.months %>"/>
+        <input id="start" name="start" type="hidden" value="<%= start %>"/>
+        <input id="end" name="end" type="hidden" value="<%= end %>"/>
+        <input id="price" name="price" type="hidden" value="<%= data.price %>"/>
+        <input id="method" name="method" type="hidden" value="01"/> <!-- 기본은 paypal-->
+        
+        <div class="ticket-popup-wrap">
+            <h1 class="popup-header">Subscription</h1> 
+            <div class="popup-body">
+                <div class="popup-content">
+                    <div class="popup-tit">Payment Contents</div> 
+                <table class="purchase-desc">
+                    <colgroup>
+                        <col width="130px"> 
+                        <col width="190px">
+                        <col width="130px"> 
+                        <col width="190px">
+                    </colgroup> 
+                    <tbody>
+                        <tr>
+                            <th scope="row"></th> 
+                            <td colspan="4" class="purchase-name">
+                                <p class="popup-text01"><strong><%= data.title %></strong></p> 
+                                <p class="popup-text02"></p> 
+                            </td>
+                        </tr> 
+                        <tr id="date" style="display: table-row;">
+                            <th scope="row">Expiration Date</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><%= moment.utc(start).local().format('YYYY-MM-DD HH:mm') %> ~ <%= moment.utc(end).local().format('YYYY-MM-DD HH:mm')  %></p>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Price</th> 
+                            <td colspan="3">
+                                <p class="popup-price">USD <%= comma(data.price) %></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> 
+            
+            <div id="payment-wrap" class="popup-content">
+                <h2 class="popup-tit">Method</h2> 
+                
+                <div class="method-others toggle-on">
+                    <ul class="method-others-toggle" style="display: block;" id="method_ul">
+                        <li><a href="#" class="method-selected"><span id="01"></span> <span >Paypal</span></a></li> 
+                        <li><a href="#" class=""><span id="02"></span> <span >Wire Transfer</span></a></li> 
+                    </ul>
+                </div> 
+                
+                <!-- <div class="check-style purchase-check"><input type="checkbox" id="ag-check" class="check-purple"><label for="ag-check">매월 자동 결제에 동의합니다.</label></div></div>  -->
+                <ul class="popup-btn-wrap" style="margin-top: 40px;">
+                    <li><button onclick="cancel();" type="button" class="btn-br-gray">Cancel</button></li> 
+                    <li><button type="button" onclick="getPost();" class="btn-fill-purple">Next</button></li>
+                </ul>
+            </div> 
+                    
+    </form>
+<script>
+
+    $(document).ready(function() 
+    {
+        $('#method_ul li').click(function(e) {
+            e.preventDefault();
+            $('#method_ul li a').removeClass('method-selected');
+            $(this).find("a").addClass('method-selected');
+            $("#method").val($(this).find("span").attr('id'));
+
+            var method =  $("#method").val();
+            if (method == "02") {
+                document.getElementById("date").style.display = "none";
+            } else {
+                document.getElementById("date").style.display = "table-row";
+            }
+        });
+    });
+
+    function cancel() {
+        window.close();  
+    }
+
+    function getPost()
+    {
+        var mode = $("#method").val();
+        var theForm = document.payForm;
+        if(mode == "01")
+        {
+            theForm.method = "POST";
+            theForm.target = "_self";
+            theForm.action = "/pass/paypalCreate";
+        }
+        else if(mode == "02")
+        {
+            theForm.method = "POST";
+            theForm.target = "_self";
+            theForm.action = "/pass/transferCreate"
+        }
+        theForm.submit();
+    }
+
+</script>
+</body>
+</html>

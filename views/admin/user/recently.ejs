@@ -1,0 +1,58 @@
+<div class="table-responsive bd_pg" >
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th style="width: 15%;">기업</th>
+          <th style="width: 15%;">조회날짜</th>
+        </tr>
+      </thead>
+      <tbody id="tbd">	                                        
+          <%         
+          if (model.contents.length > 0) { %> 
+              <% for(let i=0; i<model.contents.length; i++) {        
+          %> 
+          <tr>   
+              <th><%= model.contents[i].name_eng %></th>
+              <th><%= moment.utc(model.contents[i].createdAt).local().format('YYYY-MM-DD HH:mm')%></th>
+          </tr>                   
+          <%  
+          }
+          } else {  %> 
+              <tr>   
+                  <th colspan="5">No data to display.</th>
+              </tr> 
+              <% } %> 	
+        </tbody>	
+    </table>
+    <br>
+    <% if (model.contents.length != 0) { %>
+      <div class="col-lg-12" style="text-align:center;">
+        <ul class="pagination">
+          <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+              <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
+          </li>
+          <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+           <a <%if(model.pageNum > 1){%> href="javascript:search(<%=model.pageNum-1%>);" <%}%>>
+             <i class="fa fa-angle-left"> </i>
+           </a>
+         </li>
+        <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %> <li <%if(i===model.pageNum){%> class="active"
+            <%}%>><a class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%></a></li>
+          <% } %>
+          <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+              <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pageNum+1%>);" <%}%> class="waves-effect">
+                  <i class="fa fa-angle-right"></i>
+              </a>
+          </li>
+          <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+              <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                  <i class="fas fa-angle-double-right">  </i>
+              </a>
+          </li>
+          <li><p class="card-description">
+              <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
+          </p></li>
+       </ul>
+      </div>
+      <% } %> 
+  </div>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container-scroller">
+    <%- include ('../../layout/header.ejs') -%>
+
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+          <div class="content-wrapper" style="padding-left: 15px; padding-right: 15px; background-color: #f0f3f6;">
+            <div class="row">
+              <div class="col-sm-10 offset-sm-1 grid-margin d-flex stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <h4 class="card-title mb-2"></h4>
+                    </div>
+                    <div>
+                      <ul class="nav nav-tabs tab-no-active-fill" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/setting">My Account</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2 dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Purchase list</a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/account/purchaseList">Company information</a>
+                            <a class="dropdown-item" href="/account/creditReportList">Credit report</a>
+                          </div>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/subscriptionList">Subscription</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/transactions">Coin details</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/payList">Payment details</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link active pl-2 pr-2 dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">1:1 Inquiry</a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/account/qna/list">List</a>
+                            <a class="dropdown-item" href="/info/qnaForm">Ask</a>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="tab-content tab-no-active-fill-tab-content">
+                        <div class="tab-pane fade show active">
+                          <div class="row">
+                            <div class="col-12 grid-margin stretch-card">
+                                <div class="card">
+                                  <div class="card-body">
+                                    <h4 class="card-title">1:1 Inquiry</h4>
+                                    <p class="card-description">
+                                    </p>
+                                    <form class="forms-sample" style="width: 100%;" id="qnaForm" name="qnaForm" method="POST" enctype="multipart/form-data">
+                                      <input type="hidden" name="id" value="<%= data[0].id %>"> 
+                                      <input type="hidden" name="path" value="<%= path %>">
+                                      <div class="form-group">
+                                        <div class="row">
+                                        <div class="col-md-6">
+                                        <label for="exampleInputName1"><span class="text-danger">*</span>E-mail</label>
+                                        <input type="text" class="form-control" id="email" name="email" placeholder="E-mail" value="<%= data[0].email %>">
+                                        </div>
+                                    </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <div class="row">
+                                              <div class="col-md-6">
+                                        <label for="exampleSelectGender"><span class="text-danger">*</span>Type</label>
+                                          <select class="form-control" id="type" name="type" value="<%= data[0].type %>" onchange="changeType();" >
+                                            <option value="">-- selection --</option>
+                                            <option value="2">Request to add New company</option>
+                                            <option value="3">Request to modify existing company information</option>
+                                            <option value="4">Etc</option>
+                                          </select>
+                                        </div>
+                                        <div id="div" class="col-md-6" style="display: none;">
+                                            <label for="exampleSelectGender"><span class="text-danger">*</span>Company Name</label>
+                                            <div class="input-group">
+                                                <input type="hidden" id="companyId" name="companyId" >
+                                                <input type="text" class="form-control" id="companyName" name="companyName" style="padding: .4375rem .75rem;" readonly>
+                                                <button type="button" class="btn btn_" style="background: cadetblue; color:white; margin-right: 3px;" onclick="openModal('companyName', 'companyId');"><i class="fa fa-search"></i></button>
+                                                <button type="button" class="btn btn_" style="background: cadetblue; color:white; " onclick="reset_data();">Reset</button>
+                                              </div>
+                                        </div>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="exampleInputName1"><span class="text-danger">*</span>Title</label>
+                                        <input type="text" class="form-control" id="title" name="title" value="<%= data[0].title %>">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="exampleTextarea1"><span class="text-danger">*</span>Contents</label>
+                                        <textarea class="form-control" id="contents" name="contents" rows="15"><%= convert(data[0].contents) %></textarea>
+                                      </div>
+                                      <div class="form-group">
+                                        <label>File upload 
+                                          <div id="fileList" style="display: contents;"><% if (data[0].filename != '') { %>
+                                            <input type="hidden" name="filename" value="<%= data[0].filename %>" >
+                                            <input type="hidden" name="orgpath" value="<%= data[0].path %>" >
+                                          <span style="font-weight: 700;
+                                          margin-right: 6px;
+                                          margin-left: 6px;"><%= data[0].filename %></span>
+                                          <a style="color: lightskyblue; font-size: 21px; border: 0px;" href='javascript:delFile("<%= data[0].id %>", "<%= data[0].path %>", "<%= data[0].filename %>")'>
+                                            <i class="fas fa-times"></i>
+                                          </a><% } %></div>
+                                        </label>
+                                        <input type="file" id="file_" name="file_" class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                          <input type="text" id="info" class="form-control file-upload-info" disabled placeholder="Max File size: 3MB">
+                                          <span class="input-group-append">
+                                            <button class="file-upload-browse btn btn-warning" type="button">Upload</button>
+                                          </span>
+                                        </div>
+                                        
+                                      </div>
+                                      <button type="button" class="btn btn-primary mr-2" onclick="mod();">Modify</button>
+                                      <button type="button" class="btn btn-light" onclick="location.href='/account/qna/list'" >Cancel</button>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include ('../../layout/footer.ejs') -%>
+        </div>
+      </div>
+    </div>
+<script>
+
+  $("document").ready(function() {
+
+    $("#type").val('<%= data[0].type %>');
+    changeType();
+    $("#companyId").val('<%= data[0].companyId %>');
+    $("#companyName").val('<%= data[0].name_eng %>');
+
+
+      //파일 형식 체크
+      $("form").on("change", ".file-upload-default", function(){ 
+
+          var fileext = $(this).val();
+          fileext = fileext.slice(fileext.indexOf(".") + 1);
+          fileext = fileext.toLowerCase();
+
+          // 사이즈체크
+            var maxSize  = 3 * 1024 * 1024    //3MB
+            var fileSize = 0;
+
+            // 브라우저 확인
+            var browser=navigator.appName;
+            
+            // 익스플로러일 경우
+            if (browser=="Microsoft Internet Explorer")
+            {
+              var oas = new ActiveXObject("Scripting.FileSystemObject");
+              fileSize = oas.getFile( file.value ).size;
+            }
+            // 익스플로러가 아닐경우
+            else
+            {
+              fileSize =  document.qnaForm.file_.files[0].size
+            }
+
+            if(fileSize > maxSize)
+            {
+                alert("Uploaded file size is too large (Max 3MB).");
+                $(this).parent(".form-control file-upload-info").attr("data-text", "");
+                $("#info").val("");
+                return;
+            }
+
+          $(this).parent(".form-control file-upload-info").attr("data-text", $(this).val().replace(/.*(\/|\\)/, '') );
+      });
+  });
+
+    function changeType() {
+
+        var type = $("#type").val();
+
+        //기업 신용 레포트 조회
+        if (type == "1" || type == "3") {
+            document.getElementById('div').style.display = 'block';
+        } else {
+            document.getElementById('div').style.display = 'none';
+            $("#companyId").val('');
+            $("#companyName").val('');
+        }
+    }
+
+    function openModal(inputNm_id, inputCom_id) {
+        var url = "/company/modalList?pageNum=1&search_type=1&inputNm_id=" + inputNm_id + "&inputCom_id=" + inputCom_id;
+        var name = "search";
+        var option = "width = 988, height = 758, top = 100, left = 300, location = no"
+        window.open(url, name, option);
+      }
+
+    function mod() {
+
+      var email = $("#email").val();
+        var type = $("#type").val();
+        var companyId = $("#companyId").val();
+        var title = $("#title").val();
+        var contents = $("#contents").val();
+
+        var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+        if (email == '' || !exptext.test(email)) { 
+            alert("Please provide a valid Email!");
+            $("#email").focus();
+            return;
+        }
+        if (type == '') { 
+            alert("Please select a valid type!");
+            $("#type").focus();
+            return;
+        }
+        if (type == '1' || type == "3") {
+            if (companyId == '') {
+                alert("Please select a company!");
+                $("#companyId").focus();
+                return;
+            }
+        }
+        if (title == '') { 
+            alert("Please provide a valid title!");
+            $("#title").focus();
+            return;
+        }
+        if (contents == '') { 
+            alert("Please provide a valid contents!");
+            $("#contents").focus();
+            return;
+        }
+
+        var form = $('#qnaForm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/account/qna/mod",
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (data) {
+              alert('Successfully modified!');
+              window.location.href = '/account/qna/list'
+            },
+            error: function (e) {
+                alert("error!")
+            }
+        });
+    }
+
+    function reset_data() {
+      $("#companyId").val('');
+      $("#companyName").val('');
+    }
+
+    //파일 삭제
+    function delFile(id, path, filename) {
+      
+      if (confirm('Are you sure to delete this file?')) {
+        $.ajax({
+              type: "POST",
+              url: "/account/qna/delFile/" + id,
+              dataType: "json",
+              data: { path: path, filename: filename },
+              success: function (data) {
+                  $("#fileList").remove();
+              },
+              error: function (e) {
+                  console.log("ERROR : ", e);
+              }
+          });
+      }
+    }
+
+</script>
+ 
+</body>
+</html>

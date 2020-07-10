@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link href="/css/membership.css" rel="stylesheet" />
+
+</head>
+
+<body>
+  <div class="container-scroller">
+    <%- include ('../layout/header.ejs') -%>
+
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+          <div class="content-wrapper" style="padding-left: 15px; padding-right: 15px; background-color: #f0f3f6;">
+            <div class="row">
+              <div class="col-sm-12 d-flex stretch-card">
+                <div class="card">
+                  <div class="card-body" style="background-color: #343a40;">
+                    <div>
+                      <ul class="nav nav-tabs tab-no-active-fill justify-content-center" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active pl-2 pr-2" href="/pass/index" style="color: whitesmoke;">Subscription</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/pass/coin" style="color: whitesmoke;">Coin</a>
+                        </li>
+                      </ul>
+                     
+                      <div class="tab-content tab-no-active-fill-tab-content justify-content-center">
+                        <form name="form" id="form">
+                          <input id="pass_num" name="pass_num" type="hidden" value="group_000"/>
+                        <div class="tab-pane fade show active">
+                          <div class="row">
+                            <div class="col-lg-12 grid-margin">
+                              <div class="select-voucher"><p class="select-voucher-hd1"><span>Choose a Subscription</span></p>
+                                <p class="select-voucher-hd2"></p></div>
+                            </div>
+                            <div class="col-lg-6 offset-sm-3 align-items-center grid-margin">
+                              <ul class="list-group product-group" id="div1">
+                                <li class="list-group-item ticket-group-list checked">
+                                  <div class="d-flex w-100 justify-content-between">
+                                    <span class="product-name-box"><input type="radio" id="pass1" name="pass" value="group_000"><label for="group_000">
+                                  <span class="mb-1 product-name">For a month</span>
+                                </div>
+                                  <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 299</p></label></span></li>
+                                  <li class="list-group-item ticket-group-list ">
+                                    <div class="d-flex w-100 justify-content-between">
+                                      <span class="product-name-box"><input type="radio" id="pass2" name="pass" value="group_001"><label for="group_000">
+                                    <span class="mb-1 product-name">For 3 months</span>
+                                  </div>
+                                    <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 799</p></label></span></li>
+                                    <li class="list-group-item ticket-group-list ">
+                                      <div class="d-flex w-100 justify-content-between">
+                                        <span class="product-name-box"><input type="radio" id="pass3" name="pass" value="group_003"><label for="group_000">
+                                      <span class="mb-1 product-name">For 6 months</span>
+                                    </div>
+                                      <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 1,499</p></label></span></li>
+                                      <li class="list-group-item ticket-group-list ">
+                                        <div class="d-flex w-100 justify-content-between">
+                                          <span class="product-name-box"><input type="radio" id="pass4" name="pass" value="group_004"><label for="group_000">
+                                        <span class="mb-1 product-name">For 12 months</span>
+                                      </div>
+                                        <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 2,499</p></label></span></li>
+                              </ul>
+                            </div>
+                            <div class="col-lg-6 offset-sm-3 grid-margin" style="text-align: end;">
+                              <button type="button" class="btn btn-primary" onclick="check();">Subscription!</button>
+                            </div>
+                              </div>
+                            </div>
+                          </form>
+                          </div>
+                        
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include ('../layout/footer.ejs') -%>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+</div>
+<script>
+
+  $(document).ready(function() 
+  {
+    $('#div1 li').click(function(e) {
+      e.preventDefault();
+      $('#div1 li').removeClass('checked');
+      $(this).addClass('checked');
+      $("#pass_num").val($(this).find("[name=pass]").val());
+      
+    });
+  });
+
+  //체크 순서 : 로그인 체크->유효기간 체크->현재 이용중인 사용권 확인->결제창 열기
+  //로그인 체크부터
+  function check() {
+
+    $.ajax({
+          type: "POST",
+          url: "/user/loginCheck",
+          dataType: "json",
+          data: {url: '/pass/index'},
+          success: function (data) {
+            console.log(data)
+              if(data.result) {
+                checkExpiredDate(data.id);
+              } else {
+                if (confirm('Sign in is required. You will be moved to sign in page.')) {
+                  window.location.href = data.fullUrl;
+                }
+              }
+          },
+          error: function (e) {
+              alert(e.responseJSON.msg)
+          }
+      });
+  }
+
+  //유효기간 체크 후 상태 처리
+  function checkExpiredDate(id) {
+
+      $.ajax({
+            type: "POST",
+            url: "/pass/checkExpiredDate/" + id,
+            success: function (data) {
+              console.log('오니')
+              getCurrentSubscription(id);
+            },
+            error: function (e) {
+              console.log("ERROR : ", e);
+          }
+      });
+  }
+
+  //현재 이용중인 subscription 체크
+  function getCurrentSubscription(id) {
+    $.ajax({
+            type: "POST",
+            url: "/pass/getCurrentSubscription/" + id,
+            success: function (data) {
+              if (data.result) {
+                //상태가 대기중
+                if (data.status == 0) {
+                  alert('You are waiting for subscription to complete!');
+                }
+                //상태가 이용중
+                if (data.status == 1) {
+                  alert('You already have a subscription!');
+                }
+              } else {
+                payment();
+              }
+            },
+            error: function (e) {
+              console.log("ERROR : ", e);
+          }
+      });
+  }
+
+  //결제창 열기
+  function payment() {
+
+    var frm = document.form;
+    var url    = "/pass/selMethod" ;
+    var title  = "AUTOINPEC" ;
+    var status = "width = 710, height = 800, top = 100, left = 200, location = no" ;
+    window.open("", title,status); 
+                                              
+    frm.target = title;                   
+    frm.action = url;                    
+    frm.method = "post";
+    frm.submit();  
+  }
+   
+
+</script>
+ 
+</body>
+</html>

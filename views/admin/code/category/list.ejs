@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+      
+</head>
+
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>카테고리 관리</h2>
+                      </div>
+                    </div>
+                    <button class="btn btn-primary mt-2 mt-xl-0" onclick="location.href='/admin/category/addForm'">등록</button>
+                  </div>
+                </div>
+              </div>
+
+              
+              
+              <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      
+                      <div class="form-inline">
+                        <select id="1_categories"  class="form-control mb-2 mr-sm-2" onchange="selCategory_1();">
+                            <option value="" selected>-1차 카테고리-</option>
+                        </select>
+                        <select id="2_categories"  class="form-control mb-2 mr-sm-2" onchange="selCategory_2();">
+                            <option value="" selected>-2차 카테고리-</option>
+                        </select>
+                        <select id="3_categories"  class="form-control mb-2 mr-sm-2" custom-select" >
+                            <option value="" selected>-3차 카테고리-</option>
+                        </select>
+                          
+                          <input id="query_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
+                            <button type="button" class="btn btn-primary mb-2" style="background-color: #317376;" onClick="search('1');">Search</button>
+                      </div>
+                    
+                      <br>
+                      <p class="card-description">
+                          Total <code><%=model.totalCount %></code>
+                      </p>
+                      <div class="table-responsive bd_pg" >
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                                <th>depth</th>
+                                <th></th>
+                                <th>카테고리명</th>
+                                <th class="text-center" style="width: 10%;">사용여부</th>
+                                <th class="text-center" style="width: 10%;">수정</th>
+                                <th class="text-center" style="width: 10%;">삭제</th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbd">	                                        
+                            <%         
+                            if (model.contents.length > 0) { %> 
+                                <% for(let i=0; i<model.contents.length; i++) {        
+                            %> 
+                            <tr>   
+                                <th><%=model.contents[i].depth %> 차</th>
+                                <th><span style="color: mediumaquamarine;"><%=model.contents[i].p1_name %></span> 
+                                  <span style="color: chocolate;"><%=model.contents[i].p2_name %></span> 
+                                  <span style="color: fuchsia"><%=model.contents[i].p3_name %></span></th>
+                                <th><%=model.contents[i].category_name %></th>
+                                <th class="text-center"><button type="button" class="btn btn-link" onclick="modUseOption('<%=model.contents[i].id %>','<%=model.contents[i].useYN %>');"><%=model.contents[i].useYN %></button></th>
+                                <th class="text-center"><button type="button" class="btn btn-info" onclick="location.href='/admin/category/modForm/<%=model.contents[i].id %>'" >수정</button></th>
+                                <th class="text-center"><button type="button" class="btn btn-danger" onclick="delBtn('<%=model.contents[i].id %>');" >삭제</button></th>
+                                
+                            </tr>                   
+                            <%  
+                            }
+                            } else {  %> 
+                                <tr>   
+                                    <th colspan="6">데이터가 없습니다.</th>
+                                </tr> 
+                                <% } %> 	
+                            </tbody>	
+                        </table>
+                        <br>
+                        <% if (model.contents.length != 0) { %>
+                          <div class="col-lg-12" style="text-align:center;">
+                            <ul class="pagination">
+                              <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                  <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
+                              </li>
+                              <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                               <a <%if(model.pageNum > 1){%> href="javascript:search(<%=model.pageNum-1%>);" <%}%>>
+                                 <i class="fa fa-angle-left"> </i>
+                               </a>
+                             </li>
+                            <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %> <li <%if(i===model.pageNum){%> class="active"
+                                <%}%>><a class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%></a></li>
+                              <% } %>
+                              <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                  <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pageNum+1%>);" <%}%> class="waves-effect">
+                                      <i class="fa fa-angle-right"></i>
+                                  </a>
+                              </li>
+                              <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                  <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                      <i class="fas fa-angle-double-right">  </i>
+                                  </a>
+                              </li>
+                              <li><p class="card-description">
+                                  <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
+                              </p></li>
+                           </ul>
+                          </div>
+                          <% } %> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+          <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+ 
+
+<script>
+
+    $("document").ready(function() {  
+
+        if (getParameterByName("query_txt") != "") {
+            $("#query_txt").val(getParameterByName("query_txt"))
+        }
+
+        getCategory();
+    });
+
+    function getCategory() {
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/category/get1stCategories",
+            dataType: "json",
+            success: function (data) {
+                var list = data.list;
+                for (var i=0; i<list.length; i++) {
+                    $("#1_categories").append('<option id="' + list[i].id + '"value="' + list[i].id + '">' + list[i].category_name + '</option>');
+
+                    if (i == list.length-1) {
+                        if (getParameterByName("query_1st") != "") {
+                            $("#1_categories").val(getParameterByName("query_1st"));
+                            selCategory_1();
+                        }
+                    }
+                }
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+    function search(num) {
+        var query_1st = $("#1_categories").val();
+        var query_2nd= $("#2_categories").val();
+        var query_3rd= $("#3_categories").val();
+        var query_txt = $("#query_txt").val();
+
+        var url = "/admin/category/list?pageNum=" + num + "&query_1st=" + query_1st + "&query_2nd=" + query_2nd  + "&query_3rd=" + query_3rd + "&query_txt=" + query_txt;
+  
+        window.location.href = url;        
+    }
+
+    function selCategory_1() {
+        var category_1 = $("#1_categories").val();
+
+        $("select#2_categories option").remove();
+        $("select#2_categories").append("<option value=''>-2차 카테고리-</option>");
+
+        $("select#3_categories option").remove();
+        $("select#3_categories").append("<option value=''>-3차 카테고리-</option>");
+        if (category_1 != '') {
+            $.ajax({
+            type: "POST",
+            url: "/admin/category/get2ndCategories",
+            dataType: "json",
+            data: {parentId: category_1},
+            success: function (data) {
+                var list = data.list;
+                for (var i=0; i<list.length; i++) {
+                    $("#2_categories").append('<option id="' + list[i].id + '"value="' + list[i].id + '">' + list[i].category_name + '</option>');
+                    if (i == list.length-1) {
+                        if (getParameterByName("query_2nd") != "") {
+                            $("#2_categories").val(getParameterByName("query_2nd"));
+                            selCategory_2();
+                        }
+                    }
+                }
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+
+        }
+    }
+
+    function selCategory_2() {
+        var category_2 = $("#2_categories").val();
+
+        $("select#3_categories option").remove();
+        $("select#3_categories").append("<option value=''>-3차 카테고리-</option>");
+
+        if (category_2 != '') {
+            $.ajax({
+            type: "POST",
+            url: "/admin/category/get3rdCategories",
+            dataType: "json",
+            data: {parentId: category_2},
+            success: function (data) {
+                var list = data.list;
+                for (var i=0; i<list.length; i++) {
+                    $("#3_categories").append('<option id="' + list[i].id + '"value="' + list[i].id + '">' + list[i].category_name + '</option>');
+                    if (i == list.length-1) {
+                        if (getParameterByName("query_3rd") != "") {
+                            $("#3_categories").val(getParameterByName("query_3rd"));
+                        }
+                    }
+                }
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+        }
+    }
+
+    function modUseOption(id, value_) {
+
+        var value_;
+        if (value_ == 'Y') value = 'N';
+        else value = 'Y';
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/category/modOption",
+            dataType: "json",
+            data: { 'useYN': value, 'id': id},
+            success: function (data) {
+                alert("수정되었습니다!");
+                search(getParameterByName("pageNum"));
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+    function delBtn(id) {
+
+        if (confirm('삭제하시겠습니까?')) {
+
+            var data = { 'tableName': 'category' };
+            data = JSON.stringify(data);
+
+            //content-type을 설정하고 데이터 송신
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/admin/modDelYN/' + id);
+            xhr.setRequestHeader('Content-type', "application/json");
+            xhr.send(data);
+
+            // 데이터 수신이 완료되면 표시
+            xhr.addEventListener('load', function(){
+                alert("삭제되었습니다.")
+                location.reload(true);
+            });
+        } 
+      
+    }
+
+</script>
+ 
+<style>
+
+    /* Pagnation */
+    .bd_pg{padding:24px 0;text-align:center}
+    .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
+    .bd_pg a{color:#558421;text-decoration:none !important}
+    .bd_pg .this,.bd_pg a:hover,.bd_pg a:focus{background:#F9F9F9;border-color:#AAA;color:#555}
+    .bd_pg .frst_last{color:#555}
+    .bd_pg .direction{margin:0 4px;color:#555;letter-spacing:0;font-weight:400}
+    .bd_pg strong.direction{color:#999}
+    .bd .bd_go_page{left:-47px;padding:8px 2px;border-color:#AAA;*vertical-align:top}
+    .bd_go_page .itx,.bd_go_page .bd_btn{height:24px;margin:0 6px;padding:2px 8px;text-align:center;vertical-align:middle}
+    .bd_go_page .itx{width:32px;padding:2px 8px}
+
+    </style>
+</body>
+</html>

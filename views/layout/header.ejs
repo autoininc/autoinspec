@@ -1,0 +1,164 @@
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-absolute" style="z-index: 999999;">
+      <div class="container-fluid">
+      <div class="navbar-wrapper">
+        <div class="navbar-toggle">
+          <button type="button" class="navbar-toggler">
+            <span class="navbar-toggler-bar bar1"></span>
+            <span class="navbar-toggler-bar bar2"></span>
+            <span class="navbar-toggler-bar bar3"></span>
+          </button>
+        </div>
+        <a class="navbar-brand" href="/"><img src="/img/logo.png"></a>
+      </div>  
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>   
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/info/about">About AUTOINSPEC</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/company/search">Search</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/info/service">Service</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/info/help">HELP</a>
+              </li>
+              <li id="manage" class="nav-item" style="display:block">
+                <a class="nav-link" href="/company/list/" style="color: red;">BackOffice</a>
+              </li>
+            </ul>
+            <ul class="navbar-nav mx-auto" id="login">
+                <li class="nav-item" id="login_li">
+                    <a class="nav-link" href='/user/login'>login</a>
+                </li>
+                <li class='nav-item' style="display: none;" id="logout_li">
+                    <a class='nav-link' href='#' onclick="logout();">logout</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item" id="login_li">
+                    <a class="nav-link" href='/user/login'></a>
+                </li>
+            </ul>
+          </div>
+        </div>
+</nav> -->
+<div class="horizontal-menu">
+  <nav class="navbar top-navbar col-lg-12 col-12 p-0" style="margin-bottom: 0;">
+    <div class="container-fluid">
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-between">
+        <!-- <ul class="navbar-nav navbar-nav-left"></ul>
+        <ul class="navbar-nav navbar-nav-left"></ul> -->
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+            <a class="navbar-brand brand-logo" href="/"><img src="/img/logo.png" alt="logo"/></a>
+            <a class="navbar-brand brand-logo-mini" href="/"><img src="/img/logo.png" alt="logo"/></a>
+        </div>
+        <ul class="navbar-nav navbar-nav-right">
+          
+          <% if(userObj) { %>
+          <li class="nav-item nav-profile dropdown" >
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <span class="nav-profile-name" id="displayName" style="margin-right: 0;"><%= userObj.first_name %> <%= userObj.last_name %></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                <a class="dropdown-item" href="/account/setting">
+                  <i class="mdi mdi-settings text-primary"></i>
+                  Dashboard
+                </a>
+                <a class="dropdown-item" href="/user/logout">
+                  <i class="mdi mdi-logout text-primary"></i>
+                  Logout
+                </a>
+            </div>
+          </li>
+          <% } else { %>
+            <li class="nav-item nav-profile dropdown" >
+              <button type="button" class="btn btn-inverse-secondary btn-fw" onclick="location.href='/user/login'">Login</button>
+            </li>
+          <% } %>
+          <li class="nav-item nav-profile" style="margin-left: 0;">
+            <a class="btn" href="/pass/index" style="font-size: 16px; font-weight: 600; height: 35px; color: #d8d8d8;">Subscprtion</a>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="horizontal-menu-toggle">
+          <span class="mdi mdi-menu"></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <nav class="bottom-navbar">
+    <div class="container">
+        <ul class="nav page-navigation">
+          <li class="nav-item">
+            <a class="nav-link" href="/info/about">
+              <span class="menu-title">ABOUT AUTOINSPEC</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/company/search">
+              <span class="menu-title">SEARCH</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/info/service">
+              <span class="menu-title">SERVICE</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <span class="menu-title">HELP</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="submenu">
+                <ul>
+                    <li class="nav-item"><a class="nav-link" href="/info/help">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/info/qnaForm">1:1 Inquiry</a></li>
+                </ul>
+            </div>
+        </li>
+          <% if(userObj) { %>
+            <% if(userObj.level == 4) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/company/before">
+              <span class="menu-title">BACKOFFICE</span>
+            </a>
+          </li>
+          <% }}  %>
+        </ul>
+    </div>
+  </nav>
+</div>
+<script>
+
+    function logout() {
+        
+        $.ajax({
+            type: "GET",
+            url: "/user/logout",
+            processData: false,
+            cache: false,
+            success: function (data) {
+                window.location.href = '/';
+            },
+            error: function (e) {
+              console.log("ERROR : ", e);
+           }
+    })
+    }
+
+</script>
+<style>
+.navbar-menu-wrapper > ul > li > a {
+    display: block;
+    height: 34px;
+    padding: 0 11px;
+    font-size: 12px;
+    line-height: 34px;
+    color: #a5a5a5;
+}
+
+</style>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+ 
+    <div class="container-scroller">
+        <%- include ('../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>업체 수정</h2>
+                      </div>
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-end flex-wrap">
+                      <button type="button" class="btn btn-light bg-white btn-icon mr-3 d-none d-md-block " onclick="createExcelFile();">
+                        <i class="mdi mdi-download text-muted"></i>
+                      </button>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      
+                      <div class="form-inline">
+                        <div class="form-group">
+                          <select id="country_id" name="country_id" class="form-control mb-2 mr-sm-2" >
+                              <option value="" selected>- ALL Country -</option>
+                              <%         
+                                  if (model.countriesList.length > 0) { %> 
+                                  <% for(let i=0; i<model.countriesList.length; i++) {        
+                              %> 
+                              <option id=<%=model.countriesList[i].id %> value=<%=model.countriesList[i].id %>><%=model.countriesList[i].country_name %></option>                 
+                              <%  }}  %>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <select name="search_bn" class="form-control mb-2 mr-sm-2" id="search_bn">
+                            <option value="">- ALL Business Nature -</option>
+                            <option value="1">Manufacturer</option>
+                            <option value="2">Dealer, agent, distributor, wholesaler</option>
+                            <option value="3">Retailer</option>
+                            <option value="4">Service supplier(Auto refitter / tuner / garage / workshop)</option>
+                            <option value="5">Private & official fleetts</option>
+                            <option value="6">Trade associations/government agencies</option>
+                            <option value="7">Publisher</option>
+                            <option value="8">Research institutions / universities / polytechnic</option>
+                            <option value="9">Others</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <select name="search_pg" class="form-control mb-2 mr-sm-2" id="search_pg">
+                            <option value="">- ALL Product Group -</option>
+                            <option value="1">Commercial Vehicle</option>
+                            <option value="2">Passenger Vehicle</option>
+                            <option value="3">OEM</option>
+                            <option value="4">Aftermarket</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                          <div class="input-group">
+                            <input type="hidden" name="search_cate" id="search_cate" >
+                            <input class="form-control " id="categoryText" name="categoryText" type="text" placeholder="Category" >
+                            <div class="input-group-append">
+                              <button class="btn btn-sm btn-danger" type="button" onclick="removeCategory();">X</button>
+                            </div>
+                          </div>
+                        </div>
+                      
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                      <div class="form-inline">
+                        <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
+                            <option value="1" selected>ALL</option>
+                            <option value="2" >COMPANY</option>
+                            <option value="3" >CEO</option>
+                            <option value="4" >MAIN_PRODUCT</option>
+                        </select>
+                        <input id="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
+                          <button type="button" class="btn btn-primary mb-2" style="background-color: #317376;" onClick="search('1');">Search</button>
+                    </div>
+                  </div>
+                          
+                  <div class="row">
+                    <div class="spinner-border text-primary spinner" role="status" id="spinner" style="display: none;">
+                    </div>
+                  </div>
+                  <div class="d-flex" style="padding-top: 20px;">
+                    <div class="mr-auto p-2">
+                      <p class="card-description">
+                          <strong>Register Companies</strong> <code class="font-weight-bold"><%= comma(model.totalCount) %></code>
+                      </p>
+                    </div>
+
+                    <div class="p-2">
+                        <span style="padding-right: 0.55em;"><i class="fas fa-home" style="color: #317376"></i><label>&nbsp;Website</label></span>
+                         <span style="padding-right: 0.55em;"><i class="fas fa-envelope-square" style="color: #317376"></i><label>&nbsp;Email</label></span>
+                         <span style="padding-right: 0.55em;"><i class="fas fa-tachometer-alt" style="color: #317376;"></i> <label>&nbsp;Credit </label></span>
+                         <span style="padding-right: 0.55em;"><i class="fas fa-users" style="color: #317376;"></i> <label>&nbsp;Shareholders </label></span>
+                         <span style="padding-right: 0.55em;"><i class="fas fa-handshake" style="color: #317376;"></i> <label>&nbsp;Partner</label></span>
+                         <span style="padding-right: 0.55em;"><i class="fas fa-chart-line" style="color: #317376;"></i> <label>&nbsp;Finance</label></span>
+                         <span style="padding-right: 0.55em;"><i class="fas fa-comment-dots" style="color: #317376;"></i> <label>&nbsp;Opinion</label></span>
+                         <span><i class="fas fa-industry" style="color: #317376;"></i> <label>&nbsp;Component</label></span>
+                        </div>
+                  </div>
+                      <div class="table-responsive bd_pg" >
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th>나라</th>
+                              <th style="width: 15%">Data</th style="width: 10%">
+                              <th>업체명</th>
+                              <th>CEO</th>
+                              <th>주요 상품</th>
+                              <th>수정날짜</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbd">	                                        
+                              <%         
+                              if (model.contents.length > 0) { %> 
+                                  <% for(let i=0; i<model.contents.length; i++) {        
+                              %> 
+                              <tr>   
+                                  <th><%=model.contents[i].country_name %></th>
+                                  <th>
+                                    <% if (model.contents[i].map['website']) { %>&nbsp;<i class="fas fa-home" style="color: #317376"></i>&nbsp;<% } %>
+                                    <% if (model.contents[i].map['email']) { %>&nbsp;<i class="fas fa-envelope-square" style="color: #317376;"></i>&nbsp;<% } %>
+                                    <% if (model.contents[i].map['creditRating'] || model.contents[i].map['cashFlowRating'] || model.contents[i].map['watchRating']) { %> 
+                                      &nbsp;<i class="fas fa-tachometer-alt" style="color: #317376;"></i>&nbsp; 
+                                    <% } %>
+                                    
+                                    <% if (model.contents[i].map['ms'] || model.contents[i].map['rc']) { %> &nbsp;<i class="fas fa-users" style="color: #317376;"></i>&nbsp; <% } %>
+                                    <% if (model.contents[i].map['msp'] || model.contents[i].map['mpp']) { %> &nbsp;<i class="fas fa-handshake" style="color: #317376;"></i>&nbsp; <% } %>
+                                    <% if (model.contents[i].map['ssofp'] || model.contents[i].map['cis'] || model.contents[i].map['sfr']) { %> &nbsp;<i class="fas fa-chart-line" style="color: #317376;"></i>&nbsp; <% } %>
+                                    <% if (model.contents[i].map['opinion']) { %> &nbsp;<i class="fas fa-comment-dots" style="color: #317376;"></i>&nbsp;<% } %>
+                                    <% if (model.contents[i].map['pr'] || model.contents[i].map['sr'] || model.contents[i].map['cc'] || model.contents[i].map['mv'] || model.contents[i].map['for'] || model.contents[i].map['es']) { %> 
+                                      &nbsp;<i class="fas fa-industry" style="color: #317376;"></i>&nbsp; <% } %>
+                                  </th>
+                                  <th><span onclick="modifyForm('<%=model.contents[i].id %>');" style="color: #317376; cursor:pointer;"><%=model.contents[i].name_eng %></span>
+                                    <br><%=model.contents[i].name_kor %></th>
+                                  <th><%=model.contents[i].ceo %></th>
+                                  <th><%=model.contents[i].main_product %></th>
+                                  <th><% if (model.contents[i].updatedAt != '') { %><%= moment.utc(model.contents[i].updatedAt).local().format('YYYY-MM-DD HH:mm:ss') %><% } %></th>
+                                  <th><a style="color: silver; font-size: 21px; border: 0px;" href='javascript:openModal(<%= model.contents[i].id %>);'><i class="fas fa-search-plus"></i></a></th>
+                              </tr>                   
+                              <%  
+                              }
+                              } else {  %> 
+                                  <tr>   
+                                      <th colspan="5">데이터가 없습니다.</th>
+                                  </tr> 
+                                  <% } %> 	
+                            </tbody>	
+                        </table>
+                        <br>
+                        <% if (model.contents.length != 0) { %>
+                          <div class="col-lg-12" style="text-align:center;">
+                            <ul class="pagination">
+                              <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                  <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
+                              </li>
+                              <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                               <a <%if(model.pageNum > 1){%> href="javascript:search(<%=model.pageNum-1%>);" <%}%>>
+                                 <i class="fa fa-angle-left"> </i>
+                               </a>
+                             </li>
+                            <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %> <li <%if(i===model.pageNum){%> class="active"
+                                <%}%>><a class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%></a></li>
+                              <% } %>
+                              <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                  <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pageNum+1%>);" <%}%> class="waves-effect">
+                                      <i class="fa fa-angle-right"></i>
+                                  </a>
+                              </li>
+                              <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                  <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                      <i class="fas fa-angle-double-right">  </i>
+                                  </a>
+                              </li>
+                              <li><p class="card-description">
+                                  <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
+                              </p></li>
+                           </ul>
+                          </div>
+                          <% } %> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+          <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+
+<script type="text/javascript">
+
+  var oldVal;
+  var arr = [];
+
+    $("document").ready(function() {  
+
+      //초기화
+      $("#categoryText").autocomplete({source: arr});
+
+      //파라미터 값 설정
+      if (getParameterByName("country_id") != "") {
+          $("#country_id").val(getParameterByName("country_id"))
+      }
+
+      if (getParameterByName("search_bn") != "") {
+          $("#search_bn").val(getParameterByName("search_bn"))
+      }
+
+      if (getParameterByName("search_pg") != "") {
+          $("#search_pg").val(getParameterByName("search_pg"))
+      }
+
+      if (getParameterByName("search_cate") != "") {
+          $("#search_cate").val(getParameterByName("search_cate"));
+          $("#categoryText").attr('readonly', true);
+      }
+
+      if (getParameterByName("categoryText") != "") {
+          $("#categoryText").val(getParameterByName("categoryText"))
+      }
+
+      if (getParameterByName("search_type") != "") {
+          $("#search_type").val(getParameterByName("search_type"))
+      }
+
+      if (getParameterByName("search_txt") != "") {
+          $("#search_txt").val(getParameterByName("search_txt"))
+      }
+
+      //카테고리 입력 이벤트
+      $("#categoryText").on("propertychange change keyup paste input", function() {
+
+        var currentVal = $(this).val();
+        if(currentVal == oldVal) {
+            return;
+        } 
+    
+        oldVal = currentVal;
+        arr = [];
+        
+        if (currentVal != '') {
+
+          $.ajax({
+            type: "POST",
+            url: "/category/getlist",
+            dataType: 'json',
+            data: { 'query': oldVal },
+            success: function (data) {
+
+                for (var i=0; i<data.data.length; i++) {
+                  
+                  var id = "";
+                  if (data.data[i].depth == 4) {
+                      id = data.data[i].p1_id + "$" + data.data[i].p2_id + "$" + data.data[i].p3_id + "$" + data.data[i].id
+                  }
+                  if (data.data[i].depth == 3) {
+                      id = data.data[i].p2_id + "$" + data.data[i].p3_id + "$" + data.data[i].id
+                  } 
+                  if (data.data[i].depth == 2) {
+                    id = data.data[i].p3_id + "$" + data.data[i].id
+                  } 
+                  if (data.data[i].depth == 1) {
+                    id = data.data[i].id
+                  } 
+                      var p1 = (data.data[i].p1_name != undefined) ? data.data[i].p1_name: '';
+                      var p2 = (data.data[i].p2_name != undefined) ? data.data[i].p2_name: '';
+                      var p3 = (data.data[i].p3_name != undefined) ? data.data[i].p3_name: '';
+                      var parents = "";
+                      if (p1 != '') parents += (p1 + " > ")
+                      if (p2 != '') parents += (p2 + " > ")
+                      if (p3 != '') parents += (p3 + " > ")
+
+                      arr.push({ value: id, label: parents + data.data[i].category_name})
+                }
+
+                $("#categoryText").autocomplete({
+
+                    source: arr,
+                    select: function(event, ui) {
+                      $("#categoryText").val(ui.item.label); // display the selected text
+                      $("#search_cate").val(ui.item.value); // display the selected text
+                      $("#categoryText").attr('readonly', true);
+                      return false;
+                    },
+
+                    focus: function(event, ui) {
+                        return false;
+                    }
+                });
+                    
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+        } else {
+          $("#search_cate").val("");
+        }
+          
+    });
+    });
+    
+    function onKeyDown()
+    {
+        if(event.keyCode == 13){
+            search('1');
+        }
+    }
+
+    function removeCategory() {
+      $("#categoryText").val(""); // display the selected text
+      $("#search_cate").val(""); // display the selected text
+      $("#categoryText").attr('readonly', false);
+    }
+
+
+    function search(num) {
+        var search_type = $("#search_type").val();
+        var country_id= $("#country_id").val();
+        var search_txt = $("#search_txt").val();
+        var search_bn = $("#search_bn").val();
+        var search_pg = $("#search_pg").val();
+        var search_cate = $("#search_cate").val();
+        var categoryText = $("#categoryText").val();
+      
+        var url = "/admin/company/before?pageNum=" + num + "&search_type=" + search_type + "&country_id=" + country_id + "&search_txt=" + search_txt + 
+              "&search_bn=" + search_bn + "&search_pg=" + search_pg + "&search_cate=" + search_cate + "&categoryText=" + categoryText;
+  
+        window.location.href = url;        
+    }
+
+    //수정 폼
+    function modifyForm(id) {
+
+      var search_type = $("#search_type").val();
+      var country_id= $("#country_id").val();
+      var search_txt = $("#search_txt").val();
+      var search_bn = $("#search_bn").val();
+      var search_pg = $("#search_pg").val();
+      var search_cate = $("#search_cate").val();
+      var categoryText = $("#categoryText").val();
+
+      var url = "/admin/company/modForm/" + id + "?pageNum=" + '<%=model.pageNum%>' + "&search_type=" + search_type + "&country_id=" + country_id + "&search_txt=" + search_txt + 
+              "&search_bn=" + search_bn + "&search_pg=" + search_pg + "&search_cate=" + search_cate + "&categoryText=" + categoryText;
+      
+      window.location.href = url;       
+    }
+
+    //상세보기
+    function openModal(id) {
+        var url = "/company/modalView/" + id;
+        var name = "view";
+        var option = "width = 1640, height = 758, top = 100, left = 150, location = no, scrollbars=1"
+        window.open(url, name, option);
+    }
+
+</script>
+ 
+<style>
+
+
+    /* Pagnation */
+    .bd_pg{padding:24px 0;text-align:center}
+    .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
+    .bd_pg a{color:#558421;text-decoration:none !important}
+    .bd_pg .this,.bd_pg a:hover,.bd_pg a:focus{background:#F9F9F9;border-color:#AAA;color:#555}
+    .bd_pg .frst_last{color:#555}
+    .bd_pg .direction{margin:0 4px;color:#555;letter-spacing:0;font-weight:400}
+    .bd_pg strong.direction{color:#999}
+    .bd .bd_go_page{left:-47px;padding:8px 2px;border-color:#AAA;*vertical-align:top}
+    .bd_go_page .itx,.bd_go_page .bd_btn{height:24px;margin:0 6px;padding:2px 8px;text-align:center;vertical-align:middle}
+    .bd_go_page .itx{width:32px;padding:2px 8px}
+    
+    .ui-autocomplete {
+      max-height: 200px;
+      width: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 20px;
+    } 
+    </style>
+</body>
+</html>

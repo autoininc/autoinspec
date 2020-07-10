@@ -1,0 +1,149 @@
+.cash-table {
+    margin: 0;
+}
+
+.cash-table button {
+    width: 40%;
+    background-color: #317376;
+}
+
+.cash-table input {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 10px;
+    width: 84px;
+    height: 30px;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+    padding: 0 14px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 13px;
+}
+
+.freecash-input {
+    display: inline-block;
+    width: 281px;
+    height: 32px;
+    padding: 0 34px 0 8px;
+    border: 1px solid #e3e3e3;
+    border-radius: 2px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.freecash-button {
+    display: inline-block;
+    vertical-align: top;
+    min-width: 80px;
+    height: 32px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    background-color: #317376;
+    font-size: 13px;
+}
+
+/* 190711 MY보관함 나의 이용정보 영역 */
+.util_wrap_v3{
+    margin: 22px 0 40px;
+}
+.util_wrap_v3 .util_info{
+    border: 1px solid #e3e3e3;
+    border-top: 1px solid #317376;
+    background: #fff;
+}
+.util_wrap_v3 .util_info table{
+    width: 100%;
+    table-layout: fixed;
+}
+.util_wrap_v3 .util_info table caption{
+    visibility: hidden;
+    overflow: hidden;
+    height: 0;
+    font-size: 0;
+    line-height: 0;
+}
+.util_wrap_v3 .util_info table thead th{
+    padding: 13px 0 14px;
+    border-right: 1px solid #e3e3e3;
+    background: #fbfbfc;
+    font-size: 13px;
+    line-height: 13px;
+    letter-spacing: -0.46px;
+    color: #6a6a6a;
+    text-align: center;
+}
+.util_wrap_v3 .util_info table thead th:last-child{
+    border-right: 0;
+}
+.util_wrap_v3 .util_info table tbody td{
+    padding: 28px 15px 24px;
+    border: 1px solid #e3e3e3;
+    border-width: 1px 1px 0 0;
+    text-align: center;
+}
+.util_wrap_v3 .util_info table tbody td:last-child{
+    border-right: 0;
+}
+.util_wrap_v3 .util_info dt.ico_hold{
+    font-weight: bold;
+    font-size: 13px;
+    color: #222;
+    line-height: 13px;
+    letter-spacing: -0.46px
+}
+.util_wrap_v3 .util_info .ico_hold:before{
+    content: '';
+    display: inline-block;
+    margin-right: 3px;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    background: url(https://ssl.pstatic.net/static/nstore/sp_mypage_v16.png) no-repeat;
+}
+.util_wrap_v3 .util_info .ico_hold_cookie:before{
+    background-position: -601px -199px;
+}
+.util_wrap_v3 .util_info .ico_cache:before{
+    background-position: -625px -199px;
+}
+.util_wrap_v3 .util_info .ico_coupon:before{
+    background-position: -650px -199px;
+}
+.util_wrap_v3 .util_info .count{
+    margin-top: 5px;
+}
+.util_wrap_v3 .util_info .count .number{
+    display: inline-block;
+    font-weight: bold;
+    font-size: 24px;
+    letter-spacing: -0.8px;
+    color: #000;
+    vertical-align: middle;
+}
+.util_wrap_v3 .count .unit_hold{
+    display: inline-block;
+    margin-left: 3px;
+    font-weight: bold;
+    font-size: 11px;
+    letter-spacing: -0.22px;
+    color: #6a6a6a;
+    vertical-align: middle;
+}
+.util_wrap_v3 .util_info .util_btn_area{
+    display: block;
+    margin-top: 16px;
+    text-align: center;
+}
+.util_wrap_v3 .util_btn_area .btn_util{
+    display: inline-block;
+    padding: 4px 11px 4px;
+    border: 1px solid #d5d5d5;
+    font-size: 10px;
+    color: #444;
+    letter-spacing: -0.34px;
+    text-decoration: none;
+}
+

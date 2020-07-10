@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../layout/head.ejs') -%>
+</head>
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <%- include ('../layout/side.ejs') -%>
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>About 관리</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <form class="forms-sample" id="addForm" enctype="multipart/form-data">
+                          <div class="form-group">
+                            <label for="exampleInputName1">영상 URL</label>
+                            <input type="text" class="form-control" name="video_url" 
+                                value= <% if(model) { %>  '<%= model.data[0].video_url %>'> <% } else { '' } %>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">제목</label>
+                            <input type="text" class="form-control" name="title" 
+                                value= <% if(model) { %>  '<%= model.data[0].title %>'> <% } else { '' } %>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">부제목</label>
+                            <input type="text" class="form-control" name="sub_title" 
+                                value= <% if(model) { %>  '<%= model.data[0].sub_title %>'> <% } else { '' } %>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">내용</label>
+                            <textarea class="form-control" name="contents" rows="3">
+                                <% if(model) { %>  <%=model.data[0].contents %> <% } %>
+                            </textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea2">기존 파일</label>
+                            <input type="text" class="form-control" readonly
+                                value= <% if(model) { %>  '<%= model.data[0].file_name_new %>' <% } else { '' } %> >
+                            <% if(model) { %><img src="/uploads/<%=model.data[0].file_name_new %>" alt="My Image" width="200" height="100"><% } %>
+                          </div>
+                          <div class="form-group">
+                            <label>File upload</label>
+                            <input type="file" name="file-upload-field" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                              <input type="text" id="info" class="form-control file-upload-info" disabled placeholder="Upload Image" >
+                              <span class="input-group-append">
+                                <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                              </span>
+                            </div>
+                          </div>
+                          <button type="button" class="btn btn-primary mr-2" onclick="mod();">수정</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+    <script>
+
+    $("document").ready(function() { 
+
+        //파일 형식 체크
+        $("form").on("change", ".file-upload-default", function(){ 
+
+        var fileext = $(this).val();
+        fileext = fileext.slice(fileext.indexOf(".") + 1);
+        fileext = fileext.toLowerCase();
+
+        if (fileext != "jpg" && fileext != "png" && fileext != "gif" && fileext != "bmp") {
+            alert('이미지 파일(jpg, png, gif, bmp) 등록 가능합니다!');
+            $(this).parent(".form-control file-upload-info").attr("data-text", "");
+            $("#info").val("");
+            return;
+        }
+
+          $(this).parent(".form-control file-upload-info").attr("data-text", $(this).val().replace(/.*(\/|\\)/, '') );
+        });
+
+    });
+
+    function mod() {
+
+        var form = $('#addForm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/admin/homepage/about_mod",
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (data) {
+                window.location.href = '/admin/homepage/about'
+            },
+            error: function (e) {
+                alert("빠진거 없는지 확인 부탁!")
+            }
+        });
+    }
+     
+    </script>
+<style>
+
+.spinner {
+    position: fixed;
+    z-index: 1031;
+    top: 50%;
+    left: 50%;
+}
+
+[role="main"] {
+    padding-top: 133px; /* Space for fixed navbar */
+}
+
+@media (min-width: 768px) {
+    [role="main"] {
+    padding-top: 72px; /* Space for fixed navbar */
+    }
+}
+
+.file-upload-wrapper {
+	 position: relative;
+	 width: 100%;
+	 height: 60px;
+}
+ .file-upload-wrapper:after {
+	 content: attr(data-text);
+	 font-size: 18px;
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 background: #fff;
+	 padding: 10px 15px;
+	 display: block;
+	 width: calc(100% - 40px);
+	 pointer-events: none;
+	 z-index: 20;
+	 height: 40px;
+	 line-height: 40px;
+	 color: #999;
+	 border-radius: 5px 10px 10px 5px;
+	 font-weight: 300;
+}
+ .file-upload-wrapper:before {
+	 content: 'Upload';
+	 position: absolute;
+	 top: 0;
+	 right: 0;
+	 display: inline-block;
+	 height: 60px;
+	 background: #4daf7c;
+	 color: #fff;
+	 font-weight: 700;
+	 z-index: 25;
+	 font-size: 16px;
+	 line-height: 60px;
+	 padding: 0 15px;
+	 text-transform: uppercase;
+	 pointer-events: none;
+	 border-radius: 0 5px 5px 0;
+}
+ .file-upload-wrapper:hover:before {
+	 background: #3d8c63;
+}
+ .file-upload-wrapper input {
+	 opacity: 0;
+	 position: absolute;
+	 top: 0;
+	 right: 0;
+	 bottom: 0;
+	 left: 0;
+	 z-index: 99;
+	 height: 40px;
+	 margin: 0;
+	 padding: 0;
+	 display: block;
+	 cursor: pointer;
+	 width: 100%;
+}
+ 
+
+</style>
+</body>
+</html>

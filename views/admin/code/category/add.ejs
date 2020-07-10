@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../../layout/head.ejs') -%>
+</head>
+
+<body>
+    
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>카테고리 등록</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">등록폼</h4>
+                        <form class="forms-sample" id="addForm" enctype="multipart/form-data">
+                          <div class="form-group">
+                            <label for="exampleInputName1">1차 카테고리</label>
+                            <select id="1_categories"  class="form-control " onchange="selCategory_1();">
+                                <option value="" selected>-선택-</option>
+                                <%         
+                                    if (model.list.length > 0) { %> 
+                                    <% for(let i=0; i<model.list.length; i++) {        
+                                %> 
+                                <option id=<%=model.list[i].id %> value=<%=model.list[i].id %>><%=model.list[i].category_name %></option>                 
+                                <%  }}  %>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">2차 카테고리</label>
+                            <select id="2_categories"  class="form-control " onchange="selCategory_2();">
+                                <option value="" selected>-선택-</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">3차 카테고리</label>
+                            <select id="3_categories"  class="form-control " >
+                                <option value="" selected>-선택-</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">카테고리 명</label>
+                            <input id="name" name="name" type="text" class="form-control" aria-describedby="button-addon5" placeholder="카테고리명" style="width: 80%;">
+                          </div>
+                          <button type="button" class="btn btn-primary mr-2" onclick="add();">제출</button>
+                          <button type="button" class="btn btn-light" onclick="location.href='/admin/code/category/list'">목록</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+
+<script>
+
+    $("document").ready(function() {  
+    });
+
+    function add() {
+
+        var name = $("#name").val();
+        if (name == '') { 
+            alert("카테고리명을 선택해 주세요!");
+            return;
+        }
+
+        var category_1 = $("#1_categories").val();
+        var category_2 = $("#2_categories").val();
+        var category_3 = $("#3_categories").val();
+        var parentId = 0;
+        var depth = 1;
+
+        if (category_1 != '') {
+            parentId = $("#1_categories option:selected").attr('id');
+            depth = 2;
+
+            if (category_2 != '') {
+                parentId = $("#2_categories option:selected").attr('id');
+                depth = 3;
+
+                if (category_3 != '') {
+                parentId = $("#3_categories option:selected").attr('id');
+                depth = 4;
+                }
+            }
+        }
+
+        var form = $('#addForm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/category/add",
+            dataType: "json",
+            data: {name: name, depth: depth, parentId: parentId},
+            success: function (data) {
+                alert(data.msg);
+                window.location.href = '/admin/category/list'
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+
+
+    }
+
+    function selCategory_1() {
+        var category_1 = $("#1_categories").val();
+
+        $("select#2_categories option").remove();
+        $("select#2_categories").append("<option value=''>-선택-</option>");
+
+        $("select#3_categories option").remove();
+        $("select#3_categories").append("<option value=''>-선택-</option>");
+        if (category_1 != '') {
+            $.ajax({
+            type: "POST",
+            url: "/admin/category/get2ndCategories",
+            dataType: "json",
+            data: {parentId: category_1},
+            success: function (data) {
+                var list = data.list;
+                for (var i=0; i<list.length; i++) {
+                    $("#2_categories").append('<option id="' + list[i].id + '"value="' + list[i].id + '">' + list[i].category_name + '</option>');
+                }
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+
+        }
+    }
+
+    function selCategory_2() {
+        var category_2 = $("#2_categories").val();
+
+        $("select#3_categories option").remove();
+        $("select#3_categories").append("<option value=''>-선택-</option>");
+
+        if (category_2 != '') {
+            $.ajax({
+            type: "POST",
+            url: "/admin/category/get3rdCategories",
+            dataType: "json",
+            data: {parentId: category_2},
+            success: function (data) {
+                var list = data.list;
+                for (var i=0; i<list.length; i++) {
+                    $("#3_categories").append('<option id="' + list[i].id + '"value="' + list[i].id + '">' + list[i].category_name + '</option>');
+                }
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+        }
+    }
+
+</script>
+
+</body>
+</html>

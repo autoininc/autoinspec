@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../../layout/head.ejs') -%>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    
+</head>
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+              
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>필드 관리</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                  <div class="card">
+                      <div class="card-body">
+                      <div class="form-inline" id="addDiv">
+                            <input id="name" name="name" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" placeholder="필드이름" >
+                            <input id="name_eng" name="name_eng" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" placeholder="필드이름(영문)">
+                            <button type="button" class="btn btn-primary mb-2" style="background-color: #317376;" onClick="addField();">등록</button>
+                      </div>
+                      <div class="form-inline" id="modDiv" style="display: none;">
+                        <input id="id" type="hidden">
+                        <input id="mod_name" name="mod_name" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" placeholder="필드이름" >
+                        <input id="mod_name_eng" name="mod_name_eng" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" placeholder="필드이름(영문)">
+                        <button type="button" class="btn btn-primary mb-2" style="background-color: #317376;" onClick="modify();">수정</button>
+                        <button type="button" class="btn btn-primary mb-2" style="background-color: firebrick;" onClick="cancelMod();">취소</button>
+                      </div>
+
+                      
+                      <!-- <p class="card-description">
+                          Total <code><%=model.totalCount %></code>
+                      </p> -->
+                      
+
+                        <div class="table-responsive">
+                            <table class="table" id='table'>
+                            <thead>
+                                <tr>
+                                <th>이름(kor)</th>
+                                <th>이름(eng)</th>
+                                <th>코드</th>
+                                <th>순서<a href="javascript:modOrder();" class="btn">변경</a></th>
+                                <th>사용여부</th>
+                                <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbd">	                                        
+                                <%         
+                                if (model.list.length > 0) { %> 
+                                    <% for(let i=0; i<model.list.length; i++) {        
+                                %> 
+                                <tr id="<%=model.list[i].id %>">   
+                                    <th><%=model.list[i].name_kor %></th>
+                                    <th><%=model.list[i].name_eng %></th>
+                                    <th><%=model.list[i].field_code %></th>
+                                    <th><button type="button" class="btn" style="background: transparent; color: black;" onclick="MoveRowUp('<%=model.list[i].id %>')"><i class="fa fa-angle-up fa-lg"></i></button><button type="button" class="btn" style="background: transparent; color: black;" onclick="MoveRowDown('<%=model.list[i].id %>')"><i class="fa fa-angle-down fa-lg"></i></button></th>
+                                    <th><button type="button" class="btn btn-link" onclick="modUseOption('<%=model.list[i].id %>','<%=model.list[i].useYN %>');"><%=model.list[i].useYN %></button></th>
+                                    <th><button type="button" class="btn btn-info" onclick="modBtn('<%=model.list[i].id %>');">수정</button></th>
+                                </tr>                   
+                                <% }} else {  %> 
+                                <tr>   
+                                    <th>데이터가 없습니다.</th>
+                                </tr> 
+                                <% } %> 
+                              </tbody>
+                            </table>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+ 
+    <script>
+
+    function addField() {
+
+        var form = $('#addForm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/field/add",
+            dataType: "json",
+            data: { 'name': $("#name").val(), 'name_eng': $("#name_eng").val(), 'field_code': makeid($("#name").val().length)},
+            success: function (data) {
+                alert("완료되었습니다!");
+                window.location.href = '/admin/field/list'
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+    function modBtn(id) {
+        document.getElementById('addDiv').style.display = "none";
+        document.getElementById('modDiv').style.display = "block";
+        $("#name").val("");
+        $("#name_eng").val("");
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/field/getdata",
+            dataType: "json",
+            data: { 'id': id },
+            success: function (data) {
+                $("#id").val(data.data.id);
+                $("#mod_name").val(data.data.name_kor);
+                $("#mod_name_eng").val(data.data.name_eng);
+            },
+            error: function (e) {
+                console.log(e)
+            }
+        });
+    }
+
+    function cancelMod() {
+        document.getElementById('addDiv').style.display = "block";
+        document.getElementById('modDiv').style.display = "none";
+        $("#id").val("");
+        $("#mod_name").val("");
+        $("#mod_name_eng").val("");
+    }
+
+    function modify() {
+        $.ajax({
+            type: "POST",
+            url: "/admin/field/modify",
+            dataType: "json",
+            data: { 'name': $("#mod_name").val(), 'code': $("#mod_code").val(), 'id': $("#id").val()},
+            success: function (data) {
+                alert("수정되었습니다!");
+                window.location.href = '/admin/field/list'
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+    
+    function MoveRowDown(id) {
+            var rows = $("#table tr");
+            var row_number = document.getElementById(id).rowIndex;
+            rows.eq(document.getElementById(id).rowIndex).insertAfter(rows.eq(document.getElementById(id).rowIndex + 1));
+        }
+
+    function MoveRowUp(id) {           
+        var rows = $("#table tr");
+        var row_number = document.getElementById(id).rowIndex;
+        if (document.getElementById(id).rowIndex - 1 != 0) {
+            rows.eq(document.getElementById(id).rowIndex).insertBefore(rows.eq(document.getElementById(id).rowIndex - 1));
+        }
+    }
+
+    //순서 변경
+    function modOrder() {
+
+        var arr = [];
+
+        $('#table tr').not(':first').each(function() {
+            arr.push(this.id);
+        })
+
+        var data = { 'arr': arr };
+        data = JSON.stringify(data);
+
+        //content-type을 설정하고 데이터 송신
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/field/modOrder');
+        xhr.setRequestHeader('Content-type', "application/json");
+        xhr.send(data);
+        
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('load', function(){
+            alert(JSON.parse(xhr.responseText).msg)
+        });
+    }
+
+    function modUseOption(id, value) {
+
+        var value_;
+        if (value == 'Y') value_ = 'N';
+        else value_ = 'Y';
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/field/modUseOption",
+            dataType: "json",
+            data: { 'useYN': value_, 'id': id },
+            success: function (data) {
+                alert("수정되었습니다!");
+                window.location.href = '/admin/field/list'
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+    
+    function modify() {
+        $.ajax({
+            type: "POST",
+            url: "/admin/field/modify",
+            dataType: "json",
+            data: { 'name': $("#mod_name").val(), 'name_eng': $("#mod_name_eng").val(), 'id': $("#id").val()},
+            success: function (data) {
+                alert("수정되었습니다!");
+                window.location.href = '/admin/field/list'
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+    </script>
+
+<style>
+
+.spinner {
+    position: fixed;
+    z-index: 1031;
+    top: 50%;
+    left: 50%;
+}
+
+[role="main"] {
+    padding-top: 133px; /* Space for fixed navbar */
+}
+
+@media (min-width: 768px) {
+    [role="main"] {
+    padding-top: 72px; /* Space for fixed navbar */
+    }
+}
+
+</style>
+</body>
+</html>

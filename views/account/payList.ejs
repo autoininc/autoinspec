@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container-scroller">
+    <%- include ('../layout/header.ejs') -%>
+
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+          <div class="content-wrapper" style="padding-left: 15px; padding-right: 15px; background-color: #f0f3f6;">
+            <div class="row">
+              <div class="col-sm-10 offset-sm-1 grid-margin d-flex stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <h4 class="card-title mb-2"></h4>
+                    </div>
+                    <div>
+                      <ul class="nav nav-tabs tab-no-active-fill" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/setting">My Account</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2 dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Purchase list</a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/account/purchaseList">Company information</a>
+                            <a class="dropdown-item" href="/account/creditReportList">Credit report</a>
+                          </div>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/subscriptionList">Subscription</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2" href="/account/transactions">Coin details</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link active pl-2 pr-2" href="/account/payList">Payment details</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link pl-2 pr-2 dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">1:1 Inquiry</a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/account/qna/list">List</a>
+                            <a class="dropdown-item" href="/info/qnaForm">Ask</a>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="tab-content tab-no-active-fill-tab-content">
+                        <div class="tab-pane fade show active">
+                          <!-- 구매 취소 -->
+                          <div class="modal fade" id="cancelRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
+            
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                      <input type="hidden" id="id" name="id" />
+                                        <h4 id="warning-modal-label" class="modal-title">Cancellation request</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                    </div>
+                                    <div class="modal-body pb-0">
+                                        <div class="pb-1 mb-2">
+                                            <p class="form-text text-primary font-weight-bold">Payment Details</p>
+                                            <table class="table" id="purchase-charge-table">
+                                              <colgroup>
+                                                  <col style="width:33%;">
+                                                  <col style="width:34%;">
+                                                  <col style="width:33%;">
+                                              </colgroup>
+                                              <thead class="thead-default">
+                                              <tr>
+                                                  <th>Item</th>
+                                                  <th><p class="form-text text-dark" id="title"></p></th>
+                                              </tr>
+                                              <tr>
+                                                <th>date</th>
+                                                <th><p class="form-text text-dark" id="createdAt"></p></th>
+                                              </tr>
+                                              </thead>
+                                          </table>
+                                       </div>
+                                       <br>
+                                       <div class="pb-1 mb-2">
+                                        <p class="form-text text-primary font-weight-bold">Refund Details</p>
+                                        <table class="table" id="purchase-charge-table">
+                                          <colgroup>
+                                              <col style="width:33%;">
+                                              <col style="width:34%;">
+                                              <col style="width:33%;">
+                                          </colgroup>
+                                          <thead class="thead-default">
+                                          <tr>
+                                            <th>price</th>
+                                            <th><p class="form-text text-dark" id="price"></p></th>
+                                          </tr>
+                                          </thead>
+                                      </table>
+                                   </div>
+            
+                                    </div>
+                                    <div class="modal-footer justify-content-between bt-0">
+                                                            <div class="custom-control-stacked">
+                                                
+                                            </div>
+                                                        <div>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+                                            <button id="useBtn" class="btn btn-primary" onclick="cancelRequest();">request</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                          <div class="row">
+                            <div class="col-lg-12 grid-margin">
+                                      
+                                  <p class="card-description">
+                                      Total <code><%=model.totalCount %></code >
+                                  </p>
+                                  <div class="table-responsive bd_pg" >
+                                    <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th style="width: 17%;">date</th>
+                                          <th>price</th>
+                                          <th>item</th>
+                                          <th style="width: 18%;">method</th>
+                                          <th style="width: 10%;">status</th>
+                                          <th style="width: 10%;">cancel</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="tbd">	                                        
+                                          <%         
+                                          if (model.contents.length > 0) { %> 
+                                              <% for(let i=0; i<model.contents.length; i++) {        
+                                          %> 
+                                          <tr>   
+                                              <th><%= moment.utc(model.contents[i].createdAt).local().format('YYYY-MM-DD HH:mm:ss')%></th>
+                                              <th>USD <%= comma(model.contents[i].price) %></th>
+                                              <th><% if (model.contents[i].itemType == 'S') { %> Subscription ( <%= model.contents[i].title %> )<% } %>
+                                                <% if (model.contents[i].itemType == 'C') { %> Coin ( <%= model.contents[i].title %> )<% } %></th>
+                                              
+                                              <th><% if (model.contents[i].method == '01') { %> Paypal <% } %>
+                                                <% if (model.contents[i].method == '02') { %> Wire Transfer <br> (<%= model.contents[i].invoiceNo %>
+                                                  <a style="color: silver; font-size: 21px; border: 0px;" href='/download/payment/<%= model.contents[i].id %>'><i class="mdi mdi-download"></i></a>)<% } %></th>
+                                              <th>
+                                                <% if (model.contents[i].status == 0) { %> <label class="badge badge-info">Waiting</label> <% } %>
+                                                <% if (model.contents[i].status == 1) { %> <label class="badge badge-primary text-white">Complete</label> <% } %>
+                                                <% if (model.contents[i].status == 2) { %> <label class="badge badge-warning">Cancel Request</label> <% } %>
+                                                <% if (model.contents[i].status == 3) { %> <label class="badge badge-danger">Cancel</label> <% } %>
+                                              </th>
+                                              <th><% if ((model.contents[i].item_cnt == 0 && model.contents[i].isIn == 1) || model.contents[i].status == 0) { %> 
+                                                <button type="button" class="open-cancelRequestDialog btn btn-danger" data-id="<%=model.contents[i].id %>" data-price="<%=model.contents[i].price %>"
+                                                  data-title="<%=model.contents[i].title %>" data-created="<%= moment.utc(model.contents[i].createdAt).local().format('YYYY-MM-DD HH:mm:ss')%>" 
+                                                data-toggle="modal" data-target="#cancelRequestModal" ">Request</button>
+                                                <% } %></th>
+                                          </tr>                   
+                                          <%  
+                                          }
+                                          } else {  %> 
+                                              <tr>   
+                                                  <th colspan="10">No data to display.</th>
+                                              </tr> 
+                                              <% } %> 	
+                                        </tbody>	
+                                    </table>
+                                    <br>
+                                    <% if (model.contents.length != 0) { %>
+                                      <div class="col-lg-12" style="text-align:center;">
+                                        <ul class="pagination">
+                                          <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                              <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
+                                          </li>
+                                          <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                           <a <%if(model.pageNum > 1){%> href="javascript:search(<%=model.pageNum-1%>);" <%}%>>
+                                             <i class="fa fa-angle-left"> </i>
+                                           </a>
+                                         </li>
+                                        <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %> <li <%if(i===model.pageNum){%> class="active"
+                                            <%}%>><a class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%></a></li>
+                                          <% } %>
+                                          <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                              <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pageNum+1%>);" <%}%> class="waves-effect">
+                                                  <i class="fa fa-angle-right"></i>
+                                              </a>
+                                          </li>
+                                          <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                              <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                                  <i class="fas fa-angle-double-right">  </i>
+                                              </a>
+                                          </li>
+                                          <li><p class="card-description">
+                                              <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
+                                          </p></li>
+                                       </ul>
+                                      </div>
+                                      <% } %> 
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include ('../layout/footer.ejs') -%>
+        </div>
+      </div>
+</div>
+<script>
+    $("document").ready(function() {
+
+      $(document).on("click", ".open-cancelRequestDialog", function () { 
+          var id = $(this).data('id'); 
+          var title = $(this).data('title'); 
+          var createdAt = $(this).data('created'); 
+          var price = $(this).data('price'); 
+          $(".modal-header #id").val( id ); 
+          $(".modal-body #title").text( title ); 
+          $(".modal-body #createdAt").text( createdAt ); 
+          $(".modal-body #price").text('USD ' +  comma(price) ); 
+      });
+    });
+
+    function cancelModal(id) {
+
+      
+    }
+
+    function cancelRequest() {
+
+      $.ajax({
+          type: "POST",
+          url: "/pass/cancelRequest/" + $(".modal-header #id").val(),
+          dataType: "json",
+          success: function (data) {
+            alert(data.msg);
+            location.reload(true);
+          },
+          error: function (e) {
+              alert(e.responseJSON.msg)
+          }
+      });
+    }
+
+</script>
+ 
+<style>
+
+    .bd_pg{text-align:center}
+    .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
+    .bd_pg a{color:#558421;text-decoration:none !important}
+    .bd_pg .this,.bd_pg a:hover,.bd_pg a:focus{background:#F9F9F9;border-color:#AAA;color:#555}
+    .bd_pg .frst_last{color:#555}
+    .bd_pg .direction{margin:0 4px;color:#555;letter-spacing:0;font-weight:400}
+    .bd_pg strong.direction{color:#999}
+    .bd .bd_go_page{left:-47px;padding:8px 2px;border-color:#AAA;*vertical-align:top}
+    .bd_go_page .itx,.bd_go_page .bd_btn{height:24px;margin:0 6px;padding:2px 8px;text-align:center;vertical-align:middle}
+    .bd_go_page .itx{width:32px;padding:2px 8px}
+
+ </style>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../layout/head.ejs') -%>
+
+</head>
+<body>
+ 
+ 
+        <%- include ('../layout/header.ejs') -%>
+ 
+    <!-- Header - set the background image for the header in the line below -->
+  <!-- <section class="py-5 bg-image-full" style="background-image: url('https://unsplash.it/1900/1080?image=1076');">    
+    <div style="height: 200px.
+
+  <section>
+    <!-- Put anything you want here! There is just a spacer below for demo purposes! -->
+    <div style="height: 480px;">
+        <iframe width="100%" height="100%" src="<%= data.video_url %>?autoplay=1&playlist=IKdoUcZWsZc&loop=1&controls=0&rel=0&showinfo=0" frameborder="0" allowfullscreen"></iframe>
+    </div>
+  </section>
+
+    <!-- Content section -->
+    <section class="py-5">
+        <div class="container">
+        <% if (data != undefined) { %> <h1><%= data.title %></h1> <% } %>
+        
+        <p class="lead"><%= data.sub_title %></p>
+        <p><%= data.contents %></p>
+        </div>
+    </section>
+
+    <!-- Image Section - set the background image for the header in the line below -->
+    <section class="py-5 bg-image-full" style="background-image: url('/uploads/<%= data.file_name_new %>');">
+        <div style="height: 700px;"></div>
+    </section>
+ 
+    <%- include ('../layout/footer.ejs') -%>
+
+</body>
+</html>

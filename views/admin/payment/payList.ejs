@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<script src="/js/moment.js"></script>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <%- include ('../layout/header.ejs') -%>
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <%- include ('../layout/side.ejs') -%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body dashboard-tabs p-0">
+                  <ul class="nav nav-tabs px-4" role="tablist">
+
+                  <li class="nav-item">
+                    <a class="nav-link" id="tab" href="/admin/payment/paymentList" style="height: 60px;">ALL <span class="badge badge-dark"><%=model.cnt.cnt %></span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="0tab" href="/admin/payment/paymentList?status=0" style="height: 60px;">대기 <span class="badge badge-info"><%=model.cnt.waiting %></span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="1tab" href="/admin/payment/paymentList?status=1" style="height: 60px;">결제완료 <span class="badge badge-success"><%=model.cnt.complete %></span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="2tab" href="/admin/payment/paymentList?status=2" style="height: 60px;">취소요청 <span class="badge badge-warning"><%=model.cnt.request %></span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="3tab" href="/admin/payment/paymentList?status=3" style="height: 60px;">취소 <span class="badge badge-danger"><%=model.cnt.cancel %></span></a>
+                  </li>
+                  </ul>
+                  <div class="tab-content py-0 px-0">
+                    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                      <div style="padding: 30px;">
+
+                        <!-- 상세보기 -->
+                        <div class="modal fade bd-example-modal-lg" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
+            
+                          <div class="modal-dialog modal-lg" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                    <input type="hidden" id="id" name="id" />
+                                      <h4 id="warning-modal-label" class="modal-title"></h4>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                  </div>
+                                  <div class="modal-body pb-0">
+                                      <div class="pb-1 mb-2">
+                                          <p class="form-text text-primary font-weight-bold">Payment Details</p>
+                                          <table class="table" id="purchase-charge-table">
+                                            <colgroup>
+                                                <col style="width:33%;">
+                                                <col style="width:34%;">
+                                                <col style="width:33%;">
+                                            </colgroup>
+                                            <thead class="thead-default">
+                                            <tr>
+                                                <th>Price</th>
+                                                <th><p class="form-text text-dark" id="price"></p></th>
+                                            </tr>
+                                            <tr>
+                                              <th>date</th>
+                                              <th><p class="form-text text-dark" id="createdAt"></p></th>
+                                            </tr>
+                                            <tr>
+                                              <th>invoice</th>
+                                              <th id="invoiceDownload" style="display: none;"></th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                     </div>
+                                     <br>
+                                     <div class="pb-1 mb-2">
+                                      <p class="form-text text-primary font-weight-bold" id="type_title"></p>
+                                      <table class="table" id="purchase-charge-table">
+                                        <colgroup>
+                                            <col style="width:33%;">
+                                            <col style="width:34%;">
+                                            <col style="width:33%;">
+                                        </colgroup>
+                                        <thead class="thead-default">
+                                        <tr>
+                                          <th>Item</th>
+                                          <th><p class="form-text text-dark" id="title"></p></th>
+                                        </tr>
+                                        <tr>
+                                          <th>기간</th>
+                                          <th><p class="form-text text-dark" id="period"></p></th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                 </div>
+          
+                                  </div>
+                              </div>
+                          </div>
+                      </div> 
+                      <input type="hidden" id="status" name="status" value="" >
+                                <p class="card-description">
+                                  Total <code><%=model.totalCount %></code >
+                              </p>
+                                        <div class="table-responsive bd_pg" >
+                                          <table class="table table-bordered">
+                                            <thead>
+                                              <tr>
+                                                <th>email</th>
+                                                <th>구매항목</th>
+                                                <th>결제 금액</th>
+                                                <th>결제 방식</th>
+                                                <th>상태</th>
+                                                <th>결제 일시</th>
+                                                <th></th>
+                                                <th></th>
+                                              </tr>
+      
+                                            </thead>
+                                            <tbody id="tbd">	                                        
+                                                <%         
+                                                if (model.contents.length > 0) { %> 
+                                                    <% for(let i=0; i<model.contents.length; i++) {        
+                                                %> 
+                                                <tr>
+                                                    <th><%=model.contents[i].email %></th>   
+                                                    <th><% if (model.contents[i].itemType == 'S') { %> Subscription ( <%= model.contents[i].title %> )<% } %>
+                                                      <% if (model.contents[i].itemType == 'C') { %> Coin ( <%= model.contents[i].title %> )<% } %></th>
+                                                    <th>$ <%=model.contents[i].price %></th>
+                                                    <th><% if (model.contents[i].method == '01') { %> Paypal <% } %><% if (model.contents[i].method == '02') { %> Wire Transfer <% } %></th>
+                                                    <th>
+                                                      <% if (model.contents[i].status == 0) { %> <label class="badge badge-info">Waiting</label> <% } %>
+                                                      <% if (model.contents[i].status == 1) { %> <label class="badge badge-success">Complete</label> <% } %>
+                                                      <% if (model.contents[i].status == 2) { %> <label class="badge badge-warning">Cancel Request</label> <% } %>
+                                                      <% if (model.contents[i].status == 3) { %> <label class="badge badge-danger">Cancel</label> <% } %>
+                                                    </th>
+                                                <% var format = 'YYYY-MM-DD HH:mm:ss' %>
+                                                    <th><%= moment.utc(model.contents[i].createdAt).local().format('YYYY-MM-DD HH:mm:ss') %></th>
+                                                    <th><button type="button" class="btn btn-primary" style="background: cadetblue; padding: 7px;" onclick="openModal('<%=model.contents[i].id %>', '<%=model.contents[i].itemType %>', '<%= moment.utc(model.contents[i].createdAt).local().format(format) %>');"><i class="fa fa-search"></i></button></th>
+                                                    <th><% if (model.contents[i].status == 0) { %><button type="button" class="btn btn-primary" onclick="approval('<%=model.contents[i].id %>');" >승인 처리</button><% } %>
+                                                      <% if (model.contents[i].status == 2) { %><button type="button" class="btn btn-danger" onclick="cancel('<%=model.contents[i].id %>');" >취소 처리</button><% } %></th>
+                                                </tr>
+                                                <%  
+                                                }
+                                                } else {  %> 
+                                                    <tr>   
+                                                        <th colspan="10">No data to display.</th>
+                                                    </tr> 
+                                                    <% } %> 	
+                                              </tbody>	
+                                          </table>
+                                          <br>
+                                          <% if (model.contents.length != 0) { %>
+                                            <div class="col-lg-12" style="text-align:center;">
+                                              <ul class="pagination">
+                                                <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                    <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
+                                                </li>
+                                                <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                 <a <%if(model.pageNum > 1){%> href="javascript:search(<%=model.pageNum-1%>);" <%}%>>
+                                                   <i class="fa fa-angle-left"> </i>
+                                                 </a>
+                                               </li>
+                                              <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %> <li <%if(i===model.pageNum){%> class="active"
+                                                  <%}%>><a class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%></a></li>
+                                                <% } %>
+                                                <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                    <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pageNum+1%>);" <%}%> class="waves-effect">
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </a>
+                                                </li>
+                                                <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                    <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                                        <i class="fas fa-angle-double-right">  </i>
+                                                    </a>
+                                                </li>
+                                                <li><p class="card-description">
+                                                    <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
+                                                </p></li>
+                                             </ul>
+                                            </div>
+                                            <% } %> 
+                                        </div>
+        
+                              
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <!-- partial:partials/_footer.html -->
+        <%- include ('../layout/footer.ejs') -%>
+        <!-- partial -->
+      </div>
+    </div>
+</div>
+<script>
+    $("document").ready(function() {
+
+      if (getParameterByName("status") != "") {
+          $("#status").val(getParameterByName("status"))
+      }
+
+      //tab active
+      var status = $("#status").val();
+      $('.nav-link').removeClass('active_bg');
+      $('#' + status + 'tab').addClass('active_bg');
+
+    });
+
+    function openModal(id, itemType, date) {
+
+      var url = "";
+      if (itemType == "S") {
+        url = "/pass/getSubscriptionData/" + id;
+        $("#detailModal .modal-body").find("#type_title").text("Subscription"); 
+      } else {
+        url = "/pass/getCoinData/" + id;
+        $("#detailModal > .modal-body #type_title").val("Coin");
+      }
+
+      $.ajax({
+          type: "GET",
+          url: url,
+          dataType: "json",
+          success: function (data) {
+            $("#detailModal .modal-body").find("#price").text("USD " + data.data.price); 
+            $("#detailModal .modal-body").find("#createdAt").text(moment.utc(data.data.createdAt).local().format('YYYY-MM-DD HH:mm')); 
+            if(data.data.method == '02') {
+              document.getElementById('invoiceDownload').style.display = 'block';
+              $('#invoiceDownload').append('<a href="/download/payment/' + data.data.id + '" >' + data.data.filename + '</a>')
+              
+
+            }
+            
+            $("#detailModal .modal-body").find("#title").text(data.data.title);
+            if (data.data.start != '' && data.data.end != '') {
+              $("#detailModal .modal-body").find("#period").text(moment.utc(data.data.start).local().format('YYYY-MM-DD HH:mm') + " ~ " + moment.utc(data.data.end).local().format('YYYY-MM-DD HH:mm'));
+            }
+            $('#detailModal').modal('show') 
+          },
+          error: function (e) {
+              alert(e.responseJSON.msg)
+          }
+      });
+    }
+
+    function approval(id) {
+
+      if (confirm('승인 처리하시겠습니까?')) {
+
+        //content-type을 설정하고 데이터 송신
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/pass/approval/' + id);
+        xhr.setRequestHeader('Content-type', "application/json");
+        xhr.send(null);
+
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('load', function(){
+          alert('완료되었습니다.');
+          location.reload(true);
+        });
+      }
+    }
+
+    function cancel(id) {
+
+      if (confirm('취소 처리하시겠습니까?')) {
+
+        //content-type을 설정하고 데이터 송신
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/pass/cancel/' + id);
+        xhr.setRequestHeader('Content-type', "application/json");
+        xhr.send(null);
+
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('load', function(){
+          alert('완료되었습니다.');
+          location.reload(true);
+        });
+      }
+    }
+</script>
+ 
+<style>
+
+    .bd_pg{text-align:center}
+    .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
+    .bd_pg a{color:#558421;text-decoration:none !important}
+    .bd_pg .this,.bd_pg a:hover,.bd_pg a:focus{background:#F9F9F9;border-color:#AAA;color:#555}
+    .bd_pg .frst_last{color:#555}
+    .bd_pg .direction{margin:0 4px;color:#555;letter-spacing:0;font-weight:400}
+    .bd_pg strong.direction{color:#999}
+    .bd .bd_go_page{left:-47px;padding:8px 2px;border-color:#AAA;*vertical-align:top}
+    .bd_go_page .itx,.bd_go_page .bd_btn{height:24px;margin:0 6px;padding:2px 8px;text-align:center;vertical-align:middle}
+    .bd_go_page .itx{width:32px;padding:2px 8px}
+
+    .active_bg {
+      background-color: aliceblue !important;
+    }
+
+ </style>
+</body>
+</html>

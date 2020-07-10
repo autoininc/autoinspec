@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+<!-- include summernote css/js-->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+</head>
+
+<body>
+    
+    <div class="container-scroller">
+        <%- include ('../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+              
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="spinner-border text-primary spinner" role="status" id="spinner">
+              </div>
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <form class="forms-sample" id="answerForm" name="answerForm" enctype="multipart/form-data">
+                          <input type="hidden" id="id" name="id" value="<%= data[0].id %>" >
+                          <input type="hidden" id="tab" name="tab" value="<%= tab %>" >
+                          
+                          <table class="table table-bordered" style="background: white;">
+                            <colgroup>
+                                <col style="width:20%;">
+                            </colgroup>
+                            <thead class="thead-default">
+                              <tr>
+                                <th>Name</th>
+                                <th><%= data[0].first_name %> <%= data[0].last_name %></th>
+                              </tr>
+                              <tr>
+                                <th>E-mail</th>
+                                <th><%= data[0].email %></th>
+                              </tr>
+                              <tr>
+                                <th>E-mail 인증여부</th>
+                                <th><%= data[0].email_verified %></th>
+                              </tr><% if (data[0].email_verified == 'Y') { %><tr>
+                                <th style="vertical-align: middle;">Level</th>
+                                <th><div class="input-group" style="width: 16%;"><select class="form-control" id="sel<%= data[0].id %>" style="margin-right: 5%;" > 
+                                  <option value="1" <%= data[0].level == "1" ? "selected" : "" %> >1</option>
+                                  <option value="2" <%= data[0].level == "2" ? "selected" : "" %> >2</option>
+                                  <option value="3" <%= data[0].level == "3" ? "selected" : "" %> >3</option>
+                                  <option value="4" <%= data[0].level == "4" ? "selected" : "" %> >4</option>
+                                  </select> 
+                                  <button type="button" class="btn btn-primary" onclick="changeLevel('<%= data[0].id %>','<%= data[0].level %>');" >변경</button></div></th>
+                              </tr><tr>
+                                <th>가입일자</th>
+                                <th><%= moment.utc(data[0].createdAt).local().format('YYYY-MM-DD HH:mm:ss') %></th>
+                              </tr>
+                              <tr>
+                                <th>최근로그인</th>
+                                <th><% if (data[0].recentlyLogin != undefined) { %><%= moment.utc(data[0].recentlyLogin).local().format('YYYY-MM-DD HH:mm:ss') %><% } %></th>
+                              </tr>
+                              <tr>
+                                <th>이용중인 이용권</th>
+                                <th><% if (subscription.length > 0) { %><%= subscription[0].title %> (<% if (subscription[0].status == 0) { %>대기<% } %> <% if (subscription[0].status == 1) { %>사용<% } %> )<% } %></th>
+                              </tr>
+                              <tr>
+                                <th style="vertical-align: middle;">Coin</th>
+                                <th><%= coin[0].sum %> <br><br> <div class="input-group" style="width: 40%;"><input type="number" class="form-control" id="coin<%= data[0].id %>" placeholder="코인" style="margin-right: 5%;">
+                                  <button type="button" class="btn btn-primary" onclick="sendCoin('<%= data[0].id %>');" >주기</button></th>
+                              </tr>
+                              <% } %>
+                            </thead>
+                        </table>
+                      <br>
+                      <% if (data[0].email_verified == 'Y') { %>
+                      <div class="row">
+                        <div class="col-md-12 grid-margin stretch-card">
+                          <div class="card">
+                            <div class="card-body dashboard-tabs p-0">
+                              <div>
+                                <ul class="nav nav-tabs px-4" role="tablist">
+                                  <li class="nav-item">
+                                    <a class="nav-link <% if (tab == 'recently') { %>active<% } %>" href="/admin/user/view/<%= data[0].id %>?tab=recently">조회내역</a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a class="nav-link <% if (tab == 'purchase_company' || tab == 'purchase_credit') { %>active<% } %> dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="true">구매내역</a>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="/admin/user/view/<%= data[0].id %>?tab=purchase_company">회사정보</a>
+                                      <a class="dropdown-item" href="/admin/user/view/<%= data[0].id %>?tab=purchase_credit">신용리포트</a>
+                                    </div>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a class="nav-link <% if (tab == 'subscription') { %>active<% } %>" href="/admin/user/view/<%= data[0].id %>?tab=subscription">구독</a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a class="nav-link <% if (tab == 'coin') { %>active<% } %>" href="/admin/user/view/<%= data[0].id %>?tab=coin">코인</a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a class="nav-link <% if (tab == 'payment') { %>active<% } %>" href="/admin/user/view/<%= data[0].id %>?tab=payment">결제내역</a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a class="nav-link <% if (tab == 'qna') { %>active<% } %>" href="/admin/user/view/<%= data[0].id %>?tab=qna">1:1문의</a>
+                                  </li>
+                                </ul>
+                                <div class="tab-content tab-no-active-fill-tab-content">
+                                  <div class="tab-pane fade show active">
+                                    <div class="row">
+                                      <div class="col-lg-12 grid-margin" id="contents" style="padding: 2%;">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <% } %>
+                          <button type="button" class="btn btn-secondary" onclick="back();">목록</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+
+<script>
+
+    $("document").ready(function() { 
+
+      if (getParameterByName("tab") != "") {
+        $("#tab").val(getParameterByName("tab"))
+      }
+
+      if ('<%= data[0].email_verified %>'  == 'N') {
+        document.getElementById('spinner').style.display = 'none';
+      }
+
+      var tab = '<%= tab %>' + '/';
+      $("#contents").load("/admin/user/" + tab + '<%= data[0].id %>' + '?pageNum=' + getParameterByName("pageNum"), function() {
+          document.getElementById('spinner').style.display = 'none';
+      });
+
+    });
+
+    function search(num) {
+
+      var tab = $("#tab").val();
+        var id = $("#id").val();
+
+        var url = "/admin/user/view/" + id + "?pageNum=" + num + "&tab=" + tab;
+  
+        window.location.href = url;        
+    }
+
+   
+    //레벨 변경
+    function changeLevel(id, level) {
+
+      var selLevel = $("#sel" + id).val();
+
+      if (selLevel == level) { return; }
+
+      var data = { 'level': selLevel };
+      data = JSON.stringify(data);
+
+      //content-type을 설정하고 데이터 송신
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/admin/user/changeLevel/' + id);
+      xhr.setRequestHeader('Content-type', "application/json");
+      xhr.send(data);
+
+      // 데이터 수신이 완료되면 표시
+      xhr.addEventListener('load', function(){
+        alert('완료되었습니다.');
+        location.reload(true);
+      });
+    }
+
+     function sendCoin(id) {
+
+      var coin = $("#coin" + id).val();
+      if (coin == "") {
+        alert("줄 코인 금액을 입력해 주세요");
+        return;
+      }
+
+      var data = { 'coin': coin };
+      data = JSON.stringify(data);
+
+      //content-type을 설정하고 데이터 송신
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/pass/sendBonusCoin/' + id + '/' + coin);
+      xhr.setRequestHeader('Content-type', "application/json");
+      xhr.send(data);
+
+      // 데이터 수신이 완료되면 표시
+      xhr.addEventListener('load', function(){
+        alert('완료되었습니다.');
+        location.reload(true);
+      });
+    }
+
+    function back() {
+      window.location.href = '/admin/user/all';
+    }
+
+     //상세보기
+     function openModal(id) {
+        var url = "/company/modalView/" + id;
+        var name = "view";
+        var option = "width = 1640, height = 758, top = 100, left = 150, location = no, scrollbars=1"
+        window.open(url, name, option);
+    }
+
+</script>
+<style>
+
+.spinner {
+      position: fixed;
+      z-index: 1031;
+      top: 50%;
+      left: 50%;
+  }
+
+  /* Pagnation */
+    .bd_pg{padding:24px 0;text-align:center}
+    .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
+    .bd_pg a{color:#558421;text-decoration:none !important}
+    .bd_pg .this,.bd_pg a:hover,.bd_pg a:focus{background:#F9F9F9;border-color:#AAA;color:#555}
+    .bd_pg .frst_last{color:#555}
+    .bd_pg .direction{margin:0 4px;color:#555;letter-spacing:0;font-weight:400}
+    .bd_pg strong.direction{color:#999}
+    .bd .bd_go_page{left:-47px;padding:8px 2px;border-color:#AAA;*vertical-align:top}
+    .bd_go_page .itx,.bd_go_page .bd_btn{height:24px;margin:0 6px;padding:2px 8px;text-align:center;vertical-align:middle}
+    .bd_go_page .itx{width:32px;padding:2px 8px}
+
+</style>
+
+</body>
+</html>

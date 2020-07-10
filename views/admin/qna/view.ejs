@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+
+
+
+    <link rel="stylesheet" href="/css/summernote.css">
+    <script src="/js/summernote-updated.min.js"></script>
+    <script src="/js/summernote-active.js"></script>
+</head>
+
+<body>
+    
+    <div class="container-scroller">
+        <%- include ('../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <form class="forms-sample" id="answerForm" name="answerForm" enctype="multipart/form-data">
+                          <input type="hidden" id="id" name="id" value="<%= data[0].id %>" >
+                          <input type="hidden" name="path" value="<%= path %>" >
+                          
+                          <table class="table table-bordered" style="table-layout: fixed;">
+                            <colgroup>
+                                <col style="width:10%;">
+                            </colgroup>
+                            <thead class="thead-default">
+                              <tr>
+                                <th>Date</th>
+                                <th><%= data[0].createdAt %></th>
+                              </tr>
+                              <tr>
+                                <th>E-mail</th>
+                                <th><%= data[0].email %></th>
+                              </tr>
+                            <tr>
+                              <th>Status</th>
+                              <th><% if (data[0].status == 0) { %> <label class="badge badge-info">Waiting</label> <% } %>
+                                <% if (data[0].status == 1) { %> <label class="badge badge-success">Complete</label> <% } %></th>
+                            </tr>
+                            <tr>
+                              <th>Type</th>
+                              <th>
+                                <% if (data[0].type == 1) { %> Pay for credit report ( <%= data[0].name_eng %> ) <% } %>
+                                <% if (data[0].type == 2) { %> Request to add New company <% } %>
+                                <% if (data[0].type == 3) { %> Request to modify existing company information ( <%= data[0].name_eng %> ) <% } %>
+                                <% if (data[0].type == 4) { %> Etc <% } %>
+                              </th>
+                            </tr>
+                            <tr>
+                              <th>Title</th>
+                              <th><%= data[0].title %></th>
+                            </tr>
+                            <tr>
+                              <th>Contents</th>
+                              <th><%= data[0].contents %></th>
+                            </tr>
+                            <% if (data[0].filename != '') { %>
+                              <tr>
+                                <th>File</th>
+                                <th><a href="/account/qna/download/<%= data[0].id %>"><%= data[0].filename %></a></th>
+                              </tr>
+                            <% } %>
+                            </thead>
+                        </table>
+                        <br><br>
+                        <p class="card-description">
+                          <strong>Answer</strong> 
+                        </p>
+                        <table class="table table-bordered" style="table-layout: fixed;">
+                          <colgroup>
+                            <col style="width:10%;">
+                        </colgroup>
+                          <thead class="thead-default">
+                          <tr>
+                            <th>Date</th>
+                            <th> <% if(answerdata != undefined) {%><%= answerdata[0].createdAt %><% } %></th>
+                          </tr>
+                          <tr>
+                            <th style="vertical-align: middle;">Title</th>
+                            <th>
+                              <% if(answerdata != undefined) {%>
+                              <input type="text" class="form-control" id="title" name="title" value="<%= answerdata[0].title %>">
+                              <% } else { %>
+                                <input type="text" class="form-control" id="title" name="title">
+                              <% } %>
+                            </th>
+                          </tr>
+                          <tr>
+                            <th colspan="2">
+                                <textarea name="contents" class="summernote" id="summernote"><% if(answerdata != undefined) {%><%- answerdata[0].contents %><% } %></textarea>
+                            </th>
+                          </tr>
+                          <tr>
+                            <th style="vertical-align: middle">File upload</th>
+                            <th>
+                              <div class="form-group">
+                              <input type="file" id="file_" name="file_" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                              <input type="text" id="info" class="form-control file-upload-info" disabled placeholder="Max File size: 3MB">
+                              <span class="input-group-append">
+                                <button class="file-upload-browse btn btn-warning" type="button">Upload</button>
+                              </span>
+                            </div>
+                            
+                          </div>
+                          <div id="fileList" style="display: contents;"><% if (answerdata != undefined) { %>
+                            <input type="hidden" name="filename" value="<%= answerdata[0].filename %>" >
+                            <input type="hidden" name="orgpath" value="<%= answerdata[0].path %>" >
+                          <span style="font-weight: 700; margin-right: 6px; margin-left: 6px;">
+                            <% if (answerdata[0].filename != '') { %>
+                            <a href="/admin/qna/download/<%= answerdata[0].id %>"><%= answerdata[0].filename %></a></span>
+                            <a style="color: lightskyblue; font-size: 21px; border: 0px;" href='javascript:delFile("<%= data[0].id %>", "<%= answerdata[0].path %>", "<%= answerdata[0].filename %>")'>
+                              <i class="fas fa-times"></i>
+                            </a><% }} %></div>
+                            </th>
+                          </tr>
+                          <!--<tr>
+                            <th style="vertical-align: middle">메일전송 여부</th>
+                            <th>
+                              <% if(answerdata != undefined) {%>
+                                <%= answerdata[0].sendYN %>
+                              <% } %>
+                            </th>
+                          </tr>-->
+                          </thead>
+                      </table>
+                      <br>
+                          <button type="button" class="btn btn-primary mr-2" onclick="mod();">답변 저장(수정)</button>
+                          <button type="button" class="btn btn-light" onclick="back();">목록</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+
+<script>
+
+    $("document").ready(function() { 
+      $('.summernote').summernote({
+             height: 300,                 // set editor height
+             minHeight: null,             // set minimum height of editor
+             maxHeight: null,             // set maximum height of editor
+             focus: true,
+             disableResizeEditor: true,   // disable resizing editor
+            fontSizes: ['12', '14', '17', '18', '24', '36', '48'],
+            toolbar: [
+            ['fontname', ['fontname']],
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['myvideo', 'link', 'table', 'hr']],
+            ['misc', ['fullscreen', 'undo', 'redo']]]
+     });
+     $('.note-editable').css("word-wrap","break-word");
+      //파일 형식 체크
+      $("form").on("change", ".file-upload-default", function(){ 
+
+          var fileext = $(this).val();
+          fileext = fileext.slice(fileext.indexOf(".") + 1);
+          fileext = fileext.toLowerCase();
+
+          // 사이즈체크
+            var maxSize  = 3 * 1024 * 1024    //3MB
+            var fileSize = 0;
+
+            // 브라우저 확인
+            var browser=navigator.appName;
+            
+            // 익스플로러일 경우
+            if (browser=="Microsoft Internet Explorer")
+            {
+              var oas = new ActiveXObject("Scripting.FileSystemObject");
+              fileSize = oas.getFile( file.value ).size;
+            }
+            // 익스플로러가 아닐경우
+            else
+            {
+              fileSize =  document.answerForm.file_.files[0].size;
+            }
+
+            if(fileSize > maxSize)
+            {
+                alert("Uploaded file size is too large (Max 3MB).");
+                $(this).parent(".form-control file-upload-info").attr("data-text", "");
+                $("#info").val("");
+                return;
+            }
+
+          $(this).parent(".form-control file-upload-info").attr("data-text", $(this).val().replace(/.*(\/|\\)/, '') );
+      });
+    });
+
+    //수정
+    function mod() {
+
+      var title = $("#title").val();
+      var summernote = $("#summernote").val();
+      
+      if (title == '') { 
+          alert("제목을 입력해 주세요!");
+          $("#title").focus();
+          return;
+      }
+      if (summernote == '') { 
+          alert("내용을 입력해 주세요!");
+          $("#summernote").focus();
+          return;
+      }
+
+      var form = $('#answerForm')[0];
+      var formData = new FormData(form);
+
+      $.ajax({
+          type: "POST",
+          enctype: 'multipart/form-data',
+          url: "/admin/qna/mod/" + $("#id").val(),
+          data: formData,
+          processData: false,
+          contentType: false,
+          cache: false,
+          success: function (data) {
+            
+            if (confirm('메일 전송도 하시겠습니까?')) {
+              sendMail(data.qnaId);
+            } else {
+              alert(data.msg);
+              window.location.href = '/admin/qna/qnaList'
+            }
+          },
+          error: function (e) {
+              alert("error!")
+          }
+      });
+    }
+
+    //메일 보내기
+    function sendMail(id) {
+
+      $.ajax({
+          type: "GET",
+          enctype: 'multipart/form-data',
+          url: "/admin/qna/sendMail/" + $("#id").val(),
+          processData: false,
+          contentType: false,
+          cache: false,
+          success: function (data) {
+              alert('완료되었습니다.');
+              window.location.href = '/admin/qna/qnaList'
+          },
+          error: function (e) {
+              alert("error!")
+          }
+      });
+    }
+
+    //파일 삭제
+    function delFile(id, path, filename) {
+      
+      if (confirm('정말 파일 삭제하시겠습니까?')) {
+        $.ajax({
+              type: "POST",
+              url: "/admin/qna/delFile/" + id,
+              dataType: "json",
+              data: { path: path, filename: filename },
+              success: function (data) {
+                  $("#fileList").remove();
+              },
+              error: function (e) {
+                  console.log("ERROR : ", e);
+              }
+          });
+      }
+    }
+
+    function back() {
+      window.location.href = '/admin/qna/qnaList';
+    }
+
+</script>
+<style>
+
+  .dropdown-toggle::after {
+      border-left: 0.3em solid transparent;
+      content: none;
+  }
+  .note-popover .popover-content .dropdown-menu, .panel-heading.note-toolbar .dropdown-menu {
+      min-width: 190px;
+  }
+
+  .note-popover .popover-content .dropdown-menu, .panel-heading.note-toolbar .dropdown-menu a {
+      color: black;
+  }
+
+  .note-group-select-from-files {
+    display: none;
+  }
+
+  .caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid\9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+
+</style>
+</body>
+</html>

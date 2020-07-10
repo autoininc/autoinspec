@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../layout/head.ejs') -%>
+      <title>Help</title>
+    
+      <!-- CSS Files -->
+      <link href="/assets/css/about/full-width-pics.css" rel="stylesheet" />
+    
+      <!-- Libraries CSS Files -->
+      <link href="/assets/rapid/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+      <link href="/assets/rapid/lib/animate/animate.min.css" rel="stylesheet">
+      <link href="/assets/rapid/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+      <link href="/assets/rapid/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+      <link href="/assets/rapid/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    
+      <link href="/assets/rapid/css/style.css" rel="stylesheet">
+    
+</head>
+<body>
+ 
+ <%- include ('../layout/header.ejs') -%>
+ 
+    <!-- Header - set the background image for the header in the line below -->
+  <section class="py-5 bg-image-full" style="background-image: url('/img/server-autoinspec.jpg');">
+    <!-- Put anything you want here! There is just a spacer below for demo purposes! -->
+    <div style="height: 200px;"></div>
+  </section>
+
+  <!-- Content section -->
+  <section class="py-5">
+
+    <!--==========================
+      Frequently Asked Questions Section
+    ============================-->
+    <section id="faq">
+      <div class="container">
+        <header class="section-header">
+          <h3>FAQ</h3>
+          <p></p>
+        </header>
+
+        <ul id="faq-list" class="wow fadeInUp">
+          <%  if (list.length > 0) { %> 
+           <% for(let i=0; i<list.length; i++) {  %> 
+            <li>
+              <a data-toggle="collapse" class="collapsed" href="#faq<%= i %>"><%= list[i].title %>
+                <i class="ion-android-remove"></i></a>
+              <div id="faq<%= i %>" class="collapse" data-parent="#faq-list">
+                <p>
+                  <%- list[i].contents %>
+                </p>
+              </div>
+            </li>            
+            <%  }}  %>
+
+        </ul>
+      </div>
+    </section><!-- #faq -->
+  </section>
+
+
+  </section>
+
+ 
+    <%- include ('../layout/footer.ejs') -%>
+ 
+</body>
+<style>
+    body,
+    ul,
+    ul li {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul li {
+      list-style: none;
+    }
+
+    #header,
+    #footer {
+      padding: 0;
+    }
+  </style>
+</html>

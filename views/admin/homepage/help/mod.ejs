@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../../layout/head.ejs') -%>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+</head>
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>Help 관리</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">등록폼</h4>
+                        <form class="forms-sample" id="addForm">
+                            <input type="hidden" id="id" value="<%= data[0].id %>">
+                          <div class="form-group">
+                            <label for="exampleInputName1">제목</label>
+                            <input type="text" class="form-control" id="title" value="<%= data[0].title %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">내용</label>
+                            <textarea class="form-control" id="contents" rows="3">
+                                <%= data[0].contents %>
+                            </textarea>
+                          </div>
+                          <button type="button" class="btn btn-primary mr-2" onclick="mod();">수정</button>
+                          <button type="button" class="btn btn-light" onclick="location.href='/admin/homepage/help'">목록</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+    <script>
+
+    function mod() {
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/homepage/help/mod/" + $("#id").val(),
+            dataType: "json",
+            data: {title: $("#title").val(), contents: $("#contents").val()},
+            success: function (data) {
+                window.location.href = '/admin/homepage/help'
+            },
+            error: function (e) {
+                alert("빠진거 없는지 확인 부탁!")
+            }
+        });
+        
+    }
+     
+    </script>
+
+</body>
+</html>

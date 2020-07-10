@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../layout/head.ejs') -%>
+</head>
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <%- include ('../layout/side.ejs') -%>
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>Wire Transfer 데이터 관리</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <form class="forms-sample" id="addForm" enctype="multipart/form-data">
+                          <div class="form-group">
+                            <label for="exampleInputName1">Company Address</label>
+                            <input type="text" class="form-control" id="companyAddress" name="companyAddress" 
+                                value= '<%= data[0].companyAddress %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">Beneficiary</label>
+                            <input type="text" class="form-control" id="beneficiary" name="beneficiary" 
+                                value= '<%= data[0].beneficiary %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">Bank</label>
+                            <input type="text" class="form-control" id="bank" name="bank" 
+                                value= '<%= data[0].bank %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">Account No.</label>
+                            <input type="text" class="form-control" id="accountNo" name="accountNo" 
+                                value= '<%= data[0].accountNo %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">Swift Code</label>
+                            <input type="text" class="form-control" id="swiftCode" name="swiftCode" 
+                                value= '<%= data[0].swiftCode %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">Bank Telephone</label>
+                            <input type="text" class="form-control" id="bankTelephone" name="bankTelephone" 
+                                value= '<%= data[0].bankTelephone %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">Bank Address</label>
+                            <input type="text" class="form-control" id="bankAddress" name="bankAddress" 
+                                value= '<%= data[0].bankAddress %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">Others Beneficiary Telephone</label>
+                            <input type="text" class="form-control" id="othersBeneficiaryTel" name="othersBeneficiaryTel" 
+                                value= '<%= data[0].othersBeneficiaryTel %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">Beneficiary Address</label>
+                            <input type="text" class="form-control" id="beneficiaryAddress" name="beneficiaryAddress" 
+                                value= '<%= data[0].beneficiaryAddress %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputName1">Branch Of Bank</label>
+                            <input type="text" class="form-control" id="branchOfBank" name="branchOfBank" 
+                                value= '<%= data[0].branchOfBank %>'> 
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Note 1 </label>
+                            <textarea class="form-control" id="note1" name="note1" rows="8"><%= convert(data[0].note1) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Note 2 </label>
+                            <textarea class="form-control" id="note2" name="note2" rows="8"><%= convert(data[0].note2) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Note 3 </label>
+                            <textarea class="form-control" id="note3" name="note3" rows="8"><%= convert(data[0].note3) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Note 4 </label>
+                            <textarea class="form-control" id="note4" name="note4" rows="8"><%= convert(data[0].note4) %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Note 5 </label>
+                            <textarea class="form-control" id="note5" name="note5" rows="8"><%= convert(data[0].note5) %></textarea>
+                          </div>
+                          
+                          <button type="button" class="btn btn-primary mr-2" onclick="mod();">수정</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+    <script>
+
+    $("document").ready(function() { 
+      
+    });
+
+    function mod() {
+ 
+      var note1 = $("#note1").val().replace(/\n/g, "<br>");
+      var note2 = $("#note2").val().replace(/\n/g, "<br>");
+      var note3 = $("#note3").val().replace(/\n/g, "<br>");
+      var note4 = $("#note4").val().replace(/\n/g, "<br>");
+      var note5 = $("#note5").val().replace(/\n/g, "<br>");
+
+      $.ajax({
+          type: "POST",
+          url: '/admin/payment/modWireTransfer_setting',
+          dataType: "json",
+          data: {companyAddress: $("#companyAddress").val(), beneficiary: $("#beneficiary").val(), bank: $("#bank").val(), accountNo: $("#accountNo").val(), swiftCode: $("#swiftCode").val(),
+            bankTelephone: $("#bankTelephone").val(), bankAddress: $("#bankAddress").val(), othersBeneficiaryTel: $("#othersBeneficiaryTel").val(), beneficiaryAddress: $("#beneficiaryAddress").val(),
+            branchOfBank: $("#branchOfBank").val(), note1: note1, note2: note2, note3: note3, note4: note4, note5: note5},
+          success: function (data) {
+              alert(data.msg);
+              window.location.href = '/admin/payment/wireTransfer_setting'
+          },
+          error: function (e) {
+              console.log("ERROR : ", e);
+          }
+      });
+      }
+    </script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+  <head>
+    <%- include ('../layout/head.ejs') -%>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link href="/css/membership.css" rel="stylesheet" />
+    <script src="https://unpkg.com/gauge-chart@latest/dist/bundle.js"></script> 
+  </head>
+
+<body>
+
+  <div class="container-scroller">
+    <%- include ('../layout/header.ejs') -%>
+        <!-- partial -->
+          <div class="spinner-border text-primary spinner" role="status" id="spinner">
+          </div>
+        
+
+        <div class="container-fluid page-body-wrapper">
+          
+          <div class="main-panel">
+            <div id="detail" class="content-wrapper" style="padding-left: 15px; padding-right: 15px; background-color: #f0f3f6; display: none;">
+                <input type="hidden" id="id" value="<%= model.company.id %>">
+                <input type="hidden" id="sel-currency-id" value="">
+                <input type="hidden" id="currency-id" value="<%= model.currency.id %>">
+                <input type="hidden" id="currency-code" value="<%= model.currency.code %>">
+                <input type="hidden" id="currency-symbolNative" value="<%= model.currency.symbolNative %>">
+                <input type="hidden" id="currency-decimalPlaces" value="<%= model.currency.decimalPlaces %>">
+                <input type="hidden" id="currency-value" value="<%= model.currency.value %>">
+                <input type="hidden" id="currency-unit" value="<%= model.currency.unit %>">
+                <input type="hidden" id=coin name="coin" value="<%= model.coin %>">
+                <input type="hidden" id="subscription_member" value="<%= model.subscription_member %>">
+            
+                <% if (userObj) { %>
+                <div class="modal fade bd-example-modal-lg" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <input type="hidden" id="companyId" value="<%= model.company.id %>">
+                      <input type="hidden" id="typeR" value="1">
+                      <input type="hidden" id="usingCoin" name="usingCoin" value="">
+                      <div class="modal-header">
+                        <h3 class="modal-title" id="exampleModalLabel"><strong>Pay for a credit report (<%= model.company.name_eng %>)</strong>
+                          <br><strong><span class="text-danger" style="font-size: 15px;">** This report is provided by NICE Information Service Co., Ltd.</span></strong></h3>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form id="modalForm" name="modalForm">
+                          <p class="form-text text-primary font-weight-bold" style="color: #46516d !important;
+                          font-size: 23px;">Purchase information</p>
+                          <table class="table" id="purchase-charge-table">
+                            <colgroup>
+                                <col style="width:25%;">
+                                <col>
+                            </colgroup>
+                            <thead class="thead-default">
+                            <tr>
+                                <th style="vertical-align: inherit;
+                                text-align: center;">E-mail<span class="text-danger">*</span></th>
+                                <th><input type="text" class="form-control" id="email" value="<%= userObj.email %>"></th>
+                            </tr>
+                            <tr>
+                              <th></th>
+                              <th><div class="col-md-8 d-flex align-items-center">
+                                <div class="d-flex flex-row align-items-center">
+                                  <i class="mdi mdi-checkbox-blank-circle icon-md text-danger"></i>
+                                  <p class="mb-0 ml-1" style="font-size: 19px;
+                                  font-weight: 700;">
+                                    Basic member 30 Coins
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="col-md-8 d-flex align-items-center">
+                                <div class="d-flex flex-row align-items-center">
+                                  <i class="mdi mdi-checkbox-marked-circle icon-md text-danger"></i>
+                                  <p class="mb-0 ml-1" style="font-size: 19px;
+                                  font-weight: 700;">
+                                    Subscription member 21 Coins
+                                  </p>
+                                </div>
+                              </div></th>
+                            </tr>
+                            </thead>
+                        </table>
+
+                        <BR><BR><BR>
+                        <table class="table" id="purchase-charge-table" style="border: 1px solid #f1f6f8;">
+                            <colgroup>
+                                <col style="width:33%;">
+                                <col style="width:34%;">
+                                <col style="width:33%;">
+                            </colgroup>
+                            <thead class="thead-default">
+                            <tr style="background-color: #46516d; color:whitesmoke">
+                                <th class="text-center" style="border: 1px solid #f1f6f8;">Available coin</th>
+                                <th></th>
+                                <th class="text-center" style="border: 1px solid #f1f6f8;">Remaining coin</th>
+                            </tr>
+                            </thead>
+                            <tbody style="border: 1px solid #f1f6f8;">
+                            <tr>
+                                <td class="text-center" style="border: 1px solid #f1f6f8;" data-value="0"><span id="point"><%= model.coin %></span></td>
+                                <td class="text-center text-primary" data-value="1">-<span id="using"></span></td>
+                                <td class="text-center" style="border: 1px solid #f1f6f8;"><span id="r_c"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                             <div class="alert alert-secondary" id="purchase-lack-coin" data-gtm-vis-recent-on-screen-10067355_102="4852" data-gtm-vis-first-on-screen-10067355_102="4852" data-gtm-vis-total-visible-time-10067355_102="100" data-gtm-vis-has-fired-10067355_102="1">
+                                <div class="mb-2">
+                                    You don't have enough of coin. Do you want to move the coin Filling page?  </div>
+                                <button type="button" class="btn btn-secondary" onclick="payment();">fill coin</button>
+                            </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="creditReportSubmitBtn" class="btn btn-primary" onclick="requestCreditReport();">Submit</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% } %>
+                  <div class="row col-md-12 grid-margin" style="padding-right: 0;">
+                    <div class="col-sm-11 text-center">
+                        <div>
+                          <h2 class="text-dark font-weight-bold mb-2"><%= model.company.name_eng %></h2>
+                          <span class="font-weight-normal mb-2" style="font-size: 17.4px;"><% if (model.company.updatedAt != '') { %>(Updated date: <%= moment.utc(model.company.updatedAt).local().format('YYYY-MM-DD HH:mm') %>)<% } %></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                          <select name="sel_currency" class="form-control" id="sel_currency" onchange="changeCurrency();">
+                            <% if (model.currencies) { %>
+                              <% if (model.currencies.length > 0) { %> 
+                                 <% for(let i=0; i<model.currencies.length; i++) { %> 
+                                   <option id=<%=model.currencies[i].id %> value=<%=model.currencies[i].id %> data-id="<%=model.currencies[i].id %>" data-value="<%=model.currencies[i].value %>" data-code="<%=model.currencies[i].code %>" data-symbolNative="<%=model.currencies[i].symbolNative %>" data-decimalPlaces="<%=model.currencies[i].decimalPlaces %>" data-unit="<%=model.currencies[i].unit %>"> 
+                                      <%=model.currencies[i].symbolNative %> Currency
+                                    </option>                 
+                                 <%  } } }  %>
+                          </select>
+                    </div>
+                </div>
+            
+
+            <!-- <div class="col-md-8 offset-md-2 grid-margin stretch-card"> -->
+              <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                    <div class="detail-company">
+                        <!-- business_nature, product_group, category -->
+                            <div class="row">
+                              <div class="detail-company-item col-12">
+                                <span class="detail-company-label">
+                                  <b>Business Nature&nbsp;</b>
+                                </span> 
+                                  <% if (model.business_nature.length > 0) { %> 
+                                    <% for(let i=0; i<model.business_nature.length; i++) {  
+                                    %> 
+                                    <label class="badge badge2 badge-light"><%= model.business_nature[i] %></label>
+                                    
+                                <% }} %>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="detail-company-item col-12"><span class="detail-company-label"><b>Product Group &nbsp;</b></span> 
+                                <% if (model.product_group.length > 0) { %> 
+                                  <% for(let i=0; i<model.product_group.length; i++) {  
+                                  %> 
+                                  <label class="badge badge2 badge-light"><%= model.product_group[i] %></label>
+                                  
+                              <% }} %>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="detail-company-item col-12"><span class="detail-company-label"><b>Category &nbsp;</b></span> 
+                                <% if (model.categoryList.length > 0) { %> 
+                                  <% for(let i=0; i<model.categoryList.length; i++) {  
+                                  %> 
+                                  <label class="badge badge2 badge-dark"><%= model.categoryList[i] %></label>&nbsp;
+                              <% }} %>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- overview -->
+                <!-- <div class="col-md-8 offset-md-2 grid-margin stretch-card"> -->
+                  <div class="col-md-12 grid-margin stretch-card">
+                  <div class="card sale-diffrence-border">
+                    <div class="card-body">
+                        <div class="detail-company">
+                            <!-- 상단  대표자, 설립년도, 직원수, 대표전화, 팩스, 주소, 주요제품-->
+                                <div class="row">
+                                  <div class="detail-company-item col-6"><span class="detail-company-label"><b>CEO </b></span> <%= model.company.ceo %></div>
+                                  <div class="detail-company-item col-6"><span class="detail-company-label"><b>Established </b></span> <%= model.company.established %></div>
+                                </div>
+                                <div class="row">
+                                  <div class="detail-company-item col-12"><span class="detail-company-label"><b>Number Of Employees </b></span> <%= model.company.NoOfEmployees %></div>
+                                </div>
+                                <div class="row">
+                                  <div class="detail-company-item col-6"><span class="detail-company-label"><b>Fax </b></span> <%= model.company.fax %></div>
+                                  <div class="detail-company-item col-6"><span class="detail-company-label"><b>Tel. </b></span> <%= model.company.headOfficeNumber %></div>
+                                </div>
+                                <div class="row">
+                                  <div class="detail-company-item col-12"><span class="detail-company-label"><b>Address </b></span> <%= model.company.address %></div>
+                                </div>
+                                <div class="row">
+                                  <div class="detail-company-item col-12"><span class="detail-company-label"><b>Main Product </b></span> <%= model.company.main_product %></div>
+                                </div>
+                                <% var isExist = false; %> 
+                                <% if (model.fieldList.length > 0) { %> 
+                                  <% for(let i=0; i<model.fieldList.length; i++) { %> 
+                                    <div class="row"><div class="detail-company-item col-12"><span class="detail-company-label"><b><%=model.fieldList[i].name_eng %> </b></span>
+                                          <% if (model.subList.length > 0) { %> 
+                                            <% for(let j=0; j<model.subList.length; j++) { %>
+                                                <% if (model.fieldList[i].id == model.subList[j].field_id) {   %> 
+                                                  <% if (model.subList[j].value_ != '') { %><%=model.subList[j].value_ %><% } else { %> &nbsp;&nbsp;- <% } isExist = true; %> 
+                                                <% } %> 
+                                         <% } } if (!isExist) { %> &nbsp;&nbsp;- <% } isExist = false; %>
+                                        </div> </div>
+                              <% } } %> 
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                  <div class="col-md-12 detail-item chart-wrap"></div>
+                  <% if (model.company.detailYN == 'Y') { %> 
+                  <div class="col-md-12 grid-margin stretch-card">
+                      <div class="col-sm-6 mb-4 mb-xl-0">
+                      </div>
+                        <div class="col-sm-6">
+                          <div class="d-flex align-items-center justify-content-md-end">
+                            <div class="pr-1 mb-3 mb-xl-0" style="margin-right: 1rem;">
+                              <strong>Do you want to a credit report?</strong>
+                            </div>
+                            <div class="pr-1 mb-3 mb-xl-0">
+                              <button type="button" class="btn btn-outline-inverse-info btn-icon-text" onclick="creditReportBtn();">
+                                Pay for a credit report
+                                <i class="mdi mdi-file-document btn-icon-append"></i>                          
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                  </div>
+                  <% } %>
+                    <div id="detail_"></div>
+                    <% if (model.company.detailYN == 'Y') { %> 
+                        <div id="detail_C"></div>
+                      <% } %>
+            </div>
+          </div>
+        </div>
+          <%- include ('../layout/footer.ejs') -%>
+        </div>
+<script>
+
+    $("document").ready(function() { 
+
+      //history.replaceState({}, null, location.pathname);
+
+      var auth_rm = '<%= model.auth_rm %>';
+      var auth_component = '<%= model.auth_component %>';
+      var detailYN = '<%= model.company.detailYN %>';
+
+      //통화 설정
+      $("#sel_currency").val($("#currency-id").val())
+      history.replaceState({}, null, location.pathname);
+
+      //나라 상세보기 여부 Y면
+      if(detailYN == 'Y') {
+
+        //모두 보기 가능하면
+        if(auth_rm == "true" && auth_component == "true") {
+            $("#detail_").load("/company/detail_pay/" + '<%= model.company.id %>' + "/" + '<%= model.currency.id %>', function() {
+              $("#detail_C").load("/company/detailC_pay/" + '<%= model.company.id %>' + "/" + '<%= model.currency.id %>', function() {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('detail').style.display = 'block';
+            });
+            });
+            
+        }
+
+         //모두 보기 불가능하면
+        if(auth_rm == "false" && auth_component == "false") {
+            $("#detail_").load("/company/detail_before_/" + '<%= model.company.id %>' + '/' + detailYN + '/' + auth_rm + '/' + auth_component, function() {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('detail').style.display = 'block';
+            });
+        }
+
+        //detail data만 보기 가능하면
+        if(auth_rm == "true" && auth_component == "false") {
+            $("#detail_").load("/company/detail_pay/" + '<%= model.company.id %>' + "/" + '<%= model.currency.id %>', function() {
+              $("#detail_C").load("/company/detail_before_/" + '<%= model.company.id %>' + '/' + detailYN + '/' + auth_rm + '/' + auth_component, function() {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('detail').style.display = 'block';
+            });
+            });
+            
+        }
+
+        //component data만 보기 가능하면
+        if(auth_rm == "false" && auth_component == "true") {
+          
+            $("#detail_").load("/company/detail_before_/" + '<%= model.company.id %>' + '/' + detailYN + '/' + auth_rm + '/' + auth_component, function() {
+              $("#detail_C").load("/company/detailC_pay/" + '<%= model.company.id %>', function() {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('detail').style.display = 'block';
+              });
+            });
+            
+        }
+
+      //상세보기 N인 나라
+      } else {
+        if(auth_rm == "true") {
+            $("#detail_").load("/company/detailN_pay/" + '<%= model.company.id %>', function() {
+              document.getElementById('spinner').style.display = 'none';
+              document.getElementById('detail').style.display = 'block';
+            });
+          } else {
+              $("#detail_").load("/company/detail_before_/" + '<%= model.company.id %>' + '/' + detailYN + '/' + auth_rm + '/' + auth_component, function() {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('detail').style.display = 'block';
+              });
+          }
+      }
+
+    });
+
+    function changeCurrency() {
+      if ('<%= model.currency.id %>' == $("#sel_currency option:selected").data("id")) {
+        return;
+      }
+
+        $("#sel-currency-id").val($("#sel_currency option:selected").data("id"))
+        window.location.href = '/company/detail/' + '<%= model.company.id %>' + "?sel_currency_id=" + $("#sel-currency-id").val(); 
+    }
+
+    function creditReportBtn() {
+
+      $.ajax({
+          type: "POST",
+          url: "/user/loginCheck",
+          dataType: "json",
+          data: {url: '/company/detail/' + $("#id").val()},
+          success: function (data) {
+            var total = 0;
+
+              if(data.result) {
+                if ($("#subscription_member").val()) {
+                  total = 21;
+                } else {
+                  total = 30;
+                }
+
+                var caltot = parseInt($("#coin").val()) - total; 
+                $("#r_c").text(caltot);
+                $("#using").text( '' + total);
+                $("#usingCoin").val(total);
+
+                if (caltot < 0) {
+                    document.getElementById("purchase-lack-coin").style.display = "block";
+                    document.getElementById("creditReportSubmitBtn").style.display = "none";
+                    
+                } else {
+                    document.getElementById("purchase-lack-coin").style.display = "none";
+                    document.getElementById("creditReportSubmitBtn").style.display = "inline";
+                }
+                $('#reportModal').modal('show')
+              } else {
+                if (confirm('Sign in is required. You will be moved to sign in page.')) {
+                  window.location.href = data.fullUrl;
+                }
+              }
+          },
+          error: function (e) {
+              alert(e.responseJSON.msg)
+          }
+      });
+    }
+
+    //결제창 열기
+  function payment() {
+
+    var frm = document.modalForm;
+    var url    = "/pass/selMethod_coin" ;
+    var title  = "AUTOINPEC" ;
+    var status = "width = 710, height = 800, top = 100, left = 200, location = no" ;
+    window.open("", title,status); 
+                                              
+    frm.target = title;                   
+    frm.action = url;                    
+    frm.method = "post";
+    frm.submit();  
+  }
+
+    function requestCreditReport() {
+
+      var email = $("#email").val();
+      if (email == '') { 
+          alert("Please provide a valid Email!");
+          $("#email").focus();
+          return;
+      }
+
+        $.ajax({
+            type: "POST",
+            url: "/pass/useCoin",
+            dataType: "json",
+            data: {companyId: $("#companyId").val(), coin: $("#usingCoin").val(), typeR: $("#typeR").val(), email: $("#email").val() },
+            success: function (data) {
+                alert(data.msg);
+                $("#reportModal").modal('hide');
+                window.location.href = '/company/detail/' + $("#companyId").val();
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+</script>
+ 
+<style>
+
+.spinner {
+    position: fixed;
+    z-index: 1031;
+    top: 50%;
+    left: 50%;
+  }
+
+.detail-content {
+    table-layout: fixed;
+  }
+
+  .detail-content .detail-tab .table {
+    table-layout: fixed;
+  }
+
+  .detail-content .detail-tab-item {
+    border: 1px solid #eee;
+    text-align: center;
+    padding: 15px 0;
+    background-color: #fbfbfb;
+    cursor: pointer;
+  }
+
+  .detail-content .detail-tab-item .current {
+    background-color: #fff;
+    color: #317376;
+    font-weight: 600;
+  }
+
+  .detail-company .detail-company-item {
+    width: 350px;
+    float: left;
+    font-size: 20px;
+    color: #333;
+    line-height: 1.2;
+    margin-top: 8px;
+  }
+
+  .detail-company .detail-company-item .detail-company-label {
+    color: #666;
+    display: inline-block;
+    width: 210px;
+  }
+
+  .detail-company .detail-company-item .right-lab {
+    width: 500px;
+  }
+
+  .credit-bd {
+    border: solid #f8f9fa;
+    padding: 1.5rem;
+    margin-right: 0;
+    margin-left: 0;
+    border-width: .2rem;
+  }
+
+  .chart-wrap {
+    *zoom: 1;
+    padding-bottom: 35px;
+    margin-bottom: 20px;
+    border-top: 1px dashed #999;
+    margin-top: -1px;
+  }
+
+  .chart-title {
+    padding: 25px 0 25px 25px;
+    font-size: 18px;
+  }
+
+  .detail-bench-wrap {
+    position: relative;
+  }
+
+  .detail-bench-item {
+    position: relative;
+  }
+
+  .detail-bench-wrap.bench-2 .detail-bench-item {
+    position: relative;
+    width: 240px;
+    float: left;
+    margin-left: 155px;
+    margin-bottom: 80px;
+  }
+
+  .badge2 {
+    white-space: normal;
+    text-align: inherit;
+  }
+
+    
+    </style>
+</body>
+</html>

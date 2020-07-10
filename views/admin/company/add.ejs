@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>    
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/bootstrap-tagsinput.css">
+    <script src="/assets/js/bootstrap-tagsinput.min.js"></script>
+
+    <link rel="stylesheet" href="/css/pqgrid.min.css" />
+    <script src="/js/pqgrid.min.js"></script>
+    <link rel="stylesheet" href="/css/pqgrid.css" />
+
+</head>
+
+<body>
+
+    <div class="container-scroller">
+        <!-- partial:../../partials/_navbar.html -->
+        <%- include ('../layout/header.ejs') -%>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:../../partials/_sidebar.html -->
+          <%- include ('../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">        
+            <div class="content-wrapper">
+              <div class="spinner-border text-primary spinner" role="status" id="spinner" style="display: none;"></div>
+            <div class="row">
+                <div class="col-md-12 grid-margin">
+                    <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                        <div class="mr-md-3 mr-xl-5">
+                        <h2>업체 등록</h2>
+                        <!-- <p class="mb-md-0">Your analytics dashboard template.</p> -->
+                        </div>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group mr-2">
+                              <button type="button" class="btn btn-sm btn-secondary" onclick="add();">등록</button>
+                            </div>
+                          </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <form id="addForm" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                            <div class="form-group">
+                                <label for="countrySelect">국가</label>
+                                <select name="country_id" size="1" class="form-control" id="countryCd">
+                                    <option value="">Country</option>
+                                    <%         
+                                        if (model.countriesList.length > 0) { %> 
+                                        <% for(let i=0; i<model.countriesList.length; i++) {        
+                                    %> 
+                                    <option id=<%=model.countriesList[i].id %> value=<%=model.countriesList[i].id %>><%=model.countriesList[i].country_name %></option>                 
+                                    <%  }}  %>
+                                  </select>
+                            </div>
+                      </div>
+                    </div>
+                  </div>
+                <div class="col-md-6 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Business Nature</h4>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="1" name="business_nature[]">
+                                      Manufacturer
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="2" name="business_nature[]">
+                                      Dealer, agent, distributor, wholesaler
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="3" name="business_nature[]">
+                                      Retailer
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="4" name="business_nature[]">
+                                      Service supplier(Auto refitter / tuner / garage / workshop)
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="5" name="business_nature[]">
+                                      Private & official fleetts
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="6" name="business_nature[]">
+                                      Trade associations/government agencies
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="7" name="business_nature[]">
+                                      Publisher
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="8" name="business_nature[]">
+                                      Research institutions / universities / polytechnic
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="9" name="business_nature[]">
+                                      Others
+                                    <i class="input-helper"></i></label>
+                                  </div> 
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Product group</h4>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="1" name="product_group[]">
+                                      Commercial Vehicle
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="2" name="product_group[]">
+                                      Passenger Vehicle
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="3" name="product_group[]">
+                                      OEM
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                                  <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="4" name="product_group[]">
+                                      Aftermarket
+                                    <i class="input-helper"></i></label>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                <!-- 카테고리 -->
+                <div class="col-md-6 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">카테고리</h4>
+                      
+                      <div class="forms-sample">
+                        <div class="form-group">
+                          <input class="form-control" id="categoryText" name="categoryText" placeholder="Category"/>
+                        </div>
+                        
+                        <div class="lbjs-list" style="height: 246px; " id="list">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                            <div><p style="text-decoration: underline;">카테고리 Tags</p></div>
+                            <input type="text" id="categoryTags" value="" data-role="tagsinput" readonly/>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 카테고리 -->
+
+                <!-- overview -->
+                <div class="col-md-6 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="forms-sample">
+                        <div class="row">
+                          <div class="col-md-6">
+                              <div class="form-group row">
+                              <label class="col-sm-3 col-form-label">업체명(eng)</label>
+                              <div class="col-sm-9">
+                                  <input type="text" id="name_eng" name="name_eng" class="form-control">
+                              </div>
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                              <div class="form-group row">
+                              <label class="col-sm-3 col-form-label">업체명(kor)</label>
+                              <div class="col-sm-9">
+                                  <input type="text" id="name_kor" name="name_kor" class="form-control">
+                              </div>
+                              </div>
+                          </div>
+                      </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">CEO</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="ceo" name="ceo" class="form-control">
+                                </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">설립일자</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="established" name="established" class="form-control">
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">종업원수</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="NoOfEmployees" id="NoOfEmployees" name="NoOfEmployees" class="form-control">
+                                </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">사업자번호</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="brn" name="brn" class="form-control">
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="exampleInputUsername2" class="col-sm-2 col-form-label">주소</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="address" name="address">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">대표번호</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="headOfficeNumber" name="headOfficeNumber" class="form-control">
+                                </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">팩스</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="fax" name="fax" class="form-control">
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">이메일</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="email" name="email" class="form-control">
+                                </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">홈페이지</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="website" name="website" class="form-control">
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="exampleInputUsername2" class="col-sm-2 col-form-label">주요제품</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="main_product" name="main_product">
+                            </div>
+                        </div>
+                          
+                        <% if (model.fieldList.length > 0) { %> 
+                          <% for(let i=0; i<model.fieldList.length; i++) {  
+                      %> 
+                      <div class="form-group row">
+                          <label for="exampleInputUsername2" class="col-sm-2 col-form-label"><%= model.fieldList[i].name_kor %></label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" id="<%=model.fieldList[i].field_code %>" name="<%=model.fieldList[i].field_code %>">
+                          </div>
+                      </div>
+                  <% }
+                      } %> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">등급 현황</h4>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="creditRating0" value="" name="creditRating">
+                        <label class="custom-control-label" for="creditRating0">not selected</label>
+                      </div>
+
+                        <% if (model.ratingList.length > 0) { %> 
+                        <% for(let i=0; i<model.ratingList.length; i++) { %> 
+                            <% if (model.ratingList[i].type == 1) { %> 
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="creditRating<%= i + 1 %>" value="<%=model.ratingList[i].id %>" name="creditRating">
+                            <label class="custom-control-label" for="creditRating<%= i + 1 %>"><%=model.ratingList[i].name %> <% if(model.ratingList[i].subname != '') { %> (<%=model.ratingList[i].subname %>) <% } %></label>
+                        </div>
+                        
+                        <% }}} %> 
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">현금 흐름 등급</h4>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="cashFlowRating0" value="" name="cashFlowRating">
+                        <label class="custom-control-label" for="cashFlowRating0">not selected</label>
+                    </div>
+
+                    <% if (model.ratingList.length > 0) { %> 
+                        <% for(let i=0; i<model.ratingList.length; i++) { %> 
+                            <% if (model.ratingList[i].type == 2) { %> 
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="cashFlowRating<%= i + 1 %>" value="<%=model.ratingList[i].id %>" name="cashFlowRating">
+                            <label class="custom-control-label" for="cashFlowRating<%= i + 1 %>"><%=model.ratingList[i].name %> <% if(model.ratingList[i].subname != '') { %> (<%=model.ratingList[i].subname %>) <% } %></label>
+                        </div>
+                        
+                        <% }}} %>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Watch 등급</h4>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="watchRating0" value="" name="watchRating">
+                        <label class="custom-control-label" for="watchRating0">not selected</label>
+                    </div>
+                    <% if (model.ratingList.length > 0) { %> 
+                        <% for(let i=0; i<model.ratingList.length; i++) { %> 
+                            <% if (model.ratingList[i].type == 3) { %> 
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="watchRating<%= i + 1 %>" value="<%=model.ratingList[i].id %>" name="watchRating">
+                            <label class="custom-control-label" for="watchRating<%= i + 1 %>"><%=model.ratingList[i].name %> <% if(model.ratingList[i].subname != '') { %> (<%=model.ratingList[i].subname %>) <% } %></label>
+                        </div>
+                        
+                        <% }}} %>
+                  </div>
+                </div>
+              </div>
+
+                <!-- 주요 주주 현황 -->
+                <div class="col-md-5 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                        <!-- <div id="ms" style="z-index: 999;"></div> -->
+                        <h4 class="card-title">주요 주주 현황(Major Shareholders)</h4>
+                        <div class="row"> 
+                            <div class="col-md-10 grid-margin">
+                                <textarea class="form-control" id="ms-data"></textarea>
+                            </div>
+                            <div class="col-md-2 grid-margin">
+                                <button type="button" class="btn btn-warning" onclick="write_row('ms', 3);">쓰기</button>
+                            </div>
+                        </div>
+                        <div class="table-content">
+                      <div class="form-group" style="margin-bottom: 7px;"> 
+                            <button type="button" class="btn toolbtn btn-primary" onclick="clear_row('ms');">clear</button>
+                        </div>
+                        <div class="row"> 
+                            <div class="table-responsive" style="width: 744px; height: 350px; overflow: scroll;">
+                                <table class="table table_" id="ms-table">
+                                    <thead style="border: 1px solid #CCC; background-color: whitesmoke;">
+                                    <tr>
+                                        <th></th>
+                                        <th>대주주</th>
+                                        <th style="width: 25%;">주식주(천 주)</th>
+                                        <th style="width: 20%;">지분율</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="ms-tbody">
+                                    </tbody>
+                                </table> 
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-7 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">관계사 현황(Related Companies)</h4>
+                            <div class="row"> 
+                                <div class="col-md-10 grid-margin">
+                                    <textarea class="form-control" id="rc-data"></textarea>
+                                </div>
+                                <div class="col-md-2 grid-margin">
+                                    <button type="button" class="btn btn-warning" onclick="_write_company('rc', 3);">쓰기</button>
+                                </div>
+                            </div>
+                            <div class="table-content">
+                            <div class="form-group" style="margin-bottom: 7px;"> 
+                                <button type="button" class="btn toolbtn btn-primary" onclick="clear_row('rc');">clear</button>
+                            </div>
+                            <div class="row"> 
+                                <div class="table-responsive" style="width: 944px; height: 350px; overflow: scroll;">
+                                    <table class="table table_" id="rc-table">
+                                        <thead style="border: 1px solid #CCC; background-color: whitesmoke;">
+                                        <tr>
+                                            <th style="width: 10%;"></th>
+                                            <th>기업명</th>
+                                            <th>대표명</th>
+                                            <th style="width: 10%;">지분율</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="rc-tbody">
+                                        </tbody>
+                                    </table> 
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                      </div>
+                </div>
+
+                <div class="col-md-6 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">주요 매출처(Major Selling partner)</h4>
+                        <div class="row"> 
+                            <div class="col-md-10 grid-margin">
+                                <textarea class="form-control" id="msp-data"></textarea>
+                            </div>
+                            <div class="col-md-2 grid-margin">
+                                <button type="button" class="btn btn-warning" onclick="_write_company('msp', 8);">쓰기</button>
+                            </div>
+                        </div>
+                        <div class="table-content">
+                            <div class="form-group" style="margin-bottom: 7px;"> 
+                                <button type="button" class="btn toolbtn btn-primary" onclick="clear_row('msp');">clear</button>
+                            </div>                        
+                            <div class="row"> 
+                            <div style="width: 744px; height: 350px; overflow: scroll;">
+                                <table class="table table_" id="msp-table">
+                                    <thead style="border: 1px solid #CCC; background-color: whitesmoke;">
+                                    <tr>
+                                        <th></th>
+                                        <th>기업명</th>
+                                        <th>사업자번호</th>
+                                        <th>대표자명</th>
+                                        <th>추정거래비중</th>
+                                        <th>자산총계</th>
+                                        <th>부채총계</th>
+                                        <th>매출액</th>
+                                        <th>영업이익</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="msp-tbody">
+                                    </tbody>
+                                </table> 
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col-md-6 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">주요 매입처(Major Purchasing partner)</h4>
+                        <div class="row"> 
+                            <div class="col-md-10 grid-margin">
+                                <textarea class="form-control" id="mpp-data"></textarea>
+                            </div>
+                            <div class="col-md-2 grid-margin">
+                                <button type="button" class="btn btn-warning" onclick="_write_company('mpp', 8);">쓰기</button>
+                            </div>
+                        </div>
+                        <div class="table-content">
+                        <div class="form-group" style="margin-bottom: 7px;"> 
+                            <button type="button" class="btn toolbtn btn-primary" onclick="clear_row('mpp');">clear</button>
+                        </div>
+                        <div class="row"> 
+                            <div style="width: 744px; height: 350px; overflow: scroll;">
+                                <table class="table table_" id="mpp-table">
+                                    <thead style="border: 1px solid #CCC; background-color: whitesmoke;">
+                                    <tr>
+                                        <th></th>
+                                        <th>기업명</th>
+                                        <th>사업자번호</th>
+                                        <th>대표자명</th>
+                                        <th>추정거래비중</th>
+                                        <th>자산총계</th>
+                                        <th>부채총계</th>
+                                        <th>매출액</th>
+                                        <th>영업이익</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="mpp-tbody">
+                                    </tbody>
+                                </table> 
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="col-md-4 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">요약재무상태표(Summary statement of financial position)</h4>
+                                <div class="row"> 
+                                    <div class="col-md-10 grid-margin">
+                                        <textarea class="form-control" id="ssofp-data"></textarea>
+                                    </div>
+                                    <div class="col-md-2 grid-margin">
+                                        <button type="button" class="btn btn-warning" onclick="write_column('ssofp', 9);">쓰기</button>
+                                    </div>
+                                </div>
+                                <div class="table-content">
+                                <div class="form-group" style="margin-bottom: 7px;"> 
+                                    <button type="button" class="btn toolbtn btn-primary" onclick="clear_column('ssofp');">clear</button>
+                                    <button type="button" class="btn toolbtn btn-primary" onclick="reset_column('ssofp');">reset</button>
+                                </div>
+                                <div class="row"> 
+                                    <div style="width: 744px; height: 350px; overflow: scroll;">
+                                        <table class="table table_" id="ssofp-table">
+                                            <thead id="ssofp-thead">
+                                            <tr>
+                                                <th id="fix_ssofp"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="ssofp-tbody">
+                                                <tr id="fix_ssofp">
+                                                    <td id="fix_ssofp">유동자산</td>
+                                                </tr>
+                                                <tr id="fix_ssofp">
+                                                    <td id="fix_ssofp">비유동자산</td>
+                                                </tr>
+                                                <tr id="fix_ssofp">
+                                                    <td id="fix_ssofp">자산총계</td>
+                                                </tr>
+                                                <tr id="fix_ssofp">
+                                                    <td id="fix_ssofp">유동부채</td>
+                                                </tr>
+                                                <tr id="fix_ssofp">
+                                                    <td id="fix_ssofp">비유동부채</td>
+                                                </tr>
+                                                <tr id="fix_ssofp">
+                                                    <td id="fix_ssofp">부채총계</td>
+                                                </tr>
+                                                <tr id="fix_ssofp">
+                                                    <td id="fix_ssofp">자본금</td>
+                                                </tr>
+                                                <tr id="fix_ssofp">
+                                                    <td id="fix_ssofp">자본총계</td>
+                                                </tr>  
+                                            </tbody>
+                                        </table> 
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+                </div>
+                <div class="col-md-4 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">손익 계산서(condensed income statement"}</h4>
+                            <div class="row"> 
+                                <div class="col-md-10 grid-margin">
+                                    <textarea class="form-control" id="cis-data"></textarea>
+                                </div>
+                                <div class="col-md-2 grid-margin">
+                                    <button type="button" class="btn btn-warning" onclick="write_column('cis', 9);">쓰기</button>
+                                </div>
+                            </div>
+                            <div class="table-content">
+                                <div class="form-group" style="margin-bottom: 7px;"> 
+                                    <button type="button" class="btn toolbtn btn-primary" onclick="clear_column('cis');">clear</button>
+                                </div>
+                            <div class="row"> 
+                                <div style="width: 744px; height: 350px; overflow: scroll;">
+                                    <table class="table table_" id="cis-table">
+                                        <thead id="cis-thead">
+                                        <tr>
+                                            <th id="fix_cis"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="cis-tbody">
+                                            <tr id="fix_cis">
+                                                <td id="fix_cis">매출액</td>
+                                            </tr>
+                                            <tr id="fix_cis">
+                                                <td id="fix_cis">매출총이익</td>
+                                            </tr>
+                                            <tr id="fix_cis">
+                                                <td id="fix_cis">영업이익</td>
+                                            </tr>
+                                            <tr id="fix_cis">
+                                                <td id="fix_cis">영업외수익</td>
+                                            </tr>
+                                            <tr id="fix_cis">
+                                                <td id="fix_cis">영업외비용</td>
+                                            </tr>
+                                            <tr id="fix_cis">
+                                                <td id="fix_cis">법인세차감전이익</td>
+                                            </tr>
+                                            <tr id="fix_cis">
+                                                <td id="fix_cis">법인세비용</td>
+                                            </tr>
+                                            <tr id="fix_cis">
+                                                <td id="fix_cis">당기순이익</td>
+                                            </tr>  
+                                        </tbody>
+                                    </table> 
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </div>
+                </div>
+                <div class="col-md-4 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">요약 재무 비율(Summary financial ratio)</h4>
+                            <div class="row"> 
+                                <div class="col-md-10 grid-margin">
+                                    <textarea class="form-control" id="sfr-data"></textarea>
+                                </div>
+                                <div class="col-md-2 grid-margin">
+                                    <button type="button" class="btn btn-warning" onclick="write_column('sfr', 13);">쓰기</button>
+                                </div>
+                            </div>
+                            <div class="table-content">
+                                <div class="form-group" style="margin-bottom: 7px;"> 
+                                    <button type="button" class="btn toolbtn btn-primary" onclick="clear_column('sfr');">clear</button>
+                                </div>
+                            <div class="row"> 
+                                <div style="width: 744px; height: 350px; overflow: scroll;">
+                                    <table class="table table_" id="sfr-table">
+                                        <thead id="sfr-thead">
+                                        <tr>
+                                            <th id="fix_sfr"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="sfr-tbody">
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">총자산증가율</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">매출액증가율</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">순이익증가율</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">매출액영업이익율</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">자기자본순이익율(ROE)</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">총자본순이익율(ROIC)</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">부채비율</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">법인세차감전순이익이자보상비율</td>
+                                            </tr>  
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">차입금의존도</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">매출채권회전율</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">재고자산회전율</td>
+                                            </tr>
+                                            <tr id="fix_sfr">
+                                                <td id="fix_sfr">총자본회전율</td>
+                                            </tr>
+                                        </tbody>
+                                    </table> 
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </div>
+                </div>
+                    
+                <div class="col-6 grid-margin stretch-card">
+                <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">종합의견</h4>
+                    <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" name="opinion_eng" wrap="hard">
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">인증 여부</h4>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                                <% if (model.certifiList.length > 0) { %> 
+                                    <% for(let i=0; i<model.certifiList.length; i++) {  
+                                %> 
+                                <div class="form-check form-check-primary">
+                                    <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="<%= model.certifiList[i].id %>" name="certification[]">
+                                      <%= model.certifiList[i].code %>
+                                    <i class="input-helper"></i></label>
+                                </div>
+                              <% }} %> 
+                              
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <!-- 제품 생산 비율 -->
+                <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <!-- <div id="ms" style="z-index: 999;"></div> -->
+                      <h4 class="card-title">제품 생산 비율</h4>
+                      <div class="row"> 
+                          <div class="col-md-10 grid-margin">
+                              <textarea class="form-control" id="pr-data"></textarea>
+                          </div>
+                          <div class="col-md-2 grid-margin">
+                              <button type="button" class="btn btn-warning" onclick="write_row('pr', 2);">쓰기</button>
+                          </div>
+                      </div>
+                      <div class="table-content">
+                        <div class="form-group" style="margin-bottom: 7px;"> 
+                            <button type="button" class="btn toolbtn btn-primary" onclick="clear_row('pr');">clear</button>
+                        </div>
+                      <div class="row"> 
+                          <div class="table-responsive" style="width: 744px; height: 350px; overflow: scroll;">
+                              <table class="table table_" id="pr-table">
+                                  <thead style="border: 1px solid #CCC; background-color: whitesmoke;">
+                                  <tr>
+                                      <th></th>
+                                      <th>항목</th>
+                                      <th style="width: 25%;">값</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody id="pr-tbody">
+                                  </tbody>
+                              </table> 
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+                </div>
+
+                <!-- 품목별 매출 비율 -->
+                <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <!-- <div id="ms" style="z-index: 999;"></div> -->
+                      <h4 class="card-title">품목별 매출 비율</h4>
+                      <div class="row"> 
+                          <div class="col-md-10 grid-margin">
+                              <textarea class="form-control" id="sr-data"></textarea>
+                          </div>
+                          <div class="col-md-2 grid-margin">
+                              <button type="button" class="btn btn-warning" onclick="write_row('sr', 2);">쓰기</button>
+                          </div>
+                      </div>
+                      <div class="table-content">
+                        <div class="form-group" style="margin-bottom: 7px;"> 
+                            <button type="button" class="btn toolbtn btn-primary" onclick="clear_row('sr');">clear</button>
+                        </div>
+                      <div class="row"> 
+                          <div class="table-responsive" style="width: 744px; height: 350px; overflow: scroll;">
+                              <table class="table table_" id="sr-table">
+                                  <thead style="border: 1px solid #CCC; background-color: whitesmoke;">
+                                  <tr>
+                                      <th></th>
+                                      <th>항목</th>
+                                      <th style="width: 25%;">값</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody id="sr-tbody">
+                                  </tbody>
+                              </table> 
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+                </div>
+
+                <!-- 구성비 -->
+                <div class="col-md-5 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <!-- <div id="ms" style="z-index: 999;"></div> -->
+                      <h4 class="card-title">구성비</h4>
+                      <div class="row"> 
+                          <div class="col-md-10 grid-margin">
+                              <textarea class="form-control" id="cc-data"></textarea>
+                          </div>
+                          <div class="col-md-2 grid-margin">
+                              <button type="button" class="btn btn-warning" onclick="write_row('cc', 2);">쓰기</button>
+                          </div>
+                      </div>
+                      <div class="table-content">
+                        <div class="form-group" style="margin-bottom: 7px;"> 
+                            <!-- <button type="button" class="btn btn-primary add-row">add row</button> -->
+                            <button type="button" class="btn toolbtn btn-primary" onclick="clear_row('cc');">clear</button>
+                        </div>
+                      <div class="row"> 
+                          <div class="table-responsive" style="width: 744px; height: 350px; overflow: scroll;">
+                              <table class="table table_" id="cc-table">
+                                  <thead  style="border: 1px solid #CCC; background-color: whitesmoke;">
+                                  <tr>
+                                      <th></th>
+                                      <th>항목</th>
+                                      <th style="width: 25%;">값</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody id="cc-tbody">
+                                  </tbody>
+                              </table> 
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+                </div>
+
+                <!-- 주납품처-->
+                <div class="col-md-7 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">주납품처 (Major Vendor)</h4>
+                        <div class="row"> 
+                            <div class="col-md-10 grid-margin">
+                                <textarea class="form-control" id="mv-data"></textarea>
+                            </div>
+                            <div class="col-md-2 grid-margin">
+                                <button type="button" class="btn btn-warning" onclick="_write_company('mv', 2);">쓰기</button>
+                            </div>
+                        </div>
+                        <div class="table-content">
+                            <div class="form-group" style="margin-bottom: 7px;"> 
+                                <button type="button" class="btn toolbtn btn-primary" onclick="clear_row('mv');">clear</button>
+                            </div>
+                        <div class="row"> 
+                            <div class="table-responsive" style="width: 944px; height: 350px; overflow: scroll;">
+                                <table class="table table_" id="mv-table">
+                                    <thead  style="border: 1px solid #CCC; background-color: whitesmoke;">
+                                    <tr>
+                                        <th style="width: 10%;"></th>
+                                        <th>기업명</th>
+                                        <th style="width: 15%;">값</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="mv-tbody">
+                                    </tbody>
+                                </table> 
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 설비 가동률 -->
+                <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <!-- <div id="ms" style="z-index: 999;"></div> -->
+                      <h4 class="card-title">설비 가동률</h4>
+                      <div class="row"> 
+                          <div class="col-md-10 grid-margin">
+                              <textarea class="form-control" id="for-data"></textarea>
+                          </div>
+                          <div class="col-md-2 grid-margin">
+                              <button type="button" class="btn btn-warning" onclick="write_row('for', 2);">쓰기</button>
+                          </div>
+                      </div>
+                      <div class="table-content">
+                        <div class="form-group" style="margin-bottom: 7px;"> 
+                            <!-- <button type="button" class="btn btn-primary add-row">add row</button> -->
+                            <button type="button" class="btn toolbtn btn-primary" onclick="clear_row('for');">clear</button>
+                        </div>
+                      <div class="row"> 
+                          <div class="table-responsive" style="width: 744px; height: 350px; overflow: scroll;">
+                              <table class="table table_" id="for-table">
+                                  <thead  style="border: 1px solid #CCC; background-color: whitesmoke;">
+                                  <tr>
+                                      <th></th>
+                                      <th>항목</th>
+                                      <th style="width: 25%;">목표량</th>
+                                      <th style="width: 25%;">생산량</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody id="for-tbody">
+                                  </tbody>
+                              </table> 
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+                </div>
+                <!-- 인원 현황 (es) -->
+                <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <!-- <div class="card-body">
+                      <div id="es" style="z-index: 999;"></div>
+                  </div> -->
+                  <div class="card-body">
+                    <h4 class="card-title">인원 현황</h4>
+                    <div class="row"> 
+                        <div class="col-md-10 grid-margin">
+                            <textarea class="form-control" id="es-data"></textarea>
+                        </div>
+                        <div class="col-md-2 grid-margin">
+                            <button type="button" class="btn btn-warning" onclick="_write_es('es');">쓰기</button>
+                        </div>
+                    </div>
+                    <div class="table-content">
+                        <div class="form-group" style="margin-bottom: 7px;"> 
+                            <button type="button" class="btn toolbtn btn-primary" onclick="clear_column('es');">clear</button>
+                        </div>
+                    <div class="row"> 
+                        <div class="table-responsive" style="height: 350px">
+                            <table class="table table_" id="es-table">
+                                <thead id="es-thead">
+                                <tr>
+                                    <th id="fix_es" style="width: 40%;">항목</th>
+                                </tr>
+                                </thead>
+                                <tbody id="es-tbody">
+                                    <tr>
+                                        <td id="fix_es">Operator</td>
+                                        <!-- <td><input class="esm-control"></td> -->
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">Maintenance</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">Supervisor</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">Accountant</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">Sales</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">Logistic</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">Material</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">Quality</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">R&D</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">Logistic/Sales</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fix_es">Total</td>
+                                    </tr>
+                                </tbody>
+                            </table> 
+                            </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                <div id="cateMapDiv"></div>
+
+              </div>
+              </form>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <!-- footer-->
+            <!-- partial -->
+          </div>
+          <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+ 
+<script>
+
+    var subFieldMap = JSON.parse(htmlDecode("<%= JSON.stringify(model.fieldList) %>"));
+
+    var categoryMap = {};
+    
+    var oldVal = "";
+
+    $("document").ready(function() { 
+
+        var body = $('body');
+        body.on('click', 'span.remove-row', function() {
+            $(this).closest('tr').remove();
+        });
+        body.on('click', 'span.remove-col', function() {
+        var cell = $(this).closest('th'), index = cell.index() + 1;
+        cell.closest('table')
+            .find('th, td')
+            .filter(':nth-child(' + index + ')')
+            .remove();
+        });
+
+        // tag 삭제 이벤트
+        $("#categoryTags").on('itemRemoved', function(event) {
+          for (var key in categoryMap) {
+              if (key == event.item) {
+                delete categoryMap[key];
+                break;
+              }
+           }
+        });
+
+        $("#categoryText").on("propertychange change keyup paste input", function() {
+          var currentVal = $(this).val();
+          if(currentVal == oldVal) {
+              return;
+          }
+      
+          oldVal = currentVal;
+          $("#list").empty();
+
+          if (currentVal != '') {
+            $.ajax({
+              type: "POST",
+              url: "/category/getlist",
+              dataType: 'json',
+              data: { 'query': oldVal },
+              success: function (data) {
+                  for (var i=0; i<data.data.length; i++) {
+                        var p1 = (data.data[i].p1_name != undefined) ? data.data[i].p1_name: '';
+                        var p2 = (data.data[i].p2_name != undefined) ? data.data[i].p2_name: '';
+                        var p3 = (data.data[i].p3_name != undefined) ? data.data[i].p3_name: '';
+                        var parents = "";
+                        if (p1 != '') parents += (p1 + " > ")
+                        if (p2 != '') parents += (p2 + " > ")
+                        if (p3 != '') parents += (p3 + " > ")
+
+                        
+                        var html = "<div class='lbjs-item' style='display: block;' onclick='selCategory(\"" + data.data[i].p1_id + "\",\"" + data.data[i].p1_name + "\",\"" + data.data[i].p2_id + "\",\"" + data.data[i].p2_name + "\",\"" + data.data[i].p3_id + "\",\"" + data.data[i].p3_name + "\"," + data.data[i].depth + ",\"" + data.data[i].category_name + "\"," + data.data[i].id + ");' >" + parents + "<b>" +data.data[i].category_name + "<b>" +  "</div>";
+                        $("#list").append(html);
+                  }
+              },
+              error: function (e) {
+                  console.log("ERROR : ", e);
+              }
+          });
+          }
+           
+      });
+      
+      });
+
+      function write_row(id, count) {
+
+            var data = $('textarea[id=' + id +'-data]').val();
+
+            $('textarea[id=' + id +'-data]').val("");
+            var rows = data.split("\n");
+
+            document.getElementById(id +'-data').value = "";
+
+            for(var y in rows) {
+                var cells = rows[y].split("\t");
+                var row = $('<tr />');
+
+                //row 삭제 버튼
+                row.append('<td><span class="remove-row">X</span></td>');
+
+                if (count == cells.length) {
+                    for (var x=0; x<cells.length; x++) {
+                        row.append('<td><input class="form-control form-control_" name="' + id + '_value_' + x + '[]" value="' + cells[x] + '" style="width: auto;"></td>');
+                    }
+                    $(row).appendTo('#' + id + '-table');
+                }
+            }
+        }
+
+        function clear_row(id) {
+            $( '#' + id + "-tbody" ).empty();
+        }
+
+        function write_column(id, count) {
+
+            var data = $('textarea[id=' + id +'-data]').val();
+            $('textarea[id=' + id +'-data]').val("");
+            var rows = data.split("\n");
+            document.getElementById(id +'-data').value = "";
+
+            var arr = [];
+
+            //2차원배열로 만들기
+            for(var y in rows) {
+                var cells = rows[y].split("\t");
+                arr.push(cells);
+            }
+            arr = transpose(arr);
+
+            //생성
+            for(var y in arr) {
+                
+                    for (var x=0; x<arr[y].length; x++) {
+                        if (x==0) { $("#" + id +"-table tr:first").append('<th><span class="remove-col">X</span><input class="form-control form-control_" name="' + id + '_value_' + x + '[]" value="' + arr[y][x] + '" style="width: auto;"></td>'); }
+                        else {
+                            $("#" + id +"-table tr:eq(" + x + ")").append('<td><input class="form-control form-control_" name="' + id + '_value_' + x + '[]" value="' + arr[y][x] + '" style="width: auto;"></td>');
+
+                        }
+                    }
+            }
+        }
+
+        function clear_column(id) {
+            $( '#' + id + "-thead" ).find('tr th').not("#fix_" + id).remove();
+            $( '#' + id + "-tbody" ).find('tr td').not("#fix_" + id).remove();
+        }
+
+        function _write_es(id) {
+            var data = $('textarea[id=' + id +'-data]').val();
+            var rows = data.split("\n");
+            document.getElementById(id +'-data').value = "";
+            var arr = [];
+
+            //2차원배열로 만들기
+            for(var y in rows) {
+                var cells = rows[y].split("\t");
+                arr.push(cells);
+            }
+            arr = transpose(arr);
+
+            //생성
+            for(var y in arr) {
+                $("#" + id +"-table tr:first").append('<th><span class="remove-col">X</span></td>');
+                for (var x=0; x<arr[y].length; x++) {
+                        $("#" + id +"-table tr:eq(" + (x + 1) + ")").append('<td><input class="form-control form-control_" name="' + id + '_value_' + x + '[]" value="' + arr[y][x] + '" style="width: auto;"></td>');
+                }
+                
+            }
+        }
+
+        function _write_company(id, count) {
+
+            document.getElementById('spinner').style.display = 'block';
+            var data = $('textarea[id=' + id +'-data]').val();
+            var rows = data.split("\n");
+            document.getElementById(id +'-data').value = "";
+
+            for(var y in rows) {
+                var cells = rows[y].split("\t");
+                var row = $('<tr />');
+
+                //row 삭제 버튼
+                row.append('<td><span class="remove-row">X</span></td>');
+
+                if (count == cells.length) {
+                    for (var x=0; x<cells.length; x++) {
+
+                        //기업 선택 항목
+                        if (x == 0) {
+                            
+                            $.ajax({
+                                type: "POST",
+                                url: "/admin/company/searchCompany",
+                                dataType: 'json',
+                                data: { 'name_kor': cells[x] },
+                                async: false,
+                                success: function (data) {
+                                    var content = "";
+                                    if (data.result.len == 1) {
+                                        content += '<td><input type="hidden" id = "' + y + id + '_companyId" name="' + id + '_company[]" value="' + data.result.rs.id + '">' +
+                                            '<div class="input-group input-group_"><input id = "' + y + id + '_companyNm" name="' + id + '_companyName[]" type="text" class="form-control form-control_ select_company" value="' + data.result.rs.name_eng + '" style="width: auto;">' +
+                                            '<button type="button" class="btn btn_" style="background: cadetblue; margin-right: 3px;" onclick="openModal(\'' + data.result.rs.name_eng + '\', \'' + y + id + '_companyNm\', \'' + y + id + '_companyId\');"><i class="fa fa-search"></i></button>' +
+                                            '<button type="button" class="btn btn_" style="background: cadetblue;" onclick="javascript:reset_data(\'' + cells[x] + '\');"><i class="fas fa-undo-alt"></i></button></div></td>'
+                                    } else {
+                                        content += '<td><div class="input-group input-group_" style="flex-wrap: nowrap;"><input type="hidden" id = "' + y + id + '_companyId" name="' + id + '_company[]" value="0">' + 
+                                            '<input type="text" id = "' + y + id + '_companyNm" name="' + id + '_companyName[]" class="form-control form-control_" value="' + cells[x] + '" style="width: auto;">' + 
+                                            '<button type="button" class="btn btn_" style="background: cadetblue; margin-right: 3px;" onclick="openModal(\'' + cells[x] + '\', \'' + y + id + '_companyNm\', \'' + y + id + '_companyId\');"><i class="fa fa-search"></i></button>' +
+                                            '<button type="button" class="btn btn_" style="background: cadetblue;" onclick="javascript:reset_data(\'' + cells[x] + '\', \'' + y + id + '_companyNm\', \'' + y + id + '_companyId\');"><i class="fas fa-undo-alt"></i></button></div></td>'
+                                    } 
+                                    row.append(content);
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                            
+                        } else {
+                            row.append('<td><input class="form-control form-control_" name="' + id + '_value_' + x + '[]" value="' + cells[x] + '" style="width: auto;"></td>');
+                        }
+                        }
+
+                        $(row).appendTo('#' + id + '-table');
+                }
+                
+            }
+            document.getElementById('spinner').style.display = 'none';
+        }
+
+        //리셋 버튼
+        function reset_data(org, inputNm_id, inputCom_id) {
+            $("#" + inputNm_id).val(org);
+            $("#" + inputNm_id).removeClass('select_company');
+            $("#" + inputCom_id).val(0)
+        }
+
+
+      //카테고리 선택시 
+      function selCategory(p1_id, p1_name, p2_id, p2_name, p3_id, p3_name, depth, category_name, id) {
+
+        var obj = {'id': id};
+        if (depth == 4) {
+            $('#categoryTags').tagsinput('add', p1_name + ' > ' + p2_name + ' > ' + p3_name + ' > ' + category_name);
+            categoryMap[p1_name + ' > ' + p2_name + ' > ' + p3_name + ' > ' + category_name] = obj;
+        }
+        if (depth == 3) {
+            $('#categoryTags').tagsinput('add', p2_name + ' > ' + p3_name + ' > ' + category_name);
+            categoryMap[p2_name + ' > ' + p3_name + ' > ' + category_name] = obj;
+        } 
+        if (depth == 2) {
+            $('#categoryTags').tagsinput('add', p3_name + ' > ' + category_name);
+            categoryMap[p3_name + ' > ' + category_name] = obj;
+        } 
+        if (depth == 1) {
+            $('#categoryTags').tagsinput('add', category_name);
+            categoryMap[category_name] = obj;
+        } 
+      }
+
+      function escapeHtml(text) {
+        return text.replace(/[\"&<>]/g, function (a) { return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a]; }); 
+    }
+
+      function add() {
+
+        document.getElementById('spinner').style.display = 'block';
+
+        for (x in categoryMap) {
+            $("#cateMapDiv").append("<input type='hidden' name='cateMap[]' value='" + categoryMap[x].id + "' >")
+        }
+
+        var formData = $("form[id=addForm]").serialize();
+
+        // content-type을 설정하고 데이터 송신
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/company/add');
+        xhr.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+        xhr.send(formData);
+        
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('load', function(){
+            console.log(xhr.responseText);
+            document.getElementById('spinner').style.display = 'none';
+            window.location.href = '/admin/company/before';
+            alert("완료!");
+           
+        });
+
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('progress', function(){
+            console.log(xhr.responseText);
+        });
+        
+      }
+
+      function openModal(name_kor, inputNm_id, inputCom_id) {
+        var url = "/admin/company/modalList?pageNum=1&search_type=2&search_txt=" + name_kor + "&inputNm_id=" + inputNm_id + "&inputCom_id=" + inputCom_id;
+        var name = "search";
+        var option = "width = 988, height = 758, top = 100, left = 300, location = no"
+        window.open(url, name, option);
+      }
+
+
+      function ddd() {
+
+        var formData = $("form[id=addForm]").serializeArray();
+
+        //credit
+        var creditRating = $('input:radio[name="groupCreditRating"]:checked').val();
+        var cashFlowRating = $('input:radio[name="groupCashFlowRating"]:checked').val();
+        var watchRating = $('input:radio[name="groupWatchRating"]:checked').val();
+
+        //종합의견
+        var opinion_eng = $("#opinion_eng").val().replace(/\n/g, "<br>");
+
+        //수출 국가 비중
+        var ecr = $("#DE").val() + "|" + $("#US").val() + "|" + $("#GB").val() + "|" + $("#IT").val() + "|" + $("#JP").val() + "|" + $("#CN").val() + "|" + $("#FR").val() + "|" + $("#KR").val()
+                + "|" + $("#G7").val() + "|" + $("#OECD").val();
+
+        //인증 여부
+        var cer = $("#ISO9002").val() + "|" + $("#QS9000").val() + "|" + $("#ISOTS").val() + "|" + $("#16949").val();
+
+        var data = { 'formData': formData, 'creditRating': creditRating, 'cashFlowRating' : cashFlowRating, 'watchRating': watchRating, 
+            'opinion_eng': opinion_eng, 'detail_map': ui_map, 'ecr': ecr, 'cer': cer, 'subFieldMap' : subFieldMap, 'cateMap' : categoryMap};
+        data = JSON.stringify(data);
+
+        // content-type을 설정하고 데이터 송신
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/company/add');
+        xhr.setRequestHeader('Content-type', "application/json");
+        xhr.send(data);
+        
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('load', function(){
+            console.log(xhr.responseText);
+            window.location.href = '/admin/company/before';
+        });
+
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('progress', function(){
+            console.log(xhr.responseText);
+        });
+      }
+
+</script>
+ 
+<style>
+
+    .spinner {
+        position: fixed;
+        z-index: 1031;
+        top: 50%;
+        left: 50%;
+    }
+
+    .lbjs {
+        margin: 5% 2% 5% 2%;
+        width: 600px;
+        padding: 5px;
+        border: 1px solid #CCC;
+        border-radius: 5px;
+        background: #FCFCFC;
+        height: 300px;
+    }
+
+    .lbjs-list {
+        margin: 0px;
+        overflow: auto;
+    }
+
+
+    .lbjs-list .lbjs-item {
+        margin: 0px;
+        padding: 5px;
+    }
+
+    .lbjs-list .lbjs-item:not([disabled]) {
+        cursor: pointer;
+    }
+
+    .lbjs-list .lbjs-item:hover:not([disabled]) {
+        background: rgba(112, 147, 216, 0.9);
+    }
+
+    .lbjs-list .lbjs-item[selected] {
+        background: rgba(112, 147, 216, 0.5);
+    }
+
+    .lbjs-list .lbjs-item[disabled] {
+        color: #999;
+        cursor: default;
+    }
+
+    .lbjs-searchbar-wrapper {
+        margin: 0px;
+        margin-right: 12px;
+        width: 590px;
+    }
+
+    .lbjs-searchbar {
+        margin: 0px;
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 3px 5px;
+        border: 1px solid #ccc;
+    }
+
+    .select_company {
+        background-color: aliceblue;
+    }
+
+    .table_ th {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+    }
+
+    .table_ thead th {
+        font-weight: 500;
+        font-size: 12px;
+        border: 1px solid #CCC;
+        width: 10%;
+    }
+
+    .table_ th, .table_ td {
+        border: 1px solid #CCC;
+        padding: 0.5rem 0.5rem;
+        font-size: 12px;
+    }
+
+    .form-control_ {
+        border: 1px solid #f3f3f3;
+        font-weight: 400;
+        font-size: 12px;
+        height: 38px;
+    }
+
+    .input-group_ {
+        flex-wrap: inherit; 
+    }
+
+    .btn_ {
+        padding: 0.3rem 0.5rem;
+    }
+
+    .btn_ i {
+        font-size: 17px;
+    }
+
+    .toolbtn {
+        font-size: 12px;
+        padding: 12px;
+    }
+    </style>
+</body>
+</html>

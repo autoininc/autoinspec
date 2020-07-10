@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link href="/css/membership.css" rel="stylesheet" />
+<link href="/css/payment.css" rel="stylesheet" />
+<link href="/css/payment_method.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <form name="payForm" action="" method="POST">
+        <input id="method" name="method" type="hidden" value="01"/>
+        <div class="ticket-popup-wrap">
+            <h1 class="popup-header">Fill Coin</h1> 
+            <div class="popup-body">
+                <div class="popup-content">
+                    <div class="popup-tit">Coint List</div> 
+                <table class="purchase-desc">
+                    <colgroup>
+                        <col width="130px"> 
+                        <col width="190px">
+                        <col width="130px"> 
+                        <col width="190px">
+                    </colgroup> 
+                    <tbody>
+                        <tr>
+                          <th scope="row"></th>
+                          <td colspan="3">
+                              <div class="form-check"><label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="coin" value="10" style="background: #4eb79b;" checked>
+                                10 coin (USD 10)
+                              <i class="input-helper"></i></label>
+                              </div>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input type="radio" class="form-check-input" name="coin" style="background: #4eb79b;" value="50">
+                                  50 coin (USD 30)
+                                <i class="input-helper"></i></label>
+                              </div>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input type="radio" class="form-check-input" name="coin" style="background: #4eb79b;" value="100">
+                                  100 coin (USD 50)
+                                <i class="input-helper"></i></label>
+                              </div>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input type="radio" class="form-check-input" name="coin" style="background: #4eb79b;" value="200">
+                                  200 coin (USD 100)
+                                <i class="input-helper"></i></label>
+                              </div>
+                            </td>
+                        </tr> 
+                        <!-- <tr>
+                            <th scope="row">Expiration Date</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"></p>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Price</th> 
+                            <td colspan="3">
+                                <p class="popup-price">USD </p>
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div> 
+            
+            <div id="payment-wrap" class="popup-content">
+                <h2 class="popup-tit">Method</h2> 
+                <div class="method-others toggle-on">
+                    <ul class="method-others-toggle" id="method_ul" style="display: block;">
+                      <li><a href="#" class="method-selected"><span id="01"></span> <span >Paypal</span></a></li> 
+                        <li><a href="#" class=""><span id="02"></span> <span >Wire Transfer</span></a></li>  
+                    </ul>
+                </div> 
+                
+                <!-- <div class="check-style purchase-check"><input type="checkbox" id="ag-check" class="check-purple"><label for="ag-check">매월 자동 결제에 동의합니다.</label></div></div>  -->
+                <ul class="popup-btn-wrap" style="margin-top: 40px;"><li><button onclick="goCancel();" type="button" class="btn-br-gray">Cancel</button></li> <li><button type="button" onclick="getPost();" class="btn-fill-purple">Next</button></li></ul></div> <div id="layer-popup" class="ticket-popup-wrap" style="visibility: hidden;"><div class="modal-mask"><div class="modal-wrapper02"><button type="button" class="modal-default-button"><img src="../Common/Images/pc/common/btn-popup-close.png" alt="팝업닫기"></button> <div class="modal-container"><div class="modal02-body"><div><div class="popup-content">
+                    
+    </form>
+<script>
+
+  $(document).ready(function() 
+    {
+        $('#method_ul li').click(function(e) {
+          e.preventDefault();
+            $('#method_ul li a').removeClass('method-selected');
+            $(this).find("a").addClass('method-selected');
+            $("#method").val($(this).find("span").attr('id'));
+
+            var method =  $("#method").val();
+            if (method == "02") {
+                document.getElementById("date").style.display = "none";
+            } else {
+                document.getElementById("date").style.display = "table-row";
+            }
+        });
+    });
+
+    function goCancel() {
+        window.close();  
+    }
+
+    function getPost()
+    {
+        var mode = $("#method").val();
+        var theForm = document.payForm;
+        if(mode == "01")
+        {
+            theForm.method = "POST";
+            theForm.target = "_self";
+            theForm.action = "/pass/paypalCreate_coin";
+        }
+        else if(mode == "02")
+        {
+            theForm.method = "POST";
+            theForm.target = "_self";
+            theForm.action = "/pass/transferCreate_coin"
+        }
+        theForm.submit();
+    }
+
+</script>
+</body>
+</html>

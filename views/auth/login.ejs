@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include ('../layout/head.ejs') -%>
+</head>
+<body>
+  <div class="container-scroller">
+    <div class="horizontal-menu">
+      <nav class="navbar top-navbar col-lg-12 col-12 p-0" style="margin-bottom: 0;">
+        <div class="container-fluid">
+          <div class="navbar-menu-wrapper d-flex align-items-center justify-content-between">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="navbar-brand brand-logo" href="/"><img src="/img/logo.png" alt="logo"/></a>
+                <a class="navbar-brand brand-logo-mini" href="/"><img src="/img/logo.png" alt="logo"/></a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+      <div class="main-panel">
+        <div class="content-wrapper d-flex align-items-center auth px-0">
+          <div class="row w-100 mx-0">
+            <div class="col-lg-4 mx-auto">
+              <div class="auth-form-light text-left py-5 px-4 px-sm-5" style="background: #343a40;">
+                <h4 style="color: whitesmoke;">Hello! let's get started</h4>
+                <h6 class="font-weight-light" style="color: whitesmoke;">Sign in to continue.</h6>
+                <form class="pt-3" id="loginForm">
+                  <div class="spinner-border text-primary spinner" role="status" id="spinner" style="display: none;"></div>
+                  <div class="form-group">
+                    <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" style="color: #f1f6f8;">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Password" style="color: #f1f6f8;" onkeydown="onKeyDown();">
+                  </div>
+                  <div class="mt-3">
+                    <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" style="background-color: #317376; border-color: #317376;" href="javascript:void(0);" onclick="login();">SIGN IN</a>
+                  </div>
+                  <div class="my-2 d-flex justify-content-between align-items-center">
+                    <div class="form-check">
+                      <label class="form-check-label text-muted">
+                        
+                      </label>
+                    </div>
+                    <a href="/user/forgotPassword" class="auth-link text-black" style="color: whitesmoke;">Forgot password?</a>
+                  </div>
+                  <div class="text-center mt-4 font-weight-light" style="color: whitesmoke;">
+                    Don't have an account? <a href="/user/sign_up" style="color: #317376;">Create</a>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+<script>
+
+  var url = "";
+
+  //로그인 이벤트
+  function login() {
+
+    document.getElementById('spinner').style.display = 'block';
+  
+    if (getParameterByName("redirect") != "") {
+        url = getParameterByName("redirect");
+    }
+
+      var formData = $("form[id=loginForm]").serialize();
+  
+        $.ajax({
+            type: "POST",
+            url: "/user/login?redirect=" + url,
+            data: formData,
+            processData: false,
+            cache: false,
+            success: function (data) {
+                if (data.msg == 'success') {
+                  checkExpiredDate(data.id);
+                  if (data.redirect != undefined && data.redirect != '') {
+                    window.location.href = data.redirect;
+                  } else {
+                    window.location.href = '/';
+                  }
+                } else {
+                  document.getElementById('spinner').style.display = 'none';
+                  alert(data.msg);
+                }
+            },
+            error: function (e) {
+              console.log("ERROR : ", e);
+           }
+      });
+  }
+
+  function checkExpiredDate(id) {
+
+    $.ajax({
+            type: "POST",
+            url: "/pass/checkExpiredDate/" + id,
+            success: function (data) {
+                
+            },
+            error: function (e) {
+              console.log("ERROR : ", e);
+           }
+      });
+  }
+
+  //enter키 누르면 로그인
+  function onKeyDown() {
+        if(event.keyCode == 13){
+            login();
+        }
+    }
+
+  </script>
+  <style>
+  
+  </style>
+
+</html>

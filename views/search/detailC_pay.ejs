@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<body>
+
+    <div class="col-md-12 detail-item chart-wrap"></div>
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="col-sm-6 mb-4 mb-xl-0">
+            <div class="d-lg-flex align-items-center">
+                <div>
+                    <h3 class="text-dark font-weight-bold mb-2">Component data</h3>
+                    <!-- <h6 class="font-weight-normal mb-2">Last login was 23 hours ago. View details</h6> -->
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+        </div>
+    </div>
+
+
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                    <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6" id="pr"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                        <h4 class="card-title">Production Rate <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.pr %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                        <div class="d-lg-flex align-items-center justify-content-between">
+                                            <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                            <div class="mb-3">
+                                                <% if(model.pr.length > 0) { %> 
+                                                    <button id="pr-btn" type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#pr_modal">Show table</button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <% if(model.pr.length > 0) { %> 
+                                        <div class="row" id="pr-div">
+                                            <div class="col-sm-4">
+                                                <%  var text = "background-color:";
+                                                    var color_pr = ["#F7464A", "#46BFBD", "#FDB45C","#4D5360", "#949FB1"] 
+                                                %>
+                                                
+                                                <% if(model.pr.length > 0) { %> 
+                                                    <ul class="graphl-legend-rectangle" id="pr-ul">
+                                                        <% for(let i=0; i<model.pr.length; i++) { %> 
+                                                                <li><span class='bg' style=<%= text %><%= color_pr[i] %> ></span><%= model.pr[i].title %></li>
+                                                        <% } %> 
+                                                    </ul>
+                                                <% } %>
+                                            </div>
+                                            <div class="col-sm-8 grid-margin"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                <canvas id="pr-chart" style="display: block; width: 90%; height: 90%;" class="chartjs-render-monitor"></canvas> 
+                                            </div>
+                                        </div>
+                                        <% } else { %><div class="col-sm-12 grid-margin text-center">No chart to display</div> <% } %>
+                                        <div class="modal fade" id="pr_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Production Rate</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    
+                                                    <div class="table-responsive col-lg-12">
+                                                        <table id="pr-table" class="table">
+                                                            <thead>
+                                                                <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                <th></th>
+                                                                <th>Rate</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (model.pr) { if(model.pr.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.pr.length; i++) { %> 
+                                                                        <tr>
+                                                                            <td class="text-center"><%= model.pr[i].title %></tdclass="text-center">
+                                                                            <td class="text-center"><%= model.pr[i].value %> %</td>
+                                                                <% } } } %> 
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <div class="col-lg-6" id="sr">
+                                        <h4 class="card-title">Sales rate each part <a tabindex="0" class="btn" role="button" data-toggle="popover" data-trigger="focus" data-content="<%- model.description.sr %>">  <i class="mdi mdi-help-circle-outline text-dark"></i></a></h4>
+                                        <div class="d-lg-flex align-items-center justify-content-between">
+                                            <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                            <div class="mb-3">
+                                                <% if(model.sr.length > 0) { %> 
+                                                    <button id="rc-btn" type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#sr_modal">Show table</button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <% if(model.sr.length > 0) { %> 
+                                        <div class="row" id="rc-div">
+                                            <div class="col-sm-4" >
+                                                <ul class="graphl-legend-rectangle" id="sr-ul">
+                                                    <% if (model.sr) { if(model.sr.length > 0) { %> 
+                                                        <% for(let i=0; i<model.sr.length; i++) { %> 
+                                                                <li><span class='bg' style=<%= text %><%= color_pr[i] %> ></span><%= model.sr[i].title %></li>
+                                                    <% } } } %> 
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-8 grid-margin"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                <canvas id="sr-chart" style="display: block; width: 90%; height: 90%;" class="chartjs-render-monitor"></canvas>
+                                            </div>
+                                        </div>
+                                        <% } else { %><div class="col-sm-12 grid-margin text-center">No chart to display</div><% } %>
+                                        
+                                        <div class="modal fade" id="sr_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Related Companies</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="table-responsive col-lg-12">
+                                                        <table id="sr-table" class="table">
+                                                            <thead>
+                                                                <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                <th></th>
+                                                                <th>Rate</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (model.sr) { if(model.sr.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.sr.length; i++) { %> 
+                                                                        <tr>
+                                                                            <td class="text-center"><%= model.sr[i].title %></td>
+                                                                            <td class="text-center"><%= model.sr[i].value %> %</td>
+                                                                <% } } } %> 
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                    <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-4" id="cc">
+                                        <h4 class="card-title">Division rate <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.dr %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                        <div class="d-lg-flex align-items-center justify-content-between">
+                                            <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                            <div class="mb-3">
+                                                <% if(model.cc.length > 0) { %> 
+                                                    <button type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#cc_modal">Show table</button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        
+                                        <% if(model.cc.length > 0) { %> 
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <ul class="graphl-legend-rectangle" id="cc-ul">
+                                                    <% if (model.cc) { if(model.cc.length > 0) { %> 
+                                                        <% for(let i=0; i<model.cc.length; i++) { %> 
+                                                                <li><span class='bg' style=<%= text %><%= color_pr[i] %> ></span><%= model.cc[i].title %></li>
+                                                    <% } } } %> 
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-8 grid-margin">
+                                                <canvas id="cc-chart"></canvas> 
+                                            </div>
+                                        </div>
+                                        <% } else { %><div class="col-sm-12 grid-margin text-center">No chart to display</div> <% } %>
+                                        <div class="modal fade" id="cc_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Division rate</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    
+                                                    <div class="table-responsive col-lg-12">
+                                                        <table id="cc-table" class="table">
+                                                            <thead>
+                                                                <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                <th></th>
+                                                                <th>Rate</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (model.cc) { if(model.cc.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.cc.length; i++) { %> 
+                                                                        <tr>
+                                                                            <td class="text-center"><%= model.cc[i].title %></td>
+                                                                            <td class="text-center"><%= model.cc[i].value %> %</td>
+                                                                <% } } } %> 
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                    </div>
+
+                            <div class="col-lg-4" id="mv">
+                                        <h4 class="card-title">Major customers <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.mc %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                        <div class="d-lg-flex align-items-center justify-content-between">
+                                            <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                            <div class="mb-3">
+                                                <% if(model.mv.length > 0) { %> 
+                                                    <button type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#mv_modal">Show table</button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <% if(model.mv.length > 0) { %> 
+                                        <div class="row">
+                                            <div class="col-sm-4" >
+                                                <ul class="graphl-legend-rectangle" id="mv-ul">
+                                                    <% if (model.mv) { if(model.mv.length > 0) { %> 
+                                                        <% for(let i=0; i<model.mv.length; i++) { %> 
+                                                            <% if( model.mv[i].relCompanyId != 0 ) { %> 
+                                                                <li><span class='bg' style=<%= text %><%= color_pr[i] %> ></span><a href="/detail/<%= model.mv[i].relCompanyId%>?first=1"><%= model.mv[i].name_eng%></a></li>
+                                                            <% } else { %>
+                                                                <li><span class='bg' style=<%= text %><%= color_pr[i] %> ></span><%= model.mv[i].companyNm %></li>
+                                                            <% } %>
+                                                    <% } } } %> 
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-8 grid-margin">
+                                                <canvas id="mv-chart" style="display: block; width: 90%; height: 90%;" class="chartjs-render-monitor"></canvas>
+                                            </div>
+                                            
+                                        </div>
+                                        <% } else { %><div class="col-sm-12 grid-margin text-center" >No chart to display</div><% } %>
+                                        
+                                        <div class="modal fade" id="mv_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Major customers</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="table-responsive col-lg-12">
+                                                        <table id="mv-table" class="table">
+                                                            <thead>
+                                                                <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                <th></th>
+                                                                <th>Rate</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (model.mv) { if(model.mv.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.mv.length; i++) { %> 
+                                                                        <tr>
+                                                                        <% if( model.mv[i].relCompanyId != 0 ) { %> 
+                                                                            <td class="text-center"><a href="/detail/<%= model.mv[i].relCompanyId%>?first=1"><%= model.mv[i].name_eng%></a></td>
+                                                                        <% } else { %>
+                                                                            <td class="text-center"><%= model.mv[i].companyNm%></td>
+                                                                        <% } %>
+                                                                        <td class="text-center"><%= model.mv[i].value%> %</td></tr>
+                                                                <% } } } %>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <!-- tlwkr -->
+                                    <div class="col-lg-4" id="for">
+                                        <h4 class="card-title">Process operation rate <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.por %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                        <div class="d-lg-flex align-items-center justify-content-between">
+                                            <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                            <div class="mb-3">
+                                                <% if(model.for.length > 0) { %> 
+                                                    <button type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#for_modal">Show table</button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        
+                                        <% if(model.for.length > 0) { %> 
+                                                    <canvas id="for-chart"></canvas>
+                                            <!-- <div class="col-sm-4">
+                                                <ul class="graphl-legend-rectangle" id="cc-ul">
+                                                    <% if (model.cc) { if(model.cc.length > 0) { %> 
+                                                        <% for(let i=0; i<model.cc.length; i++) { %> 
+                                                                <li><span class='bg' style=<%= text %><%= color_pr[i] %> ></span><%= model.cc[i].title %></li>
+                                                    <% } } } %> 
+                                                </ul> 
+                                            </div>-->
+                                        <% } else { %><div class="col-sm-12 grid-margin text-center">No chart to display</div> <% } %>
+                                        <div class="modal fade" id="for_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Process operation rate</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    
+                                                    <div class="table-responsive col-lg-12">
+                                                        <table id="for-table" class="table">
+                                                            <thead>
+                                                                <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                <th></th>
+                                                                <th>Target</th>
+                                                                <th>Actual</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (model.for) { if(model.for.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.for.length; i++) { %> 
+                                                                        <tr>
+                                                                            <td class="text-center"><%= model.for[i].title %></td>
+                                                                            <td class="text-center"><%= model.for[i].value %></td>
+                                                                            <td class="text-center"><%= model.for[i].value2 %></td>
+                                                                <% } } } %> 
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                </div>
+                            </div>
+                    </div>
+        </div>
+        </div>
+
+                <!-- <div class="col-md-12 grid-margin stretch-card" id="for">
+                    <div class="card">
+                            <div class="card-body">
+                                        <h4 class="card-title">Process operation rate</h4>
+                                            <div class="d-lg-flex align-items-center justify-content-between">
+                                                <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                                <div class="mb-3">
+                                                    <% if(model.for.length > 0) { %> 
+                                                        <button type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#for_modal">Show table</button>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        <div class="row">
+                                            <% if(model.for.length > 0) { %> 
+                                                <% for(let i=0; i<model.for.length; i++) { %> 
+                                                <div class="col-lg-4"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                <p class="card-description"> <%= model.for[i].title%></code></p>      
+                                                        <div class="row" id="pr-div">
+                                                            <div class="col-sm-4">
+                                                                <ul class="graphl-legend-rectangle" id="for-<%= i %>-ul">
+                                                                     <li><span class='bg' style=<%= text %><%= color_pr[0] %> ></span>Target: <%= model.for[i].value%></li>
+                                                                     <li><span class='bg' style=<%= text %><%= color_pr[1] %> ></span>Actual: <%= model.for[i].value2%></li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-sm-8 grid-margin"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                                <canvas id="for-<%=i%>-chart" style="display: block; width: 90%; height: 90%;" class="chartjs-render-monitor"></canvas> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            <% } } else { %> <div class="col-sm-12 grid-margin text-center" >No chart to display</div> <% } %>
+                                            
+                                            <div class="modal fade" id="for_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                  <div class="modal-content">
+                                                    <div class="modal-header">
+                                                      <h5 class="modal-title" id="exampleModalLongTitle">Process operation rate</h5>
+                                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                      </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        
+                                                        <div class="table-responsive col-lg-12">
+                                                            <table id="for-table" class="table">
+                                                                <thead>
+                                                                    <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    <th></th>
+                                                                    <th>Target</th>
+                                                                    <th>Actual</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <% if (model.for) { if(model.for.length > 0) { %> 
+                                                                        <% for(let i=0; i<model.for.length; i++) { %> 
+                                                                            <tr>
+                                                                                <td class="text-center"><%= model.for[i].title %></td>
+                                                                                <td class="text-center"><%= model.for[i].value %></td>
+                                                                                <td class="text-center"><%= model.for[i].value2 %></td>
+                                                                    <% } } } %> 
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div> -->
+
+                        <div class="row mt-4">
+                            <!-- <div class="row col-md-8 offset-md-2 grid-margin stretch-card" > -->
+                                <div class="col-md-6 grid-margin stretch-card" style="padding-right: 1.8em; padding-left: 1.8em;" id="es">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-12"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h4 class="card-title">Employee <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.es %>" style="cursor: pointer;">  
+                                                        <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                                    </span></h4>
+                                                </div>
+                                                <!-- <p class="mt-1">Calculated in last 30 days</p> -->
+                                                <div class="d-lg-flex align-items-center justify-content-between">
+                                                    <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                                    <div class="mb-3">
+                                                        <% if(model.es.length > 0) { %> 
+                                                            <button type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#es_modal">Show table</button>
+                                                        <% } %>
+                                                    </div>
+                                                </div>
+                                                <% if(model.es.length == 0) { %>
+                                                    <div class="col-sm-12 grid-margin text-center">No chart to display</div>
+                                                <% } %>
+
+                                                <% if(model.es.length > 0) { %> 
+                                                    <div class="d-lg-flex justify-content-between">
+                                                        <div id="revenuechart-legend" class="revenuechart-legend" >
+                                                            <ul class="graphl-legend-rectangle" style="font-size: 14px;">
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#08ffc8;"></span>
+                                                                    <span class="legend-label text-dark">Operator</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#fff7f7;"></span>
+                                                                    <span class="legend-label text-dark">Maintenance</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#dadada;"></span>
+                                                                    <span class="legend-label text-dark">Supervisor</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#204969;"></span>
+                                                                    <span class="legend-label text-dark">Accountant</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#ffb6b9;"></span>
+                                                                    <span class="legend-label text-dark">Sales</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#fae3d9;"></span>
+                                                                    <span class="legend-label text-dark">Logistic</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#bbded6;"></span>
+                                                                    <span class="legend-label text-dark">Material</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#8ac6d1;"></span>
+                                                                    <span class="legend-label text-dark">Quality</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#d9d9f3;"></span>
+                                                                    <span class="legend-label text-dark">R&D</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="legend-box" style="background:#9dd3a8;"></span>
+                                                                    <span class="legend-label text-dark">Logistic/Sales</span>
+                                                                </li>
+                                                                 
+                                                            </ul></div>
+                                                    </div>
+                                                <canvas id="es-chart" style="display: block; width: 50%; height: 50%;" class="chartjs-render-monitor"></canvas> 
+                                                <% } %>
+
+                                                <div class="modal fade" id="es_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                                    <div class="modal-dialog modal-sm" role="document">
+                                                      <div class="modal-content">
+                                                        <div class="modal-header">
+                                                          <h5 class="modal-title" id="exampleModalLongTitle">Employee</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="table-responsive col-lg-12">
+                                                                <table class="table" id="es-table">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Operator</td>
+                                                                                <!-- <td><input class="esm-control"></td> -->
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].operator %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Maintenance</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].maintenance %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Supervisor</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].supervisor %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Accountant</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].accountant %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Sales</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].sales %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Logistic</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].logistic %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Material</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].material %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Quality</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].quality %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">R&D</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].r_d %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Logistic/Sales</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].logistic_sales %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">Total</td>
+                                                                                <% if (model.es) { if(model.es.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.es.length; i++) { %> 
+                                                                                        <td class="text-center"><%=model.es[i].total %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table></div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+            
+                            <div class="col-md-6 grid-margin stretch-card" style="padding-right: 1.8em; padding-left: 1.8em;">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-12"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h4 class="card-title mb-0">Certification <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.certification %>" style="cursor: pointer;">  
+                                                        <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                                    </span></h4>
+                                                </div>
+                                                <!-- <p class="mt-1">Calculated in last 30 days</p> -->
+                                                <div class="d-lg-flex align-items-center justify-content-between">
+                                                    <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                                    <div class="mb-3">
+                                                    </div>
+                                                </div>
+                                                
+                                                    <div class="d-lg-flex justify-content-between" >
+                                                        <div id="revenuechart-legend" class="revenuechart-legend" >
+                                                            <div class="form-group">
+                                                                <% if (model.certifiList.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.certifiList.length; i++) {  
+                                                                %> 
+                                                                <div class="form-check form-check-primary">
+                                                                    <label class="form-check-label">
+                                                                      <input type="checkbox" class="form-check-input" value="<%= model.certifiList[i].id %>" name="certification[]" onclick="return false;">
+                                                                      <%= model.certifiList[i].code %>
+                                                                    <i class="input-helper"></i></label>
+                                                                 </div>
+                                                            <% }} %> 
+                                                              
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            
+                            </div>
+            
+
+
+<script>
+
+    var inPrView = false;
+    var inSrView = false;
+    var inCcView = false;
+    var inMvView = false;
+    var inForView = false;
+    var inEsView = false;
+
+    $("document").ready(function() { 
+
+        $('[data-toggle="popover"]').popover({
+            trigger: 'focus'
+        })
+
+        createComponentDoughnutChart('pr');
+        createComponentDoughnutChart('sr');
+        createComponentDoughnutChart('cc');
+        createComponentDoughnutChart('mv');
+        createForChart(JSON.parse(htmlDecode("<%= JSON.stringify(model.for) %>")));
+        createEsChart(JSON.parse(htmlDecode("<%= JSON.stringify(model.es) %>")));
+
+        //certification
+        if ('<%= JSON.stringify(model.company.certification) %>' != '') {
+            var certification = JSON.parse(htmlDecode("<%= JSON.stringify(model.company.certification) %>"));
+            var rows = certification.split('$');
+            for (var i=0; i<rows.length; i++) {
+                if (rows[i] != '') {
+                    $('input:checkbox[name="certification[]"][value=' + rows[i] + ']').prop('checked', true);
+                }
+            }
+        }
+    });
+
+    $(window).scroll(function() {
+
+        var height = $(document).scrollTop();
+
+        if ($("#pr").offset().top - height < 450 && !inPrView) {
+            inPrView = true;
+            createComponentDoughnutChart('pr');
+        }
+        if ($("#sr").offset().top - height < 450 && !inSrView) {
+            inSrView = true;
+            createComponentDoughnutChart('sr');
+        }
+        if ($("#cc").offset().top - height < 500 && !inCcView) {
+            inCcView = true;
+            createComponentDoughnutChart('cc');
+        }
+        if ($("#mv").offset().top - height < 500 && !inMvView) {
+            inMvView = true;
+            createComponentDoughnutChart('mv');
+        }
+        if ($("#for").offset().top - height < 500 && !inForView) {
+            inForView = true;
+            createForChart(JSON.parse(htmlDecode("<%= JSON.stringify(model.for) %>")));
+        } 
+        if ($("#es").offset().top - height < 500 && !inEsView) {
+            inEsView = true;
+            createEsChart(JSON.parse(htmlDecode("<%= JSON.stringify(model.es) %>")));
+        }
+    });
+
+
+
+</script>
+
+<style>
+
+.row-title {
+    font-size: 19px;
+    font-weight: 800;
+    position: absolute;
+    color: #001737;
+    text-transform: uppercase;
+}
+
+.num {
+    text-align: right;
+}
+
+</style>
+</body>
+</html>

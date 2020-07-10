@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../../layout/head.ejs') -%>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+</head>
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>Service 관리</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">등록폼</h4>
+                        <form class="forms-sample" id="addForm" enctype="multipart/form-data">
+                          <div class="form-group">
+                            <label for="exampleInputName1">제목</label>
+                            <input type="text" class="form-control" name="title" >
+                          </div>
+                          <div class="form-group">
+                            <label>File upload</label>
+                            <input type="file" name="file-upload-field" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                              <input type="text" id="info" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                              <span class="input-group-append">
+                                <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                              </span>
+                            </div>
+                          </div>
+                          <button type="button" class="btn btn-primary mr-2" onclick="save();">제출</button>
+                          <button type="button" class="btn btn-light" onclick="location.href='/admin/homepage/service'">목록</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+    <script>
+
+    $("document").ready(function() { 
+
+        //파일 형식 체크
+        $("form").on("change", ".file-upload-default", function(){ 
+
+          var fileext = $(this).val();
+          fileext = fileext.slice(fileext.indexOf(".") + 1);
+          fileext = fileext.toLowerCase();
+
+          if (fileext != "jpg" && fileext != "png" && fileext != "gif" && fileext != "bmp") {
+              alert('이미지 파일(jpg, png, gif, bmp) 등록 가능합니다!');
+              $(this).parent(".form-control file-upload-info").attr("data-text", "");
+              $("#info").val("");
+              return;
+          }
+
+          $(this).parent(".form-control file-upload-info").attr("data-text", $(this).val().replace(/.*(\/|\\)/, '') );
+        });
+    });
+
+    function save() {
+
+        var form = $('#addForm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/admin/homepage/service/add",
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (data) {
+                window.location.href = '/admin/homepage/service'
+            },
+            error: function (e) {
+                alert("빠진거 없는지 확인 부탁!")
+            }
+        });
+    }
+     
+    </script>
+
+</body>
+</html>

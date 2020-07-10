@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <%- include ('../../layout/head.ejs') -%>
+</head>
+
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+              
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>나라 관리</h2>
+                        <p class="mb-md-0"><a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                  <div class="card">
+                      <div class="card-body">
+                      <div class="form-inline" id="addDiv">
+                            <input id="name" name="name" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" placeholder="나라명" >
+                            <input id="code_" name="code_" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" placeholder="코드(소문자)">
+                            <button type="button" class="btn btn-primary mb-2" style="background-color: #317376;" onclick="addCountry();">등록</button>
+                      </div>
+                      <div class="form-inline" id="modDiv" style="display: none;">
+                        <input id="id" name="id" type="hidden" >
+                        <input id="mod_name" name="mod_name" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" placeholder="나라명" >
+                        <input id="mod_code" name="mod_code" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" placeholder="코드(소문자)">
+                        <button type="button" class="btn btn-primary mb-2" style="background-color: #317376;" onclick="modify();">수정</button>
+                        <button type="button" class="btn btn-primary mb-2" style="background-color: firebrick;" onclick="cancelMod();">취소</button>
+                      </div>
+
+                        <div class="table-responsive">
+                            <table class="table">
+                            <thead>
+                                <tr>
+                                <th class="text-center" style="width: 5%;">ID</th>
+                                <th class="text-center">나라명</th>
+                                <th class="text-center" style="width: 10%;">코드</th>
+                                <th class="text-center">등록된 수</th>
+                                <th class="text-center" style="width: 10%;">사용여부</th>
+                                <th class="text-center" style="width: 10%;">상세보기</th>
+                                <th class="text-center" style="width: 10%;">수정</th>
+                                <th class="text-center" style="width: 10%;">삭제</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbd">	                                        
+                                <%         
+                                if (model.list.length > 0) { %> 
+                                    <% for(let i=0; i<model.list.length; i++) {        
+                                %> 
+                                <tr>   
+                                    <th class="text-center"><%=model.list[i].id %></th>
+                                    <th class="text-center"><%=model.list[i].country_name %></th>
+                                    <th class="text-center"><%=model.list[i].code %></th>
+                                    <th class="text-center"><%= comma(model.list[i].cnt) %></th>
+                                    <th class="text-center"><button type="button" class="btn btn-link" onclick="modShowOption('<%=model.list[i].id %>','<%=model.list[i].showYN %>');"><%=model.list[i].showYN %></button></th>
+                                    <th class="text-center"><button type="button" class="btn btn-link" onclick="modDetailOption('<%=model.list[i].id %>','<%=model.list[i].detailYN %>');"><%=model.list[i].detailYN %></button></th>
+                                    <th class="text-center"><button type="button" class="btn btn-info" onclick="modBtn('<%=model.list[i].id %>');">수정</button></th>
+                                    <th class="text-center"><% if(model.list[i].cnt == 0) { %><button type="button" class="btn btn-danger" onclick="del('<%=model.list[i].id %>');">삭제</button><% } %></th>
+                                </tr>                   
+                                <%  
+                                }
+                                } else {  %> 
+                                    <tr>   
+                                        <th>데이터가 없습니다.</th>
+                                    </tr> 
+                                    <% } %> 	
+                              </tbody>
+                            </table>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+
+
+<script>
+
+    $("document").ready(function() { 
+
+    });
+
+    function addCountry() {
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/countries/add",
+            dataType: "json",
+            data: { 'name': $("#name").val(), 'code': $("#code_").val()},
+            success: function (data) {
+                alert("완료되었습니다!");
+                window.location.href = '/admin/countries/list'
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+    function modBtn(id) {
+        document.getElementById('addDiv').style.display = "none";
+        document.getElementById('modDiv').style.display = "block";
+        $("#name").val("");
+        $("#code_").val("");
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/countries/getdata",
+            dataType: "json",
+            data: { 'id': id},
+            success: function (data) {
+                $("#id").val(data.data.id);
+                $("#mod_name").val(data.data.country_name);
+                $("#mod_code").val(data.data.code);
+            },
+            error: function (e) {
+                console.log(e)
+            }
+        });
+    }
+
+    function cancelMod() {
+        document.getElementById('addDiv').style.display = "block";
+        document.getElementById('modDiv').style.display = "none";
+        $("#id").val("");
+        $("#mod_name").val("");
+        $("#mod_code").val("");
+    }
+
+    function back() {
+        document.getElementById('addDiv').style.display = "block";
+        document.getElementById('modDiv').style.display = "none";
+        $("#id").val("");
+        $("#mod_name").val("");
+        $("#mod_code").val("");
+    }
+
+    function modify() {
+        $.ajax({
+            type: "POST",
+            url: "/admin/countries/modify",
+            dataType: "json",
+            data: { 'name': $("#mod_name").val(), 'code': $("#mod_code").val(), 'id': $("#id").val()},
+            success: function (data) {
+                alert("수정되었습니다!");
+                window.location.href = '/admin/countries/list'
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+    function modShowOption(id, value_) {
+
+        var value_;
+        if (value_ == 'Y') value = 'N';
+        else value = 'Y';
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/countries/modOption",
+            dataType: "json",
+            data: { 'showYN': value, 'id': id },
+            success: function (data) {
+                alert("수정되었습니다!");
+                window.location.href = '/admin/countries/list'
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+    function modDetailOption(id, value_) {
+
+        var value_;
+        if (value_ == 'Y') value = 'N';
+        else value = 'Y';
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/countries/modOption",
+            dataType: "json",
+            data: { 'detailYN': value, 'id': id},
+            success: function (data) {
+                alert("수정되었습니다!");
+                window.location.href = '/admin/countries/list'
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+    function del(id) {
+
+        if (confirm('삭제하시겠습니까?')) {
+
+            var data = { 'tableName': 'countries' };
+            data = JSON.stringify(data);
+
+            //content-type을 설정하고 데이터 송신
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/admin/del/' + id);
+            xhr.setRequestHeader('Content-type', "application/json");
+            xhr.send(data);
+
+            // 데이터 수신이 완료되면 표시
+            xhr.addEventListener('load', function(){
+                alert("삭제되었습니다.")
+                location.reload(true);
+            });
+        } 
+    }
+        
+    </script>
+ 
+</body>
+</html>

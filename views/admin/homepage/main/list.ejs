@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../../layout/head.ejs') -%>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="container-scroller">
+        <%- include ('../../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>메인 관리</h2>
+                      </div>
+                    </div>
+                    <button class="btn btn-primary mt-2 mt-xl-0" onclick="location.href='/admin/homepage/main/addForm'">등록</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Modal -->
+                <div class="modal fade" id="delCheckModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">정말 삭제하시겠습니까?</h5>
+                      <input type="hidden" id="id" name="id" value="">
+                      <input type="hidden" id="fileName" name="fileName" value="">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                      <button type="button" class="btn btn-danger" onclick="delBtn();">삭제</button>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="col-lg-12 grid-margin stretch-card">
+                  <div class="card">
+                      <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id='table'>
+                            <thead>
+                                <tr>
+                                <th>제목</th>
+                                <th>내용</th>
+                                <th>image</th>
+                                <th>순서<a href="javascript:modOrder();" class="btn btn-light">변경</a></th>
+                                <th>사용여부</th>
+                                <th></th>
+                                <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbd">
+                                <%         
+                                if (model.list.length > 0) { %> 
+                                    <% for(let i=0; i<model.list.length; i++) {        
+                                %> 
+                                <tr id="<%=model.list[i].id %>">   
+                                    
+                                    <th><%=model.list[i].title %></th>
+                                    <th><%=model.list[i].contents %></th>
+                                    <th><img src="/uploads/<%=model.list[i].file_name_new %>" alt="My Image" width="200" height="100"></th>
+                                    <th><button type="button" class="btn" style="background: transparent; color: black;" onclick="MoveRowUp('<%=model.list[i].id %>')"><i class="fa fa-angle-up fa-lg"></i></button><button type="button" class="btn" style="background: transparent; color: black;" onclick="MoveRowDown('<%=model.list[i].id %>')"><i class="fa fa-angle-down fa-lg"></i></button></th>
+                                    <th><div class="btns"><a href="javascript:modUseOption(<%=model.list[i].id %>, '<%=model.list[i].useYN %>');" class="btn"><%=model.list[i].useYN %></a></div></th>
+                                    <th><button type="button" class="btn btn-info" onclick="modBtn('<%=model.list[i].id %>');">수정</button></th>
+                                    <th><button type="button" class="open-delCheckDialog btn btn-danger" data-id="<%=model.list[i].id %>" data-filename="<%=model.list[i].file_name_new %>" data-toggle="modal" data-target="#delCheckModal">삭제</button></th>
+                                </tr>                   
+                                <% }} else {  %> 
+                                <tr>   
+                                    <th class="text-center" colspan="5">데이터가 없습니다.</th>
+                                </tr> 
+                                <% } %> 	                                        
+                              </tbody>	 
+                            </table>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+        </div>
+    </div>
+ 
+
+    <script>
+
+    $(document).ready(function() {
+
+      $(document).on("click", ".open-delCheckDialog", function () { 
+          var id = $(this).data('id'); 
+          var fileName = $(this).data('filename'); 
+          $(".modal-header #id").val( id ); 
+          $(".modal-header #fileName").val( fileName ); 
+      });
+    });
+    
+    function MoveRowDown(id) {
+            var rows = $("#table tr");
+            var row_number = document.getElementById(id).rowIndex;
+            rows.eq(document.getElementById(id).rowIndex).insertAfter(rows.eq(document.getElementById(id).rowIndex + 1));
+        }
+
+    function MoveRowUp(id) {           
+        var rows = $("#table tr");
+        var row_number = document.getElementById(id).rowIndex;
+        if (document.getElementById(id).rowIndex - 1 != 0) {
+            rows.eq(document.getElementById(id).rowIndex).insertBefore(rows.eq(document.getElementById(id).rowIndex - 1));
+        }
+    }
+
+    //순서 변경
+    function modOrder() {
+
+        var arr = [];
+
+        $('#table tr').not(':first').each(function() {
+            arr.push(this.id);
+        })
+
+        var data = { 'arr': arr };
+        data = JSON.stringify(data);
+
+        //content-type을 설정하고 데이터 송신
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/homepage/modOrder');
+        xhr.setRequestHeader('Content-type', "application/json");
+        xhr.send(data);
+        
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('load', function(){
+          alert('완료되었습니다.');
+          location.reload(true);
+        });
+    }
+
+    function modUseOption(id, value) {
+
+        var yn = (value == 'Y') ? 'N':'Y';
+        var data = { 'useYN': yn };
+        data = JSON.stringify(data);
+
+        //content-type을 설정하고 데이터 송신
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/homepage/modUseOption/' + id);
+        xhr.setRequestHeader('Content-type', "application/json");
+        xhr.send(data);
+
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('load', function(){
+          alert('완료되었습니다.');
+          location.reload(true);
+        });
+    }
+
+    function modBtn(id) {
+        window.location.href = './main/modForm/' + id;
+    }
+
+    function delBtn() {
+
+      $('#delCheckModal').modal('hide');
+
+      var data = { 'file_name': $("#fileName").val() };
+      data = JSON.stringify(data);
+
+      //content-type을 설정하고 데이터 송신
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/admin/homepage/delItem/' + $("#id").val());
+      xhr.setRequestHeader('Content-type', "application/json");
+      xhr.send(data);
+
+      // 데이터 수신이 완료되면 표시
+      xhr.addEventListener('load', function(){
+        location.reload(true);
+      });
+    }
+
+    </script>
+
+</body>
+</html>

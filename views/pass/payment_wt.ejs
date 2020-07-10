@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link href="/css/membership.css" rel="stylesheet" />
+<link href="/css/payment.css" rel="stylesheet" />
+<link href="/css/payment_method.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/bootstrap-select-country.min.css" type="text/css" />
+<script src="/js/bootstrap-select-country.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.62/pdfmake.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.62/vfs_fonts.js"></script> 
+
+</head>
+
+<body>
+    <form id="payForm" action="/pass/processWireTransfer" method="POST">
+        <input id="subscriptionKey" name="subscriptionKey" type="hidden" value="<%= subscriptionKey %>"/>
+        <input id="title" name="title" type="hidden" value="<%= data.title %>"/>
+        <input name="months" type="hidden" value="<%= data.months %>"/>
+        <input id="price" name="price" type="hidden" value="<%= data.price %>"/>
+        <input id="method" name="method" type="hidden" value="<%= method %>"/> 
+
+        <div class="ticket-popup-wrap">
+            <h1 class="popup-header">Subscription</h1> 
+            <div class="popup-body">
+                <div class="popup-content">
+                    <div class="popup-tit">Wire Transfer Account</div> 
+                <table class="purchase-desc">
+                    <colgroup>
+                        <col width="170px"> 
+                        <col width="190px">
+                        <col width="130px"> 
+                        <col width="190px">
+                    </colgroup> 
+                    <tbody>
+                        <tr>
+                            <th scope="row">Beneficiary</th> 
+                            <td colspan="4" class="purchase-name">
+                                <p class="popup-text01"><strong><%= setting.beneficiary %></strong></p> 
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Bank</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><%= setting.bank %></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Account No.</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><%= setting.accountNo %></p>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Swift Code</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><%= setting.swiftCode %></p>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Bank Telephone</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><%= setting.bankTelephone %></p>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Bank Address</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><%= setting.bankAddress %></p>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Others
+                                <br>Beneficiary Telephone</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><%= setting.othersBeneficiaryTel %></p>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Beneficiary Address</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><%= setting.beneficiaryAddress %></p>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Remitter Name</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><input class="form-control" id="remitterName" name="remitterName" value="<%= userObj.first_name %> <%= userObj.last_name %>"></p>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Email</th> 
+                            <td colspan="3">
+                                <p class="popup-text01"><input class="form-control" id="email" name="email" value="<%= userObj.email %>"></p>
+                            </td>
+                        </tr>  
+                        <tr>
+                            <th scope="row">Contact Name</th> 
+                            <td colspan="3">
+                                <p class="popup-price"><input class="form-control" id="contactName" name="contactName" value="<%= userObj.first_name %> <%= userObj.last_name %>" ></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Company Name</th> 
+                            <td colspan="3">
+                                <p class="popup-price"><input class="form-control" id="companyName" name="companyName"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Country</th> 
+                            <td colspan="3">
+                                <select id="country" name="country" class="selectpicker countrypicker" data-flag="true" onchange="changeCountry();"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Phone</th> 
+                            <td colspan="3">
+                                <p class="popup-price"><input class="form-control" id="phone" name="phone"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> 
+            
+            <div id="payment-wrap" class="popup-content">
+                <ul class="popup-btn-wrap" style="margin-top: 40px;"><li><button onclick="cancel();" type="button" class="btn-br-gray">Cancel</button></li> 
+                    <li><button type="button" class="btn-fill-purple" onclick="check();">Submit</button></li></ul></div> <div id="layer-popup" class="ticket-popup-wrap" style="visibility: hidden;"><div class="modal-mask"><div class="modal-wrapper02"><button type="button" class="modal-default-button"><img src="../Common/Images/pc/common/btn-popup-close.png" alt="팝업닫기"></button> <div class="modal-container"><div class="modal02-body"><div><div class="popup-content">
+                    
+    </form>
+<script>
+
+    $(document).ready(function() {
+        $('.countrypicker').countrypicker();
+    });
+
+    function goCancel() {
+        window.close();  
+    }
+    function check () {
+
+        var remitterName = $("#remitterName").val();
+        if (remitterName == '') { 
+            alert("Please provide a valid Remitter Name!");
+            $("#remitterName").focus();
+            return;
+        }
+
+        var email = $("#email").val();
+        var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+        if (email == '' || !exptext.test(email)) { 
+            alert("Please provide a valid Email!");
+            $("#email").focus();
+            return;
+        }
+
+        var contactName = $("#contactName").val();
+        if (contactName == '') { 
+            alert("Please provide a valid Contact Name!");
+            $("#contactName").focus();
+            return;
+        }
+
+        var companyName = $("#companyName").val();
+        if (companyName == '') { 
+            alert("Please provide a valid Company Name!");
+            $("#companyName").focus();
+            return;
+        }
+
+        var phone = $("#phone").val();
+        if (phone == '') { 
+            alert("Please provide a valid Phone!");
+            $("#phone").focus();
+            return;
+        }
+
+        $("#payForm").submit();  
+    }
+    
+
+</script>
+</body>
+</html>

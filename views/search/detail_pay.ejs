@@ -1,0 +1,1290 @@
+
+<html lang="en" >
+
+<body>
+
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="col-sm-6 mb-4 mb-xl-0">
+            <div class="d-lg-flex align-items-center">
+                <div>
+                    <h3 class="text-dark font-weight-bold mb-2">Paid data</h3>
+                    <!-- <h6 class="font-weight-normal mb-2">Last login was 23 hours ago. View details</h6> -->
+                </div>
+                <!-- <div class="ml-lg-5 d-lg-flex d-none">
+                        <button type="button" class="btn bg-white btn-icon">
+                            <i class="mdi mdi-view-grid text-success"></i>
+                    </button>
+                        <button type="button" class="btn bg-white btn-icon ml-2">
+                            <i class="mdi mdi-format-list-bulleted font-weight-bold text-primary"></i>
+                        </button>
+                </div> -->
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <!-- <div class="d-flex align-items-center justify-content-md-end">
+                <div class="pr-1 mb-3 mb-xl-0">
+                        <button type="button" class="btn btn-outline-inverse-info btn-icon-text">
+                            Feedback
+                            <i class="mdi mdi-message-outline btn-icon-append"></i>                          
+                        </button>
+                </div>
+                <div class="pr-1 mb-3 mb-xl-0">
+                        <button type="button" class="btn btn-outline-inverse-info btn-icon-text">
+                            Help
+                            <i class="mdi mdi-help-circle-outline btn-icon-append"></i>                          
+                    </button>
+                </div>
+                <div class="pr-1 mb-3 mb-xl-0">
+                        <button type="button" class="btn btn-outline-inverse-info btn-icon-text">
+                            Print
+                            <i class="mdi mdi-printer btn-icon-append"></i>                          
+                        </button>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body dashboard-tabs p-0">
+            <div class="tab-content py-0 px-0">
+              <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                <div class="d-flex flex-wrap justify-content-xl-between">
+                    <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
+                    <i class="mdi mdi-alert-circle mr-3 icon-lg text-dark"></i>
+                    <div class="d-flex flex-column justify-content-around">
+                        <small class="mb-1 text-muted">Company</small>
+                        <h5 class="mr-2 mb-0"><%= model.company.name_eng %></h5>
+                    </div>
+                    </div>
+                  <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
+                    <i class="mdi mdi-email mr-3 icon-lg text-danger"></i>
+                    <div class="d-flex flex-column justify-content-around">
+                      <small class="mb-1 text-muted">E-mail</small>
+                      <h5 class="mr-2 mb-0"><% if (model.company.email != '') { %> <%= model.company.email %> <% } else { %> No data to display. <% } %></h5>
+                    </div>
+                  </div>
+                  <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
+                    <i class="mdi mdi-home mr-3 icon-lg text-success"></i>
+                    <div class="d-flex flex-column justify-content-around">
+                      <small class="mb-1 text-muted">Website</small>
+                      <h5 class="mr-2 mb-0"><% if (model.company.website != '') { %> 
+                            <a href="<%= model.website %>" target="_blank"><%= model.website %></a>
+                        <% } else { %> No data to display. <% } %></h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- <div class="col-md-8 offset-md-2  grid-margin stretch-card" > -->
+        <div class="col-md-12  grid-margin stretch-card" >
+            <div class="card">
+                <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4" id="creditRating">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <h4 class="card-title">Credit Rating 
+                                <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.creditRating %>" style="cursor: pointer;">  
+                                    <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                </span>
+                            </h4>
+                            
+                                <% if (model.company.creditRating != '' && model.company.creditRating != undefined) { %> 
+                                    <!-- <div class="img-responsive"  id="creditRating-chart"> </div> -->
+                                    <div id="creditRating-chart" class="row" style="height: 280px;"></div>
+                                    <div class="credit-title"><%= model.company.credit_name %> <% if(model.company.credit_subname != '') { %> (<%= model.company.credit_subname %>) <% } %> 
+                                    <button type="button" class="btn btn-inverse-success btn-icon" id="creditBtn" onclick="clickCredit();" style="margin-left: 7px;" data-toggle="collapse" data-target="#collapseCredit" aria-expanded="false" aria-controls="collapseCredit"
+                                    ><i class="mdi mdi-plus text-success"></i></button> </div>
+                                        
+                                    <div class="collapse mt-3 mb-4 mb-lg-0 credit-description text-center" id="collapseCredit" >
+                                            <%= model.company.credit_contents %>
+                                    </div>
+                               
+                                    <% } else { %><div class="col-sm-12 grid-margin text-center">No data to display</div><% } %>
+                           
+                            </div>
+                            <div class="col-lg-4" id="cashFlowRating">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <h4 class="card-title">Cash Flow Rating<span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.cashFlowRating %>" style="cursor: pointer;">  
+                                <i class="mdi mdi-help-circle-outline text-dark"></i>
+                            </span></h4>
+                                <% if (model.company.cashFlowRating != '' && model.company.cashFlowRating != undefined) { %> 
+
+                                    <div id="cashFlowRating-chart"  class="row" style="height: 280px;"></div>
+
+                                    <div class="credit-title"><%= model.company.cashflow_name %> <% if(model.company.cashflow_subname != '') { %> (<%= model.company.cashflow_subname %>) <% } %> 
+                                    <button type="button" class="btn btn-inverse-success btn-icon" id="cashFlowBtn" onclick="clickCashFlow();" style="margin-left: 7px;" data-toggle="collapse" data-target="#collapseCashFlow" aria-expanded="false" aria-controls="collapseCashFlow"
+                                    ><i class="mdi mdi-plus text-success"></i></button> </div>
+                                        
+                                    <div class="collapse mt-3 mb-4 mb-lg-0 credit-description text-center" id="collapseCashFlow" >
+                                            <%= model.company.cashflow_contents %>
+                                    </div>
+                                   
+                                    <% } else { %><div class="col-sm-12 grid-margin text-center">No data to display</div><% } %>
+                            </div>
+                            <div class="col-lg-4" id="watchRating">
+                            <h4 class="card-title">Watch Rating<span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.watchRating %>" style="cursor: pointer;">  
+                                <i class="mdi mdi-help-circle-outline text-dark"></i>
+                            </span></h4>
+                            <% if (model.company.watchRating != '' && model.company.watchRating != undefined) { %> 
+                                <div id="watchRating-chart"  class="row" style="height: 280px;"></div>
+
+                                <div class="credit-title"><%= model.company.watch_name %> <% if(model.company.watch_subname != '') { %> (<%= model.company.watch_subname %>) <% } %> 
+                                <button type="button" class="btn btn-inverse-success btn-icon" id="watchBtn" onclick="clickWatch();" style="margin-left: 7px;" data-toggle="collapse" data-target="#collapseWatch" aria-expanded="false" aria-controls="collapseWatch"
+                                ><i class="mdi mdi-plus text-success"></i></button> </div>
+                                    
+                                <div class="collapse mt-3 mb-4 mb-lg-0 credit-description text-center" id="collapseWatch" >
+                                        <%= model.company.watch_contents %>
+                                </div>
+                                    <% } else { %><div class="col-sm-12 grid-margin text-center">No data to display</div><% } %>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                    <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6" id="ms"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                        <h4 class="card-title">Major Shareholders <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.ms %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                        <div class="d-lg-flex align-items-center justify-content-between">
+                                            <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                            <div class="mb-3">
+                                                <% if(model.ms.length > 0) { %>
+                                                    <button id="ms-btn" type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#ms_modal">Show table</button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <% if(model.ms.length > 0) { %>
+                                        <div class="row" id="ms-div">
+                                            <div class="col-sm-4">
+                                                <%  var text = "background-color:";
+                                                    var color_ms = ["#F7464A", "#46BFBD", "#FDB45C","#4D5360", "#949FB1"] %>
+                                                <ul class="graphl-legend-rectangle" id="ms_ul">
+                                                    <% if (model.ms) { if(model.ms.length > 0) { %> 
+                                                        <% for(let i=0; i<model.ms.length; i++) { %> 
+                                                                <li><span class='bg' style=<%= text %><%= color_ms[i] %> ></span><%= model.ms[i].shareholder %></li>
+                                                    <% } } } %> 
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-8 grid-margin"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                <canvas id="ms-chart" class="chartjs-render-monitor"></canvas> 
+                                            </div>
+                                        </div>
+                                        <% } else { %><div class="col-sm-12 grid-margin text-center">No chart to display</div><% } %>
+                                        <div class="modal fade" id="ms_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Major Shareholders</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="card-description"> <%= model.currency.code %>&nbsp;<%= model.currency.symbolNative %> <code><%= comma(model.currency.unit) %></code></p>
+                                                    <div class="table-responsive col-lg-12">
+                                                        <table id="ms-table" class="table">
+                                                            <thead>
+                                                                <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                <th>Controlling stockholder</th>
+                                                                <th>Number of shares</th>
+                                                                <th>Rate of stocks</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (model.ms) { if(model.ms.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ms.length; i++) { %> 
+                                                                        <tr>
+                                                                            <td><%= model.ms[i].shareholder %></td>
+                                                                            <td><%= model.ms[i].shares %></td>
+                                                                            <td><%= model.ms[i].rateOfStocks %></td>
+                                                                <% } } } %> 
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <div class="col-lg-6" id="rc">
+                                        <h4 class="card-title">Related Companies <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.rc %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                        <div class="d-lg-flex align-items-center justify-content-between">
+                                            <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                            <div class="mb-3">
+                                                <% if(model.rc.length > 0) { %>
+                                                <button id="rc-btn" type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#rc_modal">Show table</button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <% if(model.rc.length > 0) { %>
+                                        <div class="row" id="rc-div">
+                                            <div class="col-sm-4" >
+                                                <ul class="graphl-legend-rectangle" id="rc_ul">
+                                                    <%  var color_rc = ["#F7464A", "#46BFBD", "#FDB45C","#4D5360", "#949FB1"] %>
+                                                    <% if (model.rc) { if(model.rc.length > 0) { %> 
+                                                        <% for(let i=0; i<model.rc.length; i++) { %> 
+                                                                <% if( model.rc[i].relCompanyId != 0 ) { %> 
+                                                                    <li><span class='bg' style=<%= text %><%= color_rc[i] %> ></span><a href="/company/detail/<%= model.rc[i].relCompanyId%>?first=1"><%= model.rc[i].name_eng%></a></li>
+                                                                <% } else { %>
+                                                                    <li><span class='bg' style=<%= text %><%= color_rc[i] %> ></span><%= model.rc[i].companyNm %></li>
+                                                                <% } %>
+                                                    <% } } } %> 
+
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-8 grid-margin"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                <canvas id="rc-chart" class="chartjs-render-monitor"></canvas>
+                                            </div>
+                                        </div>
+                                        <% } else { %><div class="col-sm-12 grid-margin text-center">No chart to display</div><% } %>
+                                        
+                                        <div class="modal fade" id="rc_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Related Companies</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="table-responsive col-lg-12">
+                                                        <table id="rc-table" class="table">
+                                                            <thead>
+                                                            <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                <th>Company</th>
+                                                                <th>CEO</th>
+                                                                <th>Rate of stocks</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (model.rc) { if(model.rc.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.rc.length; i++) { %> 
+                                                                        <tr>
+                                                                        <% if( model.rc[i].relCompanyId != 0 ) { %> 
+                                                                            <td><a href="/company/detail/<%= model.rc[i].relCompanyId%>?first=1"><%= model.rc[i].name_eng%></a></td>
+                                                                            <td><%= model.rc[i].ceo%></td>
+                                                                        <% } else { %>
+                                                                            <td><%= model.rc[i].companyNm%></td>
+                                                                            <td><%= model.rc[i].ceoNm%></td>
+                                                                        <% } %>
+                                                                        <td><%= model.rc[i].rateOfStocks%></td></tr>
+                                                                <% } } } %>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+            </div>
+        </div>
+            
+        <div class="col-md-12 grid-margin stretch-card" >
+            <div class="card">
+                    <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6" id="msp"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                        <h4 class="card-title">Major Selling partner <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.msp %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                        <div class="d-lg-flex align-items-center justify-content-between" >
+                                            <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                            <div class="mb-3">
+                                                <% if(model.msp.length > 0) { %>
+                                                    <button id="msp-btn" type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#msp_modal">Show table</button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <% if(model.msp.length > 0) { %>
+                                        <div class="row" id="msp-div">
+                                            <div class="col-sm-4">
+                                                <ul class="graphl-legend-rectangle" id="msp_ul">
+                                                    <%  var text = "background-color:";
+                                                    var color_msp = ["#F7464A", "#46BFBD", "#FDB45C","#4D5360", "#949FB1"] %>
+                                                    <ul class="graphl-legend-rectangle" id="ms_ul">
+                                                    <% if (model.msp) { if(model.msp.length > 0) { %> 
+                                                        <% for(let i=0; i<model.msp.length; i++) { %> 
+                                                                <% if( model.msp[i].partnerId != 0 ) { %> 
+                                                                    <li><span class='bg' style=<%= text %><%= color_msp[i] %> ></span><a href="/company/detail/<%= model.msp[i].partnerId%>?first=1"><%= model.msp[i].name_eng%></a></li>
+                                                                <% } else { %>
+                                                                    <li><span class='bg' style=<%= text %><%= color_msp[i] %> ></span><%= model.msp[i].companyNm %></li>
+                                                                <% } %>
+                                                    <% } } } %> 
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-8 grid-margin"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                <canvas id="msp-chart" class="chartjs-render-monitor"></canvas> 
+                                            </div>
+                                        </div>
+                                        <% } else { %><div class="col-sm-12 grid-margin text-center">No chart to display</div><% } %>
+                                        
+                                        <div class="modal fade" id="msp_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-xl" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Major Selling partner</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="card-description"> <%= model.currency.code %> <%= model.currency.symbolNative %> <code><%= model.currency.unit %></code></p>
+                                                    <div class="table-responsive col-lg-12">
+                                                        <table id="msp-table" class="table">
+                                                            <thead>
+                                                                <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                <th>Company</th>
+                                                                <th>Tax Identification</th>
+                                                                <th>CEO</th>
+                                                                <th style="color:yellow;">Estimated Transaction Weight</th>
+                                                                <th>Total assets</th>
+                                                                <th>Total Liabilities</th>
+                                                                <th>Sales</th>
+                                                                <th>Operating profit</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (model.msp) { if(model.msp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.msp.length; i++) { %> 
+                                                                        <tr>
+                                                                        <% if( model.msp[i].partnerId != 0 ) { %> 
+                                                                            <td><a href="/company/detail/<%= model.msp[i].partnerId%>?first=1"><%= model.msp[i].name_eng%></a></td>
+                                                                            <td><%= model.msp[i].brn%></td>
+                                                                            <td><%= model.msp[i].ceo%></td>
+                                                                        <% } else { %>
+                                                                            <td><%= model.msp[i].companyNm%></td>
+                                                                            <td><%= model.msp[i].brnNum%></td>
+                                                                            <td><%= model.msp[i].ceoNm%></td>
+                                                                        <% } %>
+                                                                            <td class='text-center'><%= model.msp[i].weight %> %</td>
+                                                                            <td class='num'><%= formatMoney(model.currency.symbolNative, model.msp[i].totalAssets, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                            <td class='num'><%= formatMoney(model.currency.symbolNative, model.msp[i].totalLiabilities, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td >
+                                                                            <td class='num'><%= formatMoney(model.currency.symbolNative, model.msp[i].sales, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                            <td class='num'><%= formatMoney(model.currency.symbolNative, model.msp[i].operatingIncome, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                        </tr>
+                                                                <% } } } %>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <div class="col-lg-6" id="mpp">
+                                        <h4 class="card-title">Major Purchasing partner <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.mpp %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                        <div class="d-lg-flex align-items-center justify-content-between">
+                                            <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                            <div class="mb-3">
+                                                <% if(model.mpp.length > 0) { %>
+                                                    <button id="mpp-btn" type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#mpp_modal">Show table</button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <% if(model.mpp.length > 0) { %>
+                                        <div class="row" id="mpp-div">
+                                            <div class="col-sm-4">
+                                                <ul class="graphl-legend-rectangle" id="mpp_ul">
+                                                    <%  var text = "background-color:";
+                                                    var color_mpp = ["#F7464A", "#46BFBD", "#FDB45C","#4D5360", "#949FB1"] %>
+                                                    <ul class="graphl-legend-rectangle" id="ms_ul">
+                                                    <% if (model.mpp) { if(model.mpp.length > 0) { %> 
+                                                        <% for(let i=0; i<model.mpp.length; i++) { %> 
+                                                                <% if( model.mpp[i].partnerId != 0 ) { %> 
+                                                                    <li><span class='bg' style=<%= text %><%= color_mpp[i] %> ></span><a href="/company/detail/<%= model.mpp[i].partnerId%>?first=1"><%= model.mpp[i].name_eng%></a></li>
+                                                                <% } else { %>
+                                                                    <li><span class='bg' style=<%= text %><%= color_mpp[i] %> ></span><%= model.mpp[i].companyNm %></li>
+                                                                <% } %>
+                                                    <% } } } %>
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-8 grid-margin"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                                <canvas id="mpp-chart" class="chartjs-render-monitor"></canvas>
+                                            </div>
+                                        </div>
+                                        <% } else { %> <div class="col-sm-12 grid-margin text-center">No chart to display</div><% } %>
+                                        <div class="modal fade" id="mpp_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-xl" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Major Purchasing partner</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="card-description"> <%= model.currency.code %>&nbsp;<%= model.currency.symbolNative %> <code><%= comma(model.currency.unit) %></code></p>
+                                                    <div class="table-responsive col-lg-12">
+                                                        <table id="mpp-table" class="table">
+                                                            <thead>
+                                                                <tr style="font-size: 9px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    <th>company</th>
+                                                                    <th>Tax Identification</th>
+                                                                    <th>CEO</th>
+                                                                    <th style="color:yellow;">Estimated Transaction Weight</th>
+                                                                    <th>Total assets</th>
+                                                                    <th>Total Liabilities</th>
+                                                                    <th>Sales</th>
+                                                                    <th>Operating profit</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (model.mpp) { if(model.mpp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.mpp.length; i++) { %> 
+                                                                        <tr>
+                                                                        <% if( model.mpp[i].partnerId != 0 ) { %> 
+                                                                            <td><a href="/company/detail/<%= model.mpp[i].partnerId%>?first=1"><%= model.mpp[i].name_eng%></a></td>
+                                                                            <td><%= model.mpp[i].brn%></td>
+                                                                            <td><%= model.mpp[i].ceo%></td>
+                                                                        <% } else { %>
+                                                                            <td><%= model.mpp[i].companyNm%></td>
+                                                                            <td><%= model.mpp[i].brnNum%></td>
+                                                                            <td><%= model.mpp[i].ceoNm%></td>
+                                                                        <% } %>
+                                                                            <td class='text-center'><%= model.mpp[i].weight %> %</td>
+                                                                            <td class='num'><%= formatMoney(model.currency.symbolNative, model.mpp[i].totalAssets, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                            <td class='num'><%= formatMoney(model.currency.symbolNative, model.mpp[i].totalLiabilities, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td >
+                                                                            <td class='num'><%= formatMoney(model.currency.symbolNative, model.mpp[i].sales, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                            <td class='num'><%= formatMoney(model.currency.symbolNative, model.mpp[i].operatingIncome, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                        </tr>
+                                                                <% } } } %>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+            </div>
+        </div>
+
+                <div class="row mt-4" id="finance">
+                <!-- <div class="row col-md-8 offset-md-2 grid-margin stretch-card" > -->
+                    <div class="col-md-4 grid-margin stretch-card" style="padding-right: 1.8em; padding-left: 1.8em;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12" id="ssofp"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h4 class="card-title mb-0">Summary statement of financial position <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.ssofp %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                    </div>
+                                    <!-- <p class="mt-1">Calculated in last 30 days</p> -->
+                                    <div class="d-lg-flex align-items-center justify-content-between">
+                                        <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                        <div class="mb-3">
+                                            <% if(model.ssofp.length > 0) { %> 
+                                                <button id="ssofp-btn" type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#ssofp_modal">Show table</button>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <% if(model.ssofp.length == 0) { %> <div class="col-sm-12 grid-margin text-center">No chart to display</div><% } %>
+                                        <div class="d-lg-flex justify-content-between">
+                                            <div id="revenuechart-legend" class="revenuechart-legend" >
+                                                <% if(model.ssofp.length > 0) { %> 
+                                                <ul class="2-legend" style="font-size: 14px;" id="ssofp-ul">
+                                                    <!-- <li>
+                                                        <span class="legend-box" style="background:#8C2656;"></span>
+                                                        <span class="legend-label text-dark">TOTAL CURRENT ASSETS</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="legend-box" style="background:#252D59;"></span>
+                                                        <span class="legend-label text-dark">TOTAL NON-CURRENT ASSETS</span>
+                                                    </li> -->
+                                                    <li>
+                                                        <span class="legend-box" style="background:#3F4B8C;"></span>
+                                                        <span class="legend-label text-dark">TOTAL ASSETS</span>
+                                                    </li>
+                                                    <!-- <li>
+                                                        <span class="legend-box" style="background:#3F89A6;"></span>
+                                                        <span class="legend-label text-dark">CURRENT LIABILITY</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="legend-box" style="background:#BFAB99;"></span>
+                                                        <span class="legend-label text-dark">NON-CURRENT LIABILITY</span>
+                                                    </li> -->
+                                                    <li>
+                                                        <span class="legend-box" style="background:#5AA9CC;"></span>
+                                                        <span class="legend-label text-dark">CAPITAL STOCK</span>
+                                                    </li>
+                                                    <!-- <li>
+                                                        <span class="legend-box" style="background:#FFCFC9;"></span>
+                                                        <span class="legend-label text-dark">CAPITAL</span>
+                                                    </li> -->
+                                                    <li>
+                                                        <span class="legend-box" style="background:#B4BFCC;"></span>
+                                                        <span class="legend-label text-dark">TOTAL EQUITY</span>
+                                                    </li>    
+                                                </ul>
+                                                <% } %>
+                                            </div>
+                                        </div>
+
+                                    <% if(model.ssofp.length > 0) { %> 
+                                        <canvas id="ssofp-chart" width="541" height="400" style="display: block; width: 541px; height: 400px;" class="chartjs-render-monitor"></canvas>
+                                    <% } %> 
+                                    
+                                    <div class="modal fade" id="ssofp_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLongTitle">Summary statement of financial position</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="card-description"> <%= model.currency.code %>&nbsp;<%= model.currency.symbolNative %> <code><%= comma(model.currency.unit) %></code></p>
+                                                <div class="table-responsive col-lg-12">
+                                                    <table class="table" id="ssofp-table">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td></td>
+                                                                <% if (model.ssofp) { if(model.ssofp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ssofp.length; i++) { %> 
+                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.ssofp[i].title %></td>
+                                                                <% } } } %>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    TOTAL CURRENT<br>ASSETS
+                                                                </td>
+                                                                <% if (model.ssofp) { if(model.ssofp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ssofp.length; i++) { %> 
+                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.ssofp[i].currentAssets, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                <% } } } %>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    TOTAL NON-CURRENT<br>ASSETS
+                                                                </td>
+                                                                <% if (model.ssofp) { if(model.ssofp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ssofp.length; i++) { %> 
+                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.ssofp[i].nonCurrentAssets, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                <% } } } %>
+                                                            </tr>
+                                                            <tr>
+                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    TOTAL ASSETS
+                                                                </td>
+                                                                <% if (model.ssofp) { if(model.ssofp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ssofp.length; i++) { %> 
+                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.ssofp[i].totalAssets, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                <% } } } %>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    CURRENT LIABILITIES
+                                                                </td>
+                                                                <% if (model.ssofp) { if(model.ssofp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ssofp.length; i++) { %> 
+                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.ssofp[i].currentLiabilities, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                <% } } } %>
+                                                                </tr>
+                                                                <tr>
+                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    NON-CURRENT LIABILITIES
+                                                                </td>
+                                                                <% if (model.ssofp) { if(model.ssofp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ssofp.length; i++) { %> 
+                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.ssofp[i].nonCurrentLiabilities, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                <% } } } %>
+                                                                </tr>
+                                                                <tr>
+                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    TOTAL LIABILITIES
+                                                                </td>
+                                                                <% if (model.ssofp) { if(model.ssofp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ssofp.length; i++) { %> 
+                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.ssofp[i].totalLiabilities, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                <% } } } %>
+                                                                </tr>
+                                                                <tr>
+                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    CAPITAL STOCK
+                                                                </td>
+                                                                <% if (model.ssofp) { if(model.ssofp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ssofp.length; i++) { %> 
+                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.ssofp[i].capitalStock, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                <% } } } %>
+                                                                </tr>
+                                                                <tr>
+                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                    TOTAL EQUITY
+                                                                </td>
+                                                                <% if (model.ssofp) { if(model.ssofp.length > 0) { %> 
+                                                                    <% for(let i=0; i<model.ssofp.length; i++) { %> 
+                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.ssofp[i].totalEquity, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                <% } } } %>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table></div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="col-md-4 grid-margin stretch-card" style="padding-right: 1.8em; padding-left: 1.8em;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12" id="cis"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h4 class="card-title mb-0">Condensed income statement <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.cis %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                    </div>
+                                    <!-- <p class="mt-1">Calculated in last 30 days</p> -->
+                                    <div class="d-lg-flex align-items-center justify-content-between">
+                                        <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                        <div class="mb-3">
+                                            <% if(model.cis.length > 0) { %>
+                                                <button id="cis-btn" type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#cis_modal">Show table</button>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <% if(model.cis.length == 0) { %>
+                                        <div class="col-sm-12 grid-margin text-center">No chart to display</div>
+                                    <% } %>
+                                        <div class="d-lg-flex justify-content-between" >
+                                            <div id="revenuechart-legend" class="revenuechart-legend" >
+                                                <% if(model.cis.length > 0) { %>
+                                                <ul class="2-legend" style="font-size: 14px;" id="cis-ul">
+                                                    <li>
+                                                        <span class="legend-box" style="background:#FF0D74;"></span>
+                                                        <span class="legend-label text-dark">SALES</span>
+                                                    </li>
+                                                    <!-- <li>
+                                                        <span class="legend-box" style="background:#E80CD8;"></span>
+                                                        <span class="legend-label text-dark">GROSS PROFIT</span>
+                                                    </li> -->
+                                                    <li>
+                                                        <span class="legend-box" style="background:#C501FF;"></span>
+                                                        <span class="legend-label text-dark">OPERATING INCOME</span>
+                                                    </li>
+                                                    <!-- <li>
+                                                        <span class="legend-box" style="background:#30FF64;"></span>
+                                                        <span class="legend-label text-dark">NON-OPERATING REVENUE</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="legend-box" style="background:#780CE8;"></span>
+                                                        <span class="legend-label text-dark">NON-OPERATING EXPENSES</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="legend-box" style="background:#3CFFDB;"></span>
+                                                        <span class="legend-label text-dark">INCOME BEFORE INCOME TAXES</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="legend-box" style="background:#D40F30;"></span>
+                                                        <span class="legend-label text-dark">INCOME TAX EXPENSES</span>
+                                                    </li> -->
+                                                    <li>
+                                                        <span class="legend-box" style="background: #420DFF;"></span>
+                                                        <span class="legend-label text-dark">NET INCOME</span>
+                                                    </li>
+                                                </ul>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    <% if(model.cis.length > 0) { %><canvas id="cis-chart" width="541" height="400" style="display: block; width: 541px; height: 400px;" class="chartjs-render-monitor"></canvas> <% } %>
+                                    
+                                    <div class="modal fade" id="cis_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLongTitle">Condensed income statement</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="card-description"> <%= model.currency.code %>&nbsp;<%= model.currency.symbolNative %> <code><%= comma(model.currency.unit) %></code></p>
+                                                        <div class="table-responsive col-lg-12">
+                                                            <table id="cis-table" class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <% if (model.cis) { if(model.cis.length > 0) { %> 
+                                                                            <% for(let i=0; i<model.cis.length; i++) { %> 
+                                                                                <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.cis[i].title %></td>
+                                                                        <% } } } %>
+                                                                    </tr>
+                                                                        <tr>
+                                                                        <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                        SALES
+                                                                        </td>
+                                                                        <% if (model.cis) { if(model.cis.length > 0) { %> 
+                                                                            <% for(let i=0; i<model.cis.length; i++) { %> 
+                                                                                <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.cis[i].sales, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                        <% } } } %>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                            GROSS PROFIT
+                                                                        </td>
+                                                                        <% if (model.cis) { if(model.cis.length > 0) { %> 
+                                                                            <% for(let i=0; i<model.cis.length; i++) { %> 
+                                                                                <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.cis[i].grossProfit, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                        <% } } } %>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                            OPERATING INCOME
+                                                                        </td>
+                                                                        <% if (model.cis) { if(model.cis.length > 0) { %> 
+                                                                            <% for(let i=0; i<model.cis.length; i++) { %> 
+                                                                                <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.cis[i].operatingIncome, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                        <% } } } %>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                            NON-OPERATING<br>INCOME
+                                                                        </td>
+                                                                        <% if (model.cis) { if(model.cis.length > 0) { %> 
+                                                                            <% for(let i=0; i<model.cis.length; i++) { %> 
+                                                                                <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.cis[i].nonOperatingIncome, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                        <% } } } %>
+                                                                    </tr>
+                                                                        <tr>
+                                                                            <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                NON-OPERATING<br>EXPENSE
+                                                                            </td>
+                                                                            <% if (model.cis) { if(model.cis.length > 0) { %> 
+                                                                                <% for(let i=0; i<model.cis.length; i++) { %> 
+                                                                                    <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.cis[i].nonOperatingExpense, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                            <% } } } %>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                <a style="color: white;">INCOME BEFORE INCOME TAXES</a>
+                                                                            </td>
+                                                                            <% if (model.cis) { if(model.cis.length > 0) { %> 
+                                                                                <% for(let i=0; i<model.cis.length; i++) { %> 
+                                                                                    <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.cis[i].EBIT, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                            <% } } } %>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                INCOME TAXES
+                                                                            </td>
+                                                                            <% if (model.cis) { if(model.cis.length > 0) { %> 
+                                                                                <% for(let i=0; i<model.cis.length; i++) { %> 
+                                                                                    <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.cis[i].incomeTaxes, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                            <% } } } %>
+                                                                        </tr>
+                                                                        <tr >
+                                                                            <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                <a style="color: white;">NET INCOME</a>
+                                                                            </td>
+                                                                            <% if (model.cis) { if(model.cis.length > 0) { %> 
+                                                                                <% for(let i=0; i<model.cis.length; i++) { %> 
+                                                                                    <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= formatMoney(model.currency.symbolNative, model.cis[i].netIncome, model.currency.value, model.currency.decimalPlaces, ",", ".") %></td>
+                                                                            <% } } } %>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table></div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 grid-margin stretch-card" style="padding-right: 1.8em; padding-left: 1.8em;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12" id="sfr"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h4 class="card-title mb-0">Summary financial ratio <span tabindex="0" class="btn" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="<%- model.description.sfr %>" style="cursor: pointer;">  
+                                            <i class="mdi mdi-help-circle-outline text-dark"></i>
+                                        </span></h4>
+                                    </div>
+                                    <!-- <p class="mt-1">Calculated in last 30 days</p> -->
+                                  
+                                    <div class="d-lg-flex align-items-center justify-content-between">
+                                        <h1 class="font-weight-bold text-dark">&nbsp;</h1>
+                                        <div class="mb-3">
+                                            <% if(model.sfr.length > 0) { %>
+                                                <button id="sfr-btn" type="button" class="btn btn-outline-light text-dark font-weight-normal" data-toggle="modal" data-target="#sfr_modal">Show table</button>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <% if(model.sfr.length == 0) { %><div class="col-sm-12 grid-margin text-center">No chart to display</div><% } %>
+                                        <div class="d-lg-flex justify-content-between" >
+                                            <div id="revenuechart-legend" class="revenuechart-legend">
+                                                <% if(model.sfr.length > 0) { %>
+                                                <ul class="2-legend" style="font-size: 14px;" id="sfr-ul">
+                                                    <li>
+                                                        <span class="legend-box" style="background:#3B82CE;"></span>
+                                                        <span class="legend-label text-dark">GROWTH RATE OF NET PROFIT</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="legend-box" style="background:#FFCC01;"></span>
+                                                        <span class="legend-label text-dark">RETURN OF EQUITY(ROE)</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="legend-box" style="background:#F2811D;"></span>
+                                                        <span class="legend-label text-dark">DEBT RATIO</span>
+                                                    </li>
+                                                </ul>
+                                                <% } %>
+                                            </div>
+                                        </div>
+
+                                        <% if(model.sfr.length > 0) { %>
+                                            <canvas id="sfr-chart" width="541" height="400" style="display: block; width: 541px; height: 400px;" class="chartjs-render-monitor"></canvas> 
+                                        <% } %>
+                                    
+                                    <div class="modal fade" id="sfr_modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLongTitle">Summary financial ratio</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                
+                                                        <div class="table-responsive col-lg-12">
+                                                            <table id="sfr-table" class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <% if (model.ssofp) { if(model.sfr.length > 0) { %> 
+                                                                            <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                <th><%= model.sfr[i].title %></th>
+                                                                        <% } } } %>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                    <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].title_ %></td>
+                                                                            <% } } } %>
+                                                                            </tr>
+                                                                                <tr>
+                                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                GROWTH RATE OF TOTAL ASSETS
+                                                                                </td>
+                                                                                <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].growthRateOfTotalAssets %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                    GROWTH RATE OF SALES
+                                                                                </td>
+                                                                                <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].growthRateOfSales %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td  style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                    GROWTH RATE<br>OF NET PROFIT
+                                                                                </td>
+                                                                                <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].netProfitGrowthRate %></td>
+                                                                                <% } } } %>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                    PROFIT MARGIN
+                                                                                </td>
+                                                                                <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].profitMargin %></td>
+                                                                                <% } } } %>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                    RETURN OF EQUITY (ROE)
+                                                                                </td>
+                                                                                <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].ROE %></td>
+                                                                                <% } } } %>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                    <span class="text-uppercase">Return On Invested Capital (ROIC)</span>
+                                                                                </td>
+                                                                                <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].ROIC %></td>
+                                                                                <% } } } %>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                    <a style="color: white;">DEBT RATIO</a>
+                                                                                </td>
+                                                                                <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].debtRatio %></td>
+                                                                                <% } } } %>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                    <span class="text-uppercase">Net income before corporate tax deduction ratio</span>
+                                                                                </td>
+                                                                                <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                    <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                        <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].EBIT_interestCoverageRatio %></td>
+                                                                                <% } } } %>
+                                                                                </tr>
+                                                                                <tr> <!-- 차입금의존도 -->
+                                                                                    <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                        <span class="text-uppercase">Total borrowings and <br> bonds payable to total assets</span>
+                                                                                    </td>
+                                                                                    <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                        <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                            <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].TBABPTTA %></td>
+                                                                                    <% } } } %>
+                                                                                    </tr>
+                                                                                    <tr><!-- 매출채권회전율 -->
+                                                                                        <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                            <span class="text-uppercase">Receivables turnover</span>
+                                                                                        </td>
+                                                                                        <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                            <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                                <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].receivablesTO %></td>
+                                                                                        <% } } } %>
+                                                                                        </tr>
+                                                                                    <tr> <!-- 재고자산회전율 -->
+                                                                                    <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                        <span class="text-uppercase">Inventories turnover</span>
+                                                                                    </td>
+                                                                                    <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                        <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                            <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].inventoryTO %></td>
+                                                                                    <% } } } %>
+                                                                                    </tr>
+                                                                                 <tr> <!-- 총자본회전율 -->
+                                                                                    <td style="width: 100px; background-color: #2c3e50; color: white; text-align: center;">
+                                                                                        <span class="text-uppercase">Total assets turnover</span>
+                                                                                    </td>
+                                                                                    <% if (model.sfr) { if(model.sfr.length > 0) { %> 
+                                                                                        <% for(let i=0; i<model.sfr.length; i++) { %> 
+                                                                                            <td style="height:50px; border: 1px solid #dee2e6; text-align: center;"><%= model.sfr[i].totalAssetTO %></td>
+                                                                                    <% } } } %>
+                                                                                    </tr>
+                                                                    </tbody>
+                                                                </table></div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+
+                <div class="col-md-12 grid-margin stretch-card" >
+                    <div class="card">
+                        <div class="card-body">
+                        <h4 class="card-title">Overall Opinion <% if (model.opinion != "") { %><button type="button" id="opinionBtn" onclick="clickOpinion();" class="btn btn-primary btn-rounded btn-icon" data-toggle="collapse" data-target="#collapseOpinion" aria-expanded="false" aria-controls="collapseOpinion">+</button><% } %></h4>
+                        <% if (model.opinion != "") { %>
+                            <div class="collapse" id="collapseOpinion" style="font-size: 16px; line-height: 24px;">
+                                <div class="card card-body">
+                                    <%- model.company.opinion_eng %>
+                                </div>
+                              </div>
+                       
+                        <% } else { %> No display to data. <% } %>
+                        </div>
+                    </div>
+                    
+                </div>
+
+<script>
+
+    var ratingList = JSON.parse(htmlDecode("<%= JSON.stringify(model.ratingList) %>"));
+    var currency_symbol = $("#currency-symbolNative").val();
+    var currency_value = $("#currency-value").val();
+    var currency_decimalPlaces = $("#currency-decimalPlaces").val();
+
+    var inMsView = false;
+    var inRcView = false;
+    var inMspView = false;
+    var inMppView = false;
+    var inSsofpView = false;
+    var inCisView = false;
+    var inSfrView = false;
+
+    var map = { };
+
+
+    $("document").ready(function() { 
+
+        $('[data-toggle="popover"]').popover({
+            trigger: 'focus'
+        })
+
+
+        createRatingChart(ratingList, '<%= model.company.creditRating %>', 'creditRating', 1);
+        createRatingChart(ratingList,'<%= model.company.cashFlowRating %>', 'cashFlowRating', 2)
+        createRatingChart(ratingList,'<%= model.company.watchRating %>', 'watchRating', 3)
+
+        createDoughnutChart('ms', 2);
+        createDoughnutChart('rc', 2);
+        createDoughnutChart('msp', 3);
+        createDoughnutChart('mpp', 3);
+
+        var ssofp = JSON.parse(htmlDecode("<%= JSON.stringify(model.ssofp) %>"));  
+        if (ssofp != '' && ssofp != undefined) {
+            var label = [];
+            var value = [];
+            var arr = [];
+            for (var i=0; i<ssofp.length; i++) {
+
+                value = [];
+                label.push(ssofp[i].title);
+                value.push(formatMoney(currency_symbol, ssofp[i].totalAssets, currency_value, parseInt(currency_decimalPlaces), ",", "."));
+                value.push(formatMoney(currency_symbol, ssofp[i].capitalStock, currency_value, parseInt(currency_decimalPlaces), ",", "."));
+                value.push(formatMoney(currency_symbol, ssofp[i].totalEquity, currency_value, parseInt(currency_decimalPlaces), ",", "."));
+                arr.push(value);
+            }
+
+            // var header = ['TOTAL CURRENT ASSETS', 'TOTAL NON-CURRENT ASSETS', 'TOTAL ASSETS', 'CURRENT LIABILITIES', 'NON-CURRENT LIABILITIES', 'TOTAL LIABILITIES', 'CAPITAL STOCK', 'TOTAL EQUITY']
+            // var colr = ['#8C2656', '#252D59', '#3F4B8C', '#3F89A6', '#BFAB99', '#5AA9CC', '#FFCFC9', '#B4BFCC'];
+            var item = ['TOTAL ASSETS', 'CAPITAL STOCK', 'TOTAL EQUITY'];
+            var color = ['#3F4B8C', '#5AA9CC', '#B4BFCC'];
+
+            map['ssofp'] = { label: label, arr: arr, item: item, color: color, id: 'ssofp'};
+            createBarChart(currency_symbol, map['ssofp']);
+        }  
+
+        var cis = JSON.parse(htmlDecode("<%= JSON.stringify(model.cis) %>"));  
+        if (cis != '' && cis != undefined) {
+            var label = [];
+            var value = [];
+            var arr = [];
+            for (var i=0; i<cis.length; i++) {
+
+                value = [];
+                label.push(cis[i].title);
+                value.push(formatMoney(currency_symbol, cis[i].sales, currency_value, parseInt(currency_decimalPlaces), ",", "."));
+                value.push(formatMoney(currency_symbol, cis[i].operatingIncome, currency_value, parseInt(currency_decimalPlaces), ",", "."));
+                value.push(formatMoney(currency_symbol, cis[i].netIncome, currency_value, parseInt(currency_decimalPlaces), ",", "."));
+                arr.push(value);
+            }
+                
+            // var header = ['SALES', 'GROSS PROFIT', 'OPERATING INCOME', 'NON-OPERATING INCOME', 'NON-OPERATING EXPENSE', 'INCOME BEFORE INCOME TAXES', 'INCOME TAXES', 'NET INCOME']
+            // var colr = ['#FF0D74', '#E80CD8', '#C501FF', '#30FF64', '#780CE8', '#3CFFDB', '#D40F30', '#420DFF' ];
+            var item = ['SALES', 'OPERATING INCOME', 'NET INCOME'];
+            var color = ['#FF0D74', '#C501FF', '#420DFF'];
+
+            map['cis'] = { label: label, arr: arr, item: item, color: color, id: 'cis'};
+            createBarChart(currency_symbol, map['cis']);
+        }  
+
+        var sfr = JSON.parse(htmlDecode("<%= JSON.stringify(model.sfr) %>"));  
+        if (sfr != '' && sfr != undefined) {
+            var label = [];
+            var value = [];
+            var arr = [];
+            for (var i=0; i<sfr.length; i++) {
+
+                value = [];
+                label.push(sfr[i].title_);
+                value.push(sfr[i].netProfitGrowthRate);
+                value.push(sfr[i].ROE);
+                value.push(sfr[i].debtRatio);
+                arr.push(value);
+            }
+
+            arr = transpose(arr);
+            var item = ['GROWTH RATE OF NET PROFIT', 'RETURN OF EQUITY(ROE)', 'DEBT RATIO'];
+            var color = ['#3B82CE', '#FFCC01', '#F2811D'];
+
+            map['sfr'] = { label: label, arr: arr, item: item, color: color, id: 'sfr'};
+            createLineChart(map['sfr']);
+        }  
+           
+        
+      });
+
+       
+
+        $(window).scroll(function() {
+
+            var height = $(document).scrollTop();
+
+            /*if ($("#creditRating").offset().top - height < 200 && !inCreditRatingView) {
+                inCreditRatingView = true;
+                createRatingChart(ratingList, '<%= model.company.creditRating %>', 'creditRating', 1);
+            }
+            if ($("#cashFlowRating").offset().top - height < 200 && !inCashFlowRatingView) {
+                inCashFlowRatingView = true;
+                createRatingChart(ratingList,'<%= model.company.cashFlowRating %>', 'cashFlowRating', 2);
+            }
+            if ($("#watchRating").offset().top - height < 200 && !inWatchRatingView) {
+                inWatchRatingView = true;
+                createRatingChart(ratingList,'<%= model.company.watchRating %>', 'watchRating', 3)
+            }*/
+            if ($("#ms").offset().top - height < 200 && !inMsView) {
+                inMsView = true;
+                createDoughnutChart('ms', 2);
+            }
+            if ($("#rc").offset().top - height < 200 && !inRcView) {
+                inRcView = true;
+                createDoughnutChart('rc', 2);
+            }
+            if ($("#msp").offset().top - height < 230 && !inMspView) {
+                inMspView = true;
+                createDoughnutChart('msp', 3);
+            }
+            if ($("#rc").offset().top - height < 230 && !inMppView) {
+                inMppView = true;
+                createDoughnutChart('mpp', 3);
+            }
+            if ($("#ssofp").offset().top - height < 350 && !inSsofpView) {
+                inSsofpView = true;
+                createBarChart(currency_symbol, map['ssofp']);
+            } 
+            if ($("#cis").offset().top - height < 350 && !inCisView) {
+                inCisView = true;
+                createBarChart(currency_symbol, map['cis']);
+            }
+            if ($("#sfr").offset().top - height < 350 && !inSfrView) {
+                inSfrView = true;
+                createLineChart(map['sfr']);
+            }
+        });
+
+   //credit 클릭시
+    function clickCredit() {
+
+        if ($("#collapseCredit").hasClass("show")) {
+            $("#creditBtn").text("+");
+        } else {
+            $("#creditBtn").text("-");
+        }
+    }
+
+    //cashFlow 클릭시
+    function clickCashFlow() {
+
+        if ($("#collapseCashFlow").hasClass("show")) {
+            $("#cashFlowBtn").text("+");
+        } else {
+            $("#cashFlowBtn").text("-");
+        }
+    }
+
+    //watch 클릭시
+    function clickWatch() {
+
+        if ($("#collapseWatch").hasClass("show")) {
+            $("#watchBtn").text("+");
+        } else {
+            $("#watchBtn").text("-");
+        }
+    }
+
+    //오피니온 클릭시
+    function clickOpinion() {
+
+        if ($("#collapseOpinion").hasClass("show")) {
+            $("#opinionBtn").text("+");
+        } else {
+            $("#opinionBtn").text("-");
+        }
+    }
+
+</script>
+
+<style>
+
+.row-title {
+    font-size: 19px;
+    font-weight: 800;
+    position: absolute;
+    color: #001737;
+    text-transform: uppercase;
+}
+
+.num {
+    text-align: right;
+}
+
+.credit-title {
+    font-weight: 600;
+    font-size: 29px;
+    text-align: center;
+}
+
+.credit-description { 
+    border: 1px solid #f3f3f3;
+    margin-left: 5%;
+    margin-right: 5%;
+    border-color: #4eb79b;
+    padding: 1%;
+    font-size: 17px;
+}
+
+.popover {
+    /** add below prop**/
+    position: relative;
+    margin: auto;
+}
+
+.popover.bs-popover-right {
+    float: right;
+    margin-right: 10px;
+}
+.popover.bs-popover-left {
+    float: left;
+    margin-left: 10px;
+}
+
+</style>
+</body>
+</html>

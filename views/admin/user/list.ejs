@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<%- include ('../layout/head.ejs') -%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+
+<body>
+ 
+    <div class="container-scroller">
+        <%- include ('../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <%- include ('../layout/side.ejs') -%>
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div class="d-flex justify-content-between flex-wrap">
+                    <div class="d-flex align-items-end flex-wrap">
+                      <div class="mr-md-3 mr-xl-5">
+                        <h2>사용자 관리</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      
+                      <div class="form-inline">
+                          <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
+                              <option value="1" selected>ALL</option>
+                              <option value="2" >이름</option>
+                              <option value="3" >아이디</option>
+                          </select>
+                          <input id="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
+                            <button type="button" class="btn btn-primary mb-2" style="background-color: #317376;" onClick="search('1');">Search</button>
+                      </div>
+                          
+                      <p class="card-description">
+                          Total <code><%=model.totalCount %></code >
+                      </p>
+                      <div class="table-responsive bd_pg" >
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th>이름</th>
+                              <th>Email</th>
+                              <th>Level</th>
+                              <th>가입 날짜</th>
+                              <th>Email 인증 여부</th>
+                              <th>최근 로그인</th>
+                              <!-- <th></th> -->
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbd">	                                        
+                              <%         
+                              if (model.contents.length > 0) { %> 
+                                  <% for(let i=0; i<model.contents.length; i++) {        
+                              %> 
+                              <tr>   
+                                  <th><%=model.contents[i].last_name %> <%=model.contents[i].first_name %></th>
+                                  <th><%=model.contents[i].email %></th>
+                                  <th><%=model.contents[i].level %></div>
+                                  <th><%= moment.utc(model.contents[i].createdAt).local().format('YYYY-MM-DD HH:mm:ss') %></th>
+                                  <th><%=model.contents[i].email_verified %></th>
+                                  <th><% if (model.contents[i].updatedAt != '') { %><%= moment.utc(model.contents[i].recentlyLogin).local().format('YYYY-MM-DD HH:mm:ss') %><% } %></th>
+                                  <!-- <th><% if (model.contents[i].email_verified == 'Y') { %> <div class="input-group"><input type="number" class="form-control" id="coin<%=model.contents[i].id %>" placeholder="코인">
+                                    <button type="button" class="btn btn-primary" onclick="sendCoin('<%=model.contents[i].id %>');" >주기</button><% } %></th> -->
+                                  <th><a style="color: silver; font-size: 21px; border: 0px;" href='javascript:checkExpiredDate(<%= model.contents[i].id %>);'><i class="fas fa-search-plus"></i></a></th>
+                              </tr>                   
+                              <%  
+                              }
+                              } else {  %> 
+                                  <tr>   
+                                      <th colspan="5">데이터가 없습니다.</th>
+                                  </tr> 
+                                  <% } %> 	
+                            </tbody>	
+                        </table>
+                        <br>
+                        <% if (model.contents.length != 0) { %>
+                          <div class="col-lg-12" style="text-align:center;">
+                            <ul class="pagination">
+                              <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                  <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
+                              </li>
+                              <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                               <a <%if(model.pageNum > 1){%> href="javascript:search(<%=model.pageNum-1%>);" <%}%>>
+                                 <i class="fa fa-angle-left"> </i>
+                               </a>
+                             </li>
+                            <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %> <li <%if(i===model.pageNum){%> class="active"
+                                <%}%>><a class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%></a></li>
+                              <% } %>
+                              <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                  <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pageNum+1%>);" <%}%> class="waves-effect">
+                                      <i class="fa fa-angle-right"></i>
+                                  </a>
+                              </li>
+                              <li <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                  <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                      <i class="fas fa-angle-double-right">  </i>
+                                  </a>
+                              </li>
+                              <li><p class="card-description">
+                                  <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
+                              </p></li>
+                           </ul>
+                          </div>
+                          <% } %> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- partial:partials/_footer.html -->
+            <%- include ('../layout/footer.ejs') -%>
+            <!-- partial -->
+          </div>
+          <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+
+<script>
+
+    $("document").ready(function() {  
+
+        if (getParameterByName("search_type") != "") {
+            $("#search_type").val(getParameterByName("search_type"))
+        }
+
+        if (getParameterByName("search_txt") != "") {
+            $("#search_txt").val(getParameterByName("search_txt"))
+        }
+    });
+
+    function checkExpiredDate(id) {
+
+    $.ajax({
+            type: "POST",
+            url: "/pass/checkExpiredDate/" + id,
+            success: function (data) {
+              window.location.href = '/admin/user/view/' + id + '?tab=recently';
+            },
+            error: function (e) {
+              console.log("ERROR : ", e);
+           }
+      });
+  }
+    
+    function onKeyDown()
+    {
+        if(event.keyCode == 13){
+            search('1');
+        }
+    }
+
+
+    function search(num) {
+        var search_type = $("#search_type").val();
+        var search_txt = $("#search_txt").val();
+
+        var url = "/admin/user/all?pageNum=" + num + "&search_type=" + search_type + "&search_txt=" + search_txt;
+  
+        window.location.href = url;        
+    }
+
+
+   
+
+</script>
+ 
+<style>
+
+    .spinner {
+        position: fixed;
+        z-index: 1031;
+        top: 50%;
+        left: 50%;
+    }
+
+    .bg_pg {
+        padding: 24px 0;
+        text-align: center;
+    }
+
+    .clear {
+        display: block;
+        position: relative;
+        clear: both;
+        *zoom: 1;
+    }
+
+    .direction {
+        margin: 0 4px;
+        color: #555;
+        letter-spacing: 0;
+        font-weight: 400;
+    }
+
+    .frst_last {
+        color: #555;
+    }
+
+    /* Pagnation */
+    .bd_pg{padding:24px 0;text-align:center}
+    .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
+    .bd_pg a{color:#558421;text-decoration:none !important}
+    .bd_pg .this,.bd_pg a:hover,.bd_pg a:focus{background:#F9F9F9;border-color:#AAA;color:#555}
+    .bd_pg .frst_last{color:#555}
+    .bd_pg .direction{margin:0 4px;color:#555;letter-spacing:0;font-weight:400}
+    .bd_pg strong.direction{color:#999}
+    .bd .bd_go_page{left:-47px;padding:8px 2px;border-color:#AAA;*vertical-align:top}
+    .bd_go_page .itx,.bd_go_page .bd_btn{height:24px;margin:0 6px;padding:2px 8px;text-align:center;vertical-align:middle}
+    .bd_go_page .itx{width:32px;padding:2px 8px}
+    
+    </style>
+</body>
+</html>
