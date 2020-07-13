@@ -44,7 +44,7 @@ const environments = {
         host: "13.124.33.232",
         port: "8001",
         mysql: {
-            host: '10.0.0.1',
+            host: 'localhost',
             port: 3306,
             user: 'autoinspec',
             password: 'autoinspec1020',
