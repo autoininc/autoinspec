@@ -37,8 +37,8 @@ httpServer.listen(app.get('port'), function(){
 });
 
 
-// redirect HTTP to HTTPS 
-/*app.all('*', (req, res, next) => {
+// redirect HTTP to HTTPS
+app.all('*', (req, res, next) => {
   let protocol = req.headers['x-forwarded-proto'] || req.protocol; 
   if (protocol == 'https' || req.headers.host == 'localhost') { 
     console.log("오니???");
@@ -51,7 +51,7 @@ httpServer.listen(app.get('port'), function(){
     // log and redirect 
     res.redirect(to); 
   } 
-});*/
+});
 
 
   //라우팅 모듈 선언
