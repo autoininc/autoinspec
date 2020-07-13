@@ -24,6 +24,7 @@ const environments = {
       }
   },
 
+  /*cafe24사용
   production: {
     host: "autoinspec.com",
       port: "8001",
@@ -36,6 +37,21 @@ const environments = {
         multipleStatements: true
       }
   }
+  */
+
+  //AWS 사용
+    production: {
+        host: "13.124.33.232",
+        port: "8001",
+        mysql: {
+            host: 'localhost',
+            port: 3306,
+            user: 'autoinspec',
+            password: 'autoinspec1020',
+            database: 'autoin',
+            multipleStatements: true
+        }
+    }
 }
 
 const nodeEnv =  process.env.NODE_ENV || 'production';
