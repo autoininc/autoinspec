@@ -44,11 +44,11 @@ const environments = {
         host: "13.124.33.232",
         port: "8001",
         mysql: {
-            host: 'localhost',
+            host: '10.0.0.1',
             port: 3306,
-            user: 'root',
-            password: 'autoin1020#',
-            database: 'autoin',
+            user: 'autoinspec',
+            password: 'autoinspec1020',
+            database: 'autoinspec',
             multipleStatements: true
         }
     }
