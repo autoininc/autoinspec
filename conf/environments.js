@@ -48,7 +48,7 @@ const environments = {
             port: 3306,
             user: 'root',
             password: 'autoin1020#',
-            database: 'autoin',
+            database: 'autoinspec',
             multipleStatements: true
         }
     }
