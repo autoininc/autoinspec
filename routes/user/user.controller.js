@@ -17,7 +17,7 @@ var nodemailer = require('nodemailer');
 var smtpTransporter = require('nodemailer-smtp-transport');
 
 //메일 서버
-/*var smtpTransport = nodemailer.createTransport(smtpTransporter ( {
+var smtpTransport = nodemailer.createTransport(smtpTransporter ( {
   service: 'Cafe24',
   host:'smtp.cafe24.com',
   secure: false, 
@@ -34,7 +34,7 @@ var smtpTransporter = require('nodemailer-smtp-transport');
   },
   maxConnections:5,
   maxMessages:10
-}));*/
+}));
 
 
 // 로그인 GET
