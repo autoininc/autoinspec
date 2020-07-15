@@ -33,7 +33,7 @@
                      
                       <div class="tab-content tab-no-active-fill-tab-content justify-content-center">
                         <form name="form" id="form">
-                          <input id="pass_num" name="pass_num" type="hidden" value="group_000"/>
+                          <input id="radio_btn" name="radio_btn" type="hidden" value="coin10"/>
                         <div class="tab-pane fade show active">
                           <div class="row">
                             <div class="ticket-coupon-wrap" style="width: 464px">
@@ -52,16 +52,71 @@
                                   <p class="dot-text"><span>유효기간이 지난 쿠폰은 등록하실 수 없습니다.</span></p>
                                   <p class="dot-text"><span>등록하신 쿠폰은 환불되지 않습니다.</span></p><p class="dot-text"><span>쿠폰은 상업적 용도로 사용하거나 매매하실 수 없습니다.</span></p></div>
                                 </div> -->
-                                <div class="ticket-coupon"><p class="ticket-coupon-tit">Fill Coin</p>
+                                <div class="ticket-coupon" style="text-align: center;">
+                                  <p class="ticket-coupon-tit">Fill Coin</p>
                                   <img src="data:image/png;base64,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" alt="">
-                                  <p class="ticket-coupon-text">You can buy the data quickly and easily <br> if you charge the coin.</p><div class="ticket-coupon-input" style="margin-right: 116px;">
-                                    <button type="button" onclick="check();" style="border-style: none;">Fill</button></div><div class="coupon-noti"><p class="dot-text"><span>The charged coin has a validity period of 1 years. <br> The expired coin has expired and cannot be used.
-                                    </span></p></div></div></div>
-                              </div>
+                                  <p class="ticket-coupon-text">
+                                    You can buy the data quickly and easily
+                                    <br> if you charge the coin.
+                                  </p>
+                                  <!--  -->
+                                  <ul id="div2">
+                                    <table class="purchase-desc" style="margin-left: auto; margin-right: auto;">
+                                      <tbody>
+                                      <tr id="radio_btn">
+                                        <th scope="row"></th>
+                                        <td colspan="3">
+                                          <div class="form-check">
+                                            <label class="form-check-label">
+                                              <input type="radio" class="form-check-input" name="coin" value="coin10" style="background: #4eb79b;" checked>
+                                              10 coin
+                                              <i class="input-helper">
+                                              </i>
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <label class="form-check-label">
+                                              <input type="radio" class="form-check-input" name="coin" style="color: #ffffff; background: #4eb79b; " value="coin50">
+                                              50 coin
+                                              <i class="input-helper">
+                                              </i>
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <label class="form-check-label">
+                                              <input type="radio" class="form-check-input" name="coin" style="background: #4eb79b;" value="coin100">
+                                              100 coin
+                                              <i class="input-helper">
+                                              </i>
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <label class="form-check-label">
+                                              <input type="radio" class="form-check-input" name="coin" style="background: #4eb79b;" value="coin200">
+                                              200 coin
+                                              <i class="input-helper">
+                                              </i>
+                                            </label>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                      </tbody>
+                                    </table>
+                                  </ul>
+                                  <p class="dot-text">
+                                    <span>
+                                        The charged coin has a validity period of 1 years.
+                                        <br> The expired coin has expired and cannot be used.
+                                    </span>
+                                  </p>
+                                  <div class="ticket-coupon-input" style="margin-right: 116px;">
+                                    <button type="button" onclick="check();" style="border-style: none;">Fill</button>
+                                  </div>
                             </div>
-                          </form>
                           </div>
-                        
+                        </div>
+                        </form>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -82,7 +137,14 @@
     var content = "";
 
     $("document").ready(function() {
-
+      var temp = $(':radio[name="coin"]:checked').val();
+      $("input:radio[name=coin]").click(function(){
+        temp = $(':radio[name="coin"]:checked').val();
+        $("#radio_btn").val(temp);
+        console.log("radio btn: " + temp);
+        console.log("radio btn: " + $("#radio_btn").val());
+        });
+      console.log("radio btn: " + temp);
       if ('<%= result %>' == 1) {
         alert("Transaction Complete!");
         window.location.href = '/point/deposit';
@@ -118,6 +180,7 @@
   function payment() {
 
     var frm = document.form;
+    console.log(frm);
     var url    = "/pass/selMethod_coin" ;
     var title  = "AUTOINPEC" ;
     var status = "width = 710, height = 800, top = 100, left = 200, location = no" ;

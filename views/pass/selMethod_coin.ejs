@@ -12,81 +12,92 @@
 
 <body>
     <form name="payForm" action="" method="POST">
-        <input id="method" name="method" type="hidden" value="01"/>
+        <input id="subscriptionKey" name="subscriptionKey" type="hidden" value="<%= subscriptionKey %>"/>
+        <input id="coin" name="coin" type="hidden" value="<%= data.coin %>"/>
+        <input id="price" name="price" type="hidden" value="<%= data.price %>"/>
+        <input id="method" name="method" type="hidden" value="01"/> <!-- 기본은 paypal-->
+
         <div class="ticket-popup-wrap">
-            <h1 class="popup-header">Fill Coin</h1> 
+            <h1 class="popup-header">Fill Coin</h1>
             <div class="popup-body">
                 <div class="popup-content">
-                    <div class="popup-tit">Coint List</div> 
-                <table class="purchase-desc">
-                    <colgroup>
-                        <col width="130px"> 
-                        <col width="190px">
-                        <col width="130px"> 
-                        <col width="190px">
-                    </colgroup> 
-                    <tbody>
+                    <div class="popup-tit">Payment Contents</div>
+                    <table class="purchase-desc">
+                        <colgroup>
+                            <col width="130px">
+                            <col width="190px">
+                            <col width="130px">
+                            <col width="190px">
+                        </colgroup>
+                        <tbody>
                         <tr>
-                          <th scope="row"></th>
-                          <td colspan="3">
-                              <div class="form-check"><label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="coin" value="10" style="background: #4eb79b;" checked>
-                                10 coin (USD 10)
-                              <i class="input-helper"></i></label>
-                              </div>
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input type="radio" class="form-check-input" name="coin" style="background: #4eb79b;" value="50">
-                                  50 coin (USD 30)
-                                <i class="input-helper"></i></label>
-                              </div>
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input type="radio" class="form-check-input" name="coin" style="background: #4eb79b;" value="100">
-                                  100 coin (USD 50)
-                                <i class="input-helper"></i></label>
-                              </div>
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input type="radio" class="form-check-input" name="coin" style="background: #4eb79b;" value="200">
-                                  200 coin (USD 100)
-                                <i class="input-helper"></i></label>
-                              </div>
+                            <th scope="row"></th>
+                            <td colspan="4" class="purchase-name">
+                                <p class="popup-text01"><strong> <%= data.coin %></strong></p>
+                                <p class="popup-text02"></p>
                             </td>
-                        </tr> 
-                        <!-- <tr>
-                            <th scope="row">Expiration Date</th> 
-                            <td colspan="3">
-                                <p class="popup-text01"></p>
-                            </td>
-                        </tr> 
+                        </tr>
+                        </tr>
                         <tr>
-                            <th scope="row">Price</th> 
+                            <th scope="row">Price</th>
                             <td colspan="3">
-                                <p class="popup-price">USD </p>
+                                <p class="popup-price">USD <%= data.price%></p>
+                                <p class="popup-price">KRW <%= comma(data.price * currency)%></p>
                             </td>
-                        </tr> -->
-                    </tbody>
-                </table>
-            </div> 
-            
-            <div id="payment-wrap" class="popup-content">
-                <h2 class="popup-tit">Method</h2> 
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="payment-wrap" class="popup-content">
+                <h2 class="popup-tit">Method</h2>
                 <div class="method-others toggle-on">
                     <ul class="method-others-toggle" id="method_ul" style="display: block;">
                       <li><a href="#" class="method-selected"><span id="01"></span> <span >Paypal</span></a></li> 
-                        <li><a href="#" class=""><span id="02"></span> <span >Wire Transfer</span></a></li>  
+                        <li>
+                            <a href="#" class="">
+                                <span id="02" ></span>
+                                <span >Wire Transfer</span>
+                            </a>
+                        </li>
                     </ul>
-                </div> 
+                </div>
                 
                 <!-- <div class="check-style purchase-check"><input type="checkbox" id="ag-check" class="check-purple"><label for="ag-check">매월 자동 결제에 동의합니다.</label></div></div>  -->
-                <ul class="popup-btn-wrap" style="margin-top: 40px;"><li><button onclick="goCancel();" type="button" class="btn-br-gray">Cancel</button></li> <li><button type="button" onclick="getPost();" class="btn-fill-purple">Next</button></li></ul></div> <div id="layer-popup" class="ticket-popup-wrap" style="visibility: hidden;"><div class="modal-mask"><div class="modal-wrapper02"><button type="button" class="modal-default-button"><img src="../Common/Images/pc/common/btn-popup-close.png" alt="팝업닫기"></button> <div class="modal-container"><div class="modal02-body"><div><div class="popup-content">
+                <ul class="popup-btn-wrap" style="margin-top: 40px;">
+                    <li>
+                        <button onclick="goCancel();" type="button" class="btn-br-gray">Cancel</button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="getPost();" class="btn-fill-purple">Next</button>
+                    </li>
+                </ul>
+            </div>
+                <div id="layer-popup" class="ticket-popup-wrap" style="visibility: hidden;">
+                    <div class="modal-mask">
+                        <div class="modal-wrapper02">
+                            <button type="button" class="modal-default-button">
+                                <img src="../Common/Images/pc/common/btn-popup-close.png" alt="팝업닫기">
+                            </button>
+                            <div class="modal-container">
+                                <div class="modal02-body">
+                                    <div>
+                                        <div class="popup-content">
                     
     </form>
 <script>
 
   $(document).ready(function() 
     {
+        var temp = $(':radio[name="coin"]:checked').val();
+        $("input:radio[name=coin]").click(function(){
+            temp = $(':radio[name="coin"]:checked').val();
+            $("#radio_btn").val(temp);
+            console.log("radio btn: " + temp);
+            console.log("radio btn: " + $("#radio_btn").val());
+        });
+        console.log("radio btn: " + temp);
+
+
         $('#method_ul li').click(function(e) {
           e.preventDefault();
             $('#method_ul li a').removeClass('method-selected');
@@ -95,11 +106,12 @@
 
             var method =  $("#method").val();
             if (method == "02") {
-                document.getElementById("date").style.display = "none";
+                document.getElementById("date").style.display = "table-row";
             } else {
                 document.getElementById("date").style.display = "table-row";
             }
         });
+
     });
 
     function goCancel() {

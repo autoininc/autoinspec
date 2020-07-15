@@ -7,12 +7,15 @@ const controller = require('./pass.controller');
 //subscription
 router.get('/index', controller.index);
 
+
 //subscription -> 결제창
 router.post('/selMethod', controller.selMethod);
 router.post('/paypalCreate',controller.paypalCreate);
 router.get('/success',controller.success);
 router.post('/transferCreate',controller.transferCreate);
 router.post('/processWireTransfer',controller.processWireTransfer);
+
+
 
 
 //coin

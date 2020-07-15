@@ -77,10 +77,14 @@
                                     <th><%=model.list[i].title %></th>
                                     <th><%=model.list[i].code %></th>
                                     <th><%=model.list[i].value %></th>
-                                    <th><div class="form-check">
+                                    <th>
+                                        <div class="form-check">
                                         <label class="form-check-label">
-                                          <input type="radio" class="form-check-input" name="defaltRadio" id="default<%=model.list[i].title %>" value="<%=model.list[i].id %>" <%  if (model.list[i].defaultYN == "Y") { %> checked <% } %> >
-                                      </div></th>
+                                          <input type="radio" class="form-check-input" name="defaltRadio" id="default<%=model.list[i].title %>" value="<%=model.list[i].value%>"
+                                          <%  if (model.list[i].defaultYN == "Y") { %> checked <% } %>
+                                          >
+                                      </div>
+                                    </th>
                                     <th><%= moment.utc(model.list[i].updatedAt).local().format('YYYY-MM-DD HH:mm:ss') %></th>
                                     <th><a class="btn btn-info" href="/admin/currency/modForm/<%=model.list[i].id %>">수정</button></th>
                                     <th><button type="button" class="open-delCheckDialog btn btn-danger" data-id="<%=model.list[i].id %>" data-toggle="modal" data-target="#delCheckModal">삭제</button></th>
@@ -133,8 +137,9 @@
 
         $(document).on("click", ".open-delCheckDialog", function () { 
             var id = $(this).data('id'); 
-            $(".modal-header #id").val( id ); 
+            $(".modal-header #id").val( id );
         });
+
 
         function delBtn() {
 

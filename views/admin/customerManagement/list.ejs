@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <!-- 오토인스펙 사이트에 적용중인 전체 사이트 스타일을 위해 반드시 필요!-->
+    <%- include ('../layout/head.ejs') -%>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="container-scroller">
+    <!-- back office 상단 바 ejs-->
+    <%- include ('../layout/header.ejs') -%>
+        <div class="container-fluid page-body-wrapper">
+            <!-- back office 왼쪽 바 ejs-->
+            <%- include ('../layout/side.ejs') -%>
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <div class="d-flex justify-content-between flex-wrap">
+                                <div class="d-flex align-items-end flex-wrap">
+                                    <div class="mr-md-3 mr-xl-5">
+                                        <!-- 디자인 참고: https://ecsupport.cafe24.com/article/%EC%87%BC%ED%95%91%EB%AA%B0-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5/12/2026/?page=10 -->
+                                        <h2>고객관리</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <div class="card"><div class="card-body"><div class="container-scroller">
+                                        <p class="card-description">고객목록</p>
+                                        <!-- 검색 영역 -->
+                                        <div class="row">
+
+                                            <div class="form-inline" >
+                                                <select id="country_id" name="country_id" class="form-control mb-2 mr-sm-2" >
+                                                    <option value="" selected>- ALL Country -</option>
+                                                    <option value="1" >KOREA</option>
+                                                </select>
+                                                <select id="country_id" name="country_id" class="form-control mb-2 mr-sm-2" >
+                                                    <option value="" selected>- level -</option>
+                                                    <option value="1" >1</option>
+                                                    <option value="2" >2</option>
+                                                    <option value="3" >3</option>
+                                                </select>
+                                                <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
+                                                    <option value="1" selected>ALL</option>
+                                                    <option value="2" >COMPANY</option>
+                                                    <option value="3" >CEO</option>
+                                                </select>
+                                                <input id="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
+                                                <button type="button" class="btn btn-primary"
+                                                        data-toggle="modal" data-target="#e   pleModal" data-whatever="@mdo">조회</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="text-align: center">
+                                            <!-- 여기서부터~ 업체 나열 리스트 부분 -->
+                                            <!--참고링크: https://getbootstrap.com/docs/4.5/content/tables/#hoverable-rows -->
+                                            <table id="companyList" class="table table-hover">
+                                                <thead class="thead-light">
+                                                <tr>
+                                                    <th>국가</th>
+                                                    <th>업체명</th>
+                                                    <th>업체주소</th>
+                                                    <th>E-mail</th>
+                                                    <th>연락처</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>user01</td>
+                                                    <td>홍길동</td>
+                                                    <td>hong@gmail.com</td>
+                                                    <td>01012345678</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>user02</td>
+                                                    <td>김사부</td>
+                                                    <td>kim@naver.com</td>
+                                                    <td>01098765432</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <!-- ~여기까지 -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 grid-margin">
+                            <div class="card"><div class="card-body"><div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="card-description">고객정보</p>
+                                                <!-- 여기부터~ 위에서 업체를 클릭하면 정보를 보여줍니다 -->
+                                                <table class="table table-bordered" style="text-align: center;">
+                                                    <thead class="thead-light">
+                                                    <tr>
+                                                        <th style="width: 15%;">회사</th>
+                                                        <th style="width: 15%;">정보</th>
+                                                        <th style="width: 15%;">등급</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="tbd">
+
+                                                    <tr>
+                                                        <th>오토인</th>
+                                                        <th>오토인인데요~</th>
+                                                        <th>1등급</th>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                <!-- ~여기까지 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 grid-margin">
+                            <div class="card"><div class="card-body"><div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="card-description" style="margin-bottom:10px">상담목록
+                                                    <button style="float: right" type="button" class="btn btn-primary"
+                                                            data-toggle="modal" data-target="#contactInfoModify" data-whatever="@mdo" onclick="tableModifyDialog()">내용수정</button>
+                                                    <button style="float: right; margin-right: 10px" type="button" class="btn btn-primary"
+                                                            data-toggle="modal" data-target="#contactInfoAdd" data-whatever="@mdo">내용추가</button>
+                                                </p>
+
+                                                <!-- 여기부터~ 지금까지 등록된 상담 내용을 보여주는 리스트입니다!
+                                                담당자를 선택하면 담당자의 개인 정보를 볼 수 있도록 변경해야함-->
+                                                <table id="dynamicTable" class="table table-bordered" style="text-align: center;">
+                                                    <thead class="thead-light">
+                                                    <tr>
+                                                        <th style="width: 5%;"></th>
+                                                        <th style="width: 10%;">담당자</th>
+                                                        <th style="width: 20%;">내용</th>
+                                                        <th style="width: 20%;">비고</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <br>
+                                                    <tbody id="dynamicTbody">
+                                                    </tbody>
+                                                </table>
+                                                <!-- ~여기까지 -->
+                                                <!-- 참고링크: https://getbootstrap.com/docs/4.5/components/modal/ -->
+                                                <!-- 여기서부터~ 상담내용 추가하기위한 다이어로그입니다! -->
+                                                <div class="modal fade" id="contactInfoAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">상담 내용</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form>
+                                                                    <div class="form-group" style="margin-bottom: 0%">
+                                                                        <label for="recipient-name" class="col-form-label">상담자 </label>
+                                                                        <!-- value 값에 현재 로그인 정보 이름 가져와서 담기 -->
+                                                                        <input type="text" class="form-control" id="inName" style="width: 100px" value="오현경">
+                                                                    </div>
+                                                                    <div class="form-group" style="margin-bottom: 0%">
+                                                                        <label for="message-text" class="col-form-label">내용</label>
+                                                                        <textarea class="form-control" id="inContent"></textarea>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="message-text" class="col-form-label">비고</label>
+                                                                        <textarea class="form-control" id="inRemark"></textarea>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                                                <!-- 확인 버튼 누르면 MySQL 업데이트 및 리스트에 추가 기능 필요-->
+                                                                <button type="button" onclick="tableAppend()" class="btn btn-primary" data-dismiss="modal">확인</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- ~여기까지 -->
+                                                <!-- 참고링크: https://getbootstrap.com/docs/4.5/components/modal/ -->
+                                                <!-- 여기서부터~ 체크박스 선택 후 내용 수정 버튼 누르면 상담내용 수정하는 다이어로그입니다! -->
+                                                <!-- 체크박스 선택시에만 버튼 누를 수 있도록 if문 추가하기 -->
+                                                <!-- ~여기까지 -->
+                                                <div class="modal fade" id="contactInfoModify" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">상담 내용</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form>
+                                                                    <div class="form-group" style="margin-bottom: 0%">
+                                                                        <label for="recipient-name" class="col-form-label">상담자 </label>
+
+                                                                        <input type="text" class="form-control" id="outName" style="width: 100px" value="오현경">
+                                                                    </div>
+                                                                    <div class="form-group" style="margin-bottom: 0%">
+                                                                        <label for="message-text" class="col-form-label">내용</label>
+                                                                        <textarea class="form-control" id="outContent"></textarea>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="message-text" class="col-form-label">비고</label>
+                                                                        <textarea class="form-control" id="outRemark"></textarea>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                                                <!-- 확인 버튼 누르면 MySQL 업데이트 및 리스트에 추가 기능 필요-->
+                                                                <button type="button"  class="btn btn-primary" data-dismiss="modal">확인</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- ~여기까지 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- partial:partials/_footer.html -->
+                <%- include ('../layout/footer.ejs') -%>
+                <!-- partial -->
+            </div>
+        </div>
+    </div>
+
+
+
+<script type="text/javascript">
+
+
+    //직원 정보 창 띄우기
+    function managerInfo(id) {
+        var url = "/admin/customerManagement/managerView";
+        var name = "view";
+        var option = "width = 640, height = 510, top = 100, left = 150, location = no, scrollbars=1"
+        window.open(url, name, option);
+    }
+
+    //테이블 추가
+    function tableAppend() {
+        var row = $("#dynamicTable").length;
+        console.log("tablecnt: " + row);
+        var html = '';
+
+        var name = $("#inName").val();
+        var content = $("#inContent").val();
+        var remark = $("#inRemark").val();
+
+        html += '<tr>';
+        //할수있다면 chekbox는 상담자만 가능하도록 수정 필요!
+        html += '<td>'+ '<input type="radio" name="check">'+'</td>';
+        html += '<td name= '+'name'+row+'>'+'<span onclick="managerInfo(1);" style="color: #317376; cursor:pointer;">' + name +'</span>'+'</td>';
+        html += '<td name="'+'content'+row+'">'+content+'</td>';
+        html += '<td name="'+'remark'+row+'">'+remark+'</td>';
+        html += '</tr>';
+
+        $("#dynamicTable").append(html);
+        //inName은 무조건 로그인 정보 이름 가져오기
+        //$("#inName").val('');
+        $("#inContent").val('');
+        $("#inRemark").val('');
+
+    }
+
+    //상담 내용 띄우기
+    function tableModifyDialog() {
+
+    }
+
+    //상담내용 수정 확인
+    function tableModifyConfirm() {
+
+    }
+
+
+</script>
+</body>
+
+</html>
