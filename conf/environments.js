@@ -6,7 +6,7 @@ const environments = {
         host: 'localhost',
         port: 3306,
         user: 'root',
-        password: '1225',
+        password: 'ohg!0612',
         database: 'autoin',
         multipleStatements: true
       }
@@ -23,35 +23,19 @@ const environments = {
         port: '3306'
       }
   },
-
-  /*cafe24사용
+  //AWS 버전
   production: {
-    host: "autoinspec.com",
+    host: "13.124.33.232",
       port: "8001",
       mysql: {
-        host: '10.0.0.1',
+        host: '127.0.0.1',
         port: 3306,
-        user: 'autoinspec',
-        password: 'autoinspec1020',
+        user: 'root',
+        password: 'autoin1020#',
         database: 'autoinspec',
         multipleStatements: true
       }
   }
-  */
-
-  //AWS 사용
-    production: {
-        host: "13.124.33.232",
-        port: "8001",
-        mysql: {
-            host: 'localhost',
-            port: 3306,
-            user: 'root',
-            password: 'autoin1020#',
-            database: 'autoinspec',
-            multipleStatements: true
-        }
-    }
 }
 
 const nodeEnv =  process.env.NODE_ENV || 'production';

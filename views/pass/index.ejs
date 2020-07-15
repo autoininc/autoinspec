@@ -40,30 +40,50 @@
                             </div>
                             <div class="col-lg-6 offset-sm-3 align-items-center grid-margin">
                               <ul class="list-group product-group" id="div1">
-                                <li class="list-group-item ticket-group-list checked">
-                                  <div class="d-flex w-100 justify-content-between">
-                                    <span class="product-name-box"><input type="radio" id="pass1" name="pass" value="group_000"><label for="group_000">
-                                  <span class="mb-1 product-name">For a month</span>
-                                </div>
-                                  <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 299</p></label></span></li>
+                                  <li class="list-group-item ticket-group-list checked">
+                                      <div class="d-flex w-100 justify-content-between">
+                                          <span class="product-name-box">
+                                              <input type="radio" id="pass1" name="pass" value="group_000">
+                                              <label for="group_000">
+                                                  <span class="mb-1 product-name">For a month</span>
+                                                  <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 299</p>
+                                              </label>
+                                          </span>
+                                      </div>
+                                  </li>
                                   <li class="list-group-item ticket-group-list ">
                                     <div class="d-flex w-100 justify-content-between">
-                                      <span class="product-name-box"><input type="radio" id="pass2" name="pass" value="group_001"><label for="group_000">
-                                    <span class="mb-1 product-name">For 3 months</span>
-                                  </div>
-                                    <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 799</p></label></span></li>
+                                      <span class="product-name-box">
+                                          <input type="radio" id="pass2" name="pass" value="group_001">
+                                          <label for="group_000">
+                                              <span class="mb-1 product-name">For 3 months</span>
+                                              <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 799</p>
+                                          </label>
+                                      </span>
+                                    </div>
+                                  </li>
                                     <li class="list-group-item ticket-group-list ">
                                       <div class="d-flex w-100 justify-content-between">
-                                        <span class="product-name-box"><input type="radio" id="pass3" name="pass" value="group_003"><label for="group_000">
-                                      <span class="mb-1 product-name">For 6 months</span>
-                                    </div>
-                                      <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 1,499</p></label></span></li>
+                                        <span class="product-name-box">
+                                            <input type="radio" id="pass3" name="pass" value="group_003">
+                                            <label for="group_000">
+                                                <span class="mb-1 product-name">For 6 months</span>
+                                                <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 1,499</p>
+                                            </label>
+                                        </span>
+                                      </div>
+                                    </li>
                                       <li class="list-group-item ticket-group-list ">
                                         <div class="d-flex w-100 justify-content-between">
-                                          <span class="product-name-box"><input type="radio" id="pass4" name="pass" value="group_004"><label for="group_000">
-                                        <span class="mb-1 product-name">For 12 months</span>
-                                      </div>
-                                        <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 2,499</p></label></span></li>
+                                          <span class="product-name-box">
+                                              <input type="radio" id="pass4" name="pass" value="group_004">
+                                              <label for="group_000">
+                                                  <span class="mb-1 product-name">For 12 months</span>
+                                                  <p class="mb-1 product-price" style="color: rgb(255, 255, 255);"> USD 2,499</p>
+                                              </label>
+                                          </span>
+                                        </div>
+                                      </li>
                               </ul>
                             </div>
                             <div class="col-lg-6 offset-sm-3 grid-margin" style="text-align: end;">
@@ -97,7 +117,6 @@
       $('#div1 li').removeClass('checked');
       $(this).addClass('checked');
       $("#pass_num").val($(this).find("[name=pass]").val());
-      
     });
   });
 

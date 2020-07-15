@@ -36,7 +36,7 @@
                         <tr>
                             <th scope="row"></th> 
                             <td colspan="4" class="purchase-name">
-                                <p class="popup-text01"><strong><%= data.title %></strong></p> 
+                                <p class="popup-text01"><strong><%=data.title %></strong></p>
                                 <p class="popup-text02"></p> 
                             </td>
                         </tr> 
@@ -45,11 +45,13 @@
                             <td colspan="3">
                                 <p class="popup-text01"><%= moment.utc(start).local().format('YYYY-MM-DD HH:mm') %> ~ <%= moment.utc(end).local().format('YYYY-MM-DD HH:mm')  %></p>
                             </td>
-                        </tr> 
+                        </tr>
+                        </tr>
                         <tr>
                             <th scope="row">Price</th> 
                             <td colspan="3">
                                 <p class="popup-price">USD <%= comma(data.price) %></p>
+                                <p class="popup-price">KRW <%= comma(data.price * currency) %>
                             </td>
                         </tr>
                     </tbody>
@@ -62,7 +64,7 @@
                 <div class="method-others toggle-on">
                     <ul class="method-others-toggle" style="display: block;" id="method_ul">
                         <li><a href="#" class="method-selected"><span id="01"></span> <span >Paypal</span></a></li> 
-                        <li><a href="#" class=""><span id="02"></span> <span >Wire Transfer</span></a></li> 
+                        <li><a href="#" class=""><span id="02"></span> <span >Wire Transfer</span></a></li>
                     </ul>
                 </div> 
                 
@@ -71,13 +73,17 @@
                     <li><button onclick="cancel();" type="button" class="btn-br-gray">Cancel</button></li> 
                     <li><button type="button" onclick="getPost();" class="btn-fill-purple">Next</button></li>
                 </ul>
-            </div> 
+            </div>
+
                     
     </form>
 <script>
 
-    $(document).ready(function() 
+    $(document).ready(function()
     {
+        $.ajax()
+
+
         $('#method_ul li').click(function(e) {
             e.preventDefault();
             $('#method_ul li a').removeClass('method-selected');
@@ -86,11 +92,15 @@
 
             var method =  $("#method").val();
             if (method == "02") {
-                document.getElementById("date").style.display = "none";
-            } else {
+                document.getElementById("date").style.display = "table-row";
+
+            }
+            else {
                 document.getElementById("date").style.display = "table-row";
             }
         });
+
+
     });
 
     function cancel() {

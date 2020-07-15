@@ -19,13 +19,15 @@ var fonts = {
     bolditalics: filePath + '/fonts/Roboto-MediumItalic.ttf'
   }
 };
+
+
 var printer = new PdfPrinter(fonts);
 var fs = require('fs');
 
 //페이팔 관련
 var paypal = require('paypal-rest-sdk');
 paypal.configure({
-  'mode': 'live', //sandbox or live
+  'mode': 'live', //sandbox or live - paypal local test용 = sandbox
   'client_id': 'Aa6b2sCxlNbK8iJEAQwSq9HoD8aQjzOBSAYNbqW__JjWjtzcQzogyUwJikMAis22kKI87nZj9W0l_IYn',
   'client_secret': 'EK08BO0p6CzmisVklCVcvW5o0p309mVmkIL6cKiXfvFYd1XWzIMIarQyEqEBa9iZ0V4WThMcyRkKy-EJ'
 });
@@ -72,8 +74,8 @@ const queryExec = (sql, v) => new Promise ((resolve, reject) => {
 exports.index = (req, res) => {
 
   let session = req.session;
-
   res.render("pass/index", {
+
     session : session,
     'userObj': req.cookies.userObj,
   });
@@ -83,6 +85,7 @@ exports.index = (req, res) => {
 exports.selMethod = (req, res) => {
 
   //subscription 항목들
+    var cur = 0;
   var map = {};
   map['group_000'] = { title: 'For a month',   months: 1,  price: '299' };
   map['group_001'] = { title: 'For 3 months',  months: 3,  price: '799' };
@@ -96,16 +99,29 @@ exports.selMethod = (req, res) => {
 
   let session = req.session;
 
-  res.render("pass/selMethod", {
-    session : session,
-    userObj: req.cookies.userObj,
-    subscriptionKey: req.body.pass_num,
-    data: map[req.body.pass_num],
-    start: start,
-    end: end,
-    moment: moment,
-    comma: common.comma
-  });
+  //통화별로 가격 수정 필요
+  connection.query('SELECT value FROM currencies WHERE defaultYN=' + '\'Y\';', (err,rs) => {
+        if (err) {
+            console.log(err);
+            res.end();
+        } else {
+            console.log(req.body.pass_num);
+            cur = rs[0].value;
+            res.render("pass/selMethod", {
+                session : session,
+                userObj: req.cookies.userObj,
+                subscriptionKey: req.body.pass_num,
+                data: map[req.body.pass_num],
+                start: start,
+                end: end,
+                moment: moment,
+                comma: common.comma,
+                currency: cur
+            });
+        }
+    });
+
+
 };
 
 // 멤버쉽 결제 확인 창 POST
@@ -479,42 +495,76 @@ exports.coin = (req, res) => {
 
   let session = req.session;
 
+
   res.render("pass/coin", {
-    session : session,
-    'userObj': req.cookies.userObj,
-    'result' : 0
+      session : session,
+      'userObj': req.cookies.userObj,
+      'result' : 0
   });
 };
 
 // 멤버쉽 결제 확인 창 POST
 exports.selMethod_coin = (req, res) => {
 
+    var map = {};
+    var cur;
+    map['coin10'] = { coin: '10 coin', price: '10' };
+    map['coin50'] = { coin: '50 coin', price: '30'};
+    map['coin100'] = { coin: '100 coin', price:'50' };
+    map['coin200'] = { coin: '200 coin', price:'100' };
   let session = req.session;
+    console.log(req.body.radio_btn);
 
-  res.render("pass/selMethod_coin", {
-    session : session,
-    'userObj': req.cookies.userObj,
-  });
+    connection.query('SELECT value FROM currencies WHERE defaultYN=' + '\'Y\';', (err,rs) => {
+        if (err) {
+            console.log(err);
+            res.end();
+        } else {
+            cur = rs[0].value;
+            res.render("pass/selMethod_coin", {
+                session : session,
+                userObj: req.cookies.userObj,
+                subscriptionKey: req.body.radio_btn,
+                data: map[req.body.radio_btn],
+                comma: common.comma,
+                currency: cur,
+            });
+        }
+    });
+
+
 };
 
 exports.paypalCreate_coin = function (req, res) {
 
+    var map = {};
+    map['coin10'] = { coin: '10 coin', price: '10' };
+    map['coin50'] = { coin: '50 coin',price: '30'};
+    map['coin100'] = { coin: '100 coin',price:'50' };
+    map['coin200'] = { coin: '200 coin',price:'100' };
+
   //paypal method방법(credit_card or paypal)
   var method = req.body.method;
-  var coin = req.body.coin;
+  var coinTemp = req.body.subscriptionKey;
+  var coin;
+
   var price = 0;
 
   //가격 설정
-  if (coin == 10) {
+  if (coinTemp == "coin10") {
+      coin="10";
     price = "10";
-  } else if (coin == 50) {
+  } else if (coinTemp == "coin50") {
+      coin="50";
     price = "30";
-  } else if (coin == 100) {
+  } else if (coinTemp == "coin100") {
+      coin="100";
     price = "50";
-  } else if (coin == 200) {
+  } else if (coinTemp == "coin200") {
+      coin="200";
     price = "100";
   }
- 
+
   //내용 설정
   var create_payment_json = {
       "intent": "sale",
@@ -680,24 +730,31 @@ exports.success_coin = function(req, res) {
 // 멤버쉽 결제 확인 창 POST
 exports.transferCreate_coin = (req, res) => {
 
-  let session = req.session;
-  var coin = parseInt(req.body.coin);
-  var price = "";
+    var setting;
+    //선택한 코인 정보 가져오기
+    var coin = req.body.subscriptionKey;
+    var coinprice;
+    var price;
+
+    let session = req.session;
 
     //가격 설정
-    if (coin == 10) {
+    if ( coin == "coin10") {
+        coinprice="10";
       price = "10";
-    } else if (coin == 50) {
+    } else if (coin == "coin50") {
+        coinprice="50";
       price = "30";
-    } else if (coin == 100) {
+    } else if (coin == "coin100") {
+        coinprice="100";
       price = "50";
-    } else if (coin == 200) {
+    } else if (coin == "coin200") {
+        coinprice="200";
       price = "100";
     }
 
-    var setting;
-
-  connection.query('SELECT companyAddress, beneficiary, bank, accountNo, swiftCode, bankTelephone, bankAddress, othersBeneficiaryTel, beneficiaryAddress, branchOfBank, note1, note2, note3, note4, note5 FROM wireTransfer_setting', (err,rs) => {   
+    //pdf에 들어갈 정보 가져오기기
+  connection.query('SELECT companyAddress, beneficiary, bank, accountNo, swiftCode, bankTelephone, bankAddress, othersBeneficiaryTel, beneficiaryAddress, branchOfBank, note1, note2, note3, note4, note5 FROM wireTransfer_setting', (err,rs) => {
       if (err) {   
           console.log(err);
           res.end();
@@ -706,7 +763,7 @@ exports.transferCreate_coin = (req, res) => {
         setting = rs[0];
 
         res.render("pass/payment_wt_coin", {
-          coin: req.body.coin,
+          coin: coinprice,
           price: price,
           method: req.body.method,
           session : session,
@@ -717,6 +774,7 @@ exports.transferCreate_coin = (req, res) => {
       }
   });
 };
+
 
 //결제 성공시
 exports.processWireTransfer_coin = function(req, res) {
@@ -1325,7 +1383,7 @@ exports.checkExpiredDate = function (req, res) {
   
 };
 
-exports.getCurrentSubscription = (req, res) => {
+exports.getCurrentSubscription = function(req, res) {
 
   var result = false;
   var status = -1;
@@ -1345,4 +1403,5 @@ exports.getCurrentSubscription = (req, res) => {
      }
   });
 };
+
 

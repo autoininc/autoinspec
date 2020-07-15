@@ -16,18 +16,18 @@ const queryExec = (sql, v) => new Promise ((resolve, reject) => {
     })
 });
 
+
 // 목록 GET
 exports.list = (req, res) => {
 
     let model = {};
     
-    connection.query('SELECT id, title, code, value, defaultYN, updatedAt FROM currencies', (err, rs) => {   
+    connection.query('SELECT id, title, code, value, defaultYN, updatedAt FROM currencies', (err, rs) => {
 
         if(err){   
             console.log(err);
             res.end();
         } else {
-
             model.list = rs;
             res.render('admin/code/currency/list', {model:model, userObj: req.cookies.userObj, moment: moment});
         }
@@ -68,7 +68,7 @@ exports.modForm = (req, res) => {
     });
 };
 
-// modForm GET
+// 수정본을 받아서 업데이트
 exports.mod = (req, res) => {
 
     var jsonData = req.body;
