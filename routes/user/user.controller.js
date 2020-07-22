@@ -17,25 +17,24 @@ var nodemailer = require('nodemailer');
 var smtpTransporter = require('nodemailer-smtp-transport');
 
 //메일 서버
-/*var smtpTransport = nodemailer.createTransport(smtpTransporter ( {
-  service: 'Cafe24',
-  host:'smtp.cafe24.com',
-  secure: false, 
-  port:'587',
-  tls: {
-    rejectUnauthorized: false,
-    ignoreTLS: false,
-    requireTLS: true,
-    secureProtocol: "TLSv1_method"
-  },
-  auth:{
-      user:'autoingroup@autoingroup.com',
-      pass:'autoin102030', 
-  },
-  maxConnections:5,
-  maxMessages:10
+var smtpTransport = nodemailer.createTransport(smtpTransporter({
+    service: 'Lineworks',
+    host:'smtp.worksmobile.com',
+    secure: true,
+    port:'465',
+    tls: {
+        rejectUnauthorized: false,
+        ignoreTLS: false,
+        requireTLS: true,
+        secureProtocol: "TLSv1_method"
+    },
+    auth:{
+        user:'service@autoingroup.com',
+        pass:'autoin2020$',
+    }
 }));
-*/
+
+
 
 // 로그인 GET
 exports.login = (req, res) => {
@@ -167,7 +166,7 @@ exports.gosign_up = (req, res, next) => {
 
                       //메일 옵션
                       var mailOpt = {
-                        from: 'autoinspec@autoinspec.com',
+                        from: 'service@autoinspec.com',
                         to: req.body.email,
                         subject: '[AUTOINSPEC] Email Authentication',
                         html: header_mail.getData(req.protocol + '://' + req.headers.host) + content_html.getData(url)
@@ -251,7 +250,7 @@ exports.createNewPassword = (req, res) => {
 
                     //메일 옵션
                     var mailOpt = {
-                      from: 'autoinspec@autoinspec.com',
+                      from: 'service@autoinspec.com',
                       to: req.body.email,
                       subject: '[AUTOINSPEC] Your Temporary Password',
                       html: header_mail.getData(req.protocol + '://' + req.headers.host) + findPassword_content_html.getData(newPassord)

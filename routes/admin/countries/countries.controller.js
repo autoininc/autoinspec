@@ -82,16 +82,16 @@ exports.getData = (req, res) => {
 exports.modify = (req, res) => {
 
     var jsonData = req.body;
-    
-    var sql = 'UPDATE countries SET country_name = ?, code = ? WHERE id = ?';	
+
+    var sql = 'UPDATE countries SET country_name = ?, code = ? WHERE id = ?';
     connection.query(sql, [jsonData['name'], jsonData['code'], jsonData['id']], function(err,results) {
-        
+
         if (err) {
             console.log(err);
         } else {
             res.status(200).json({ 'msg': "success" });
         }
-    
+
     });
 };
 

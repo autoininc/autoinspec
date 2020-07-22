@@ -7,7 +7,7 @@
   <!-- // AUTOIN.inc landing -->
   <link href="/main/css/landing/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
   <link href="/main/css/landing/landing-page.min.css" rel="stylesheet" />
-  <link href="/main/css/landing/landing-page.css" rel="stylesheet" />    
+  <link href="/main/css/landing/landing-page.css" rel="stylesheet" />
 
   <!-- Google geo chart-->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -25,11 +25,11 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    
+
 </head>
 
 <body>
-  <div class="container-scroller">
+<div class="container-scroller">
   <!-- partial:partials/_horizontal-navbar.html -->
   <%- include ('./layout/header.ejs') -%>
   <!-- partial -->
@@ -41,25 +41,25 @@
           <div class="col-lg-12">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
               <ol class="carousel-indicators">
-                <%  if (model.carousel != undefined) { %> 
-                <%  if (model.carousel.length > 0) { %> 
-                  <% for(let i=0; i<model.carousel.length; i++) {  %> 
-                    <li data-target="#carouselExampleIndicators" data-slide-to="<%= i %>" <%  if (i == 0) { %> class="active" <% } %>></li>      
-                <% }}} %> 
+                <%  if (model.carousel != undefined) { %>
+                  <%  if (model.carousel.length > 0) { %>
+                    <% for(let i=0; i<model.carousel.length; i++) {  %>
+                      <li data-target="#carouselExampleIndicators" data-slide-to="<%= i %>" <%  if (i == 0) { %> class="active" <% } %>></li>
+                <% }}} %>
               </ol>
               <div class="carousel-inner" role="listbox">
-                
-                <%  if (model.carousel != undefined) { %> 
-                <%  if (model.carousel.length > 0) { %> 
-                  <% for(let i=0; i<model.carousel.length; i++) {  %> 
-                      <div class="carousel-item <%  if (i == 0) { %> active <% } %>" style="background-image: url('/uploads/<%=model.carousel[i].file_name_new %>')"> 
-                      <div class="carousel-caption d-none d-md-block">
-                        <h3 class="display-4 autoinspecTitleColor" style="<%=model.carousel[i].title_style %>"><%=model.carousel[i].title %></h3>
-                        <p class="lead autoinspecTitleColor" style="<%=model.carousel[i].contents_style %>"><%=model.carousel[i].contents %></p>
+
+                <%  if (model.carousel != undefined) { %>
+                  <%  if (model.carousel.length > 0) { %>
+                    <% for(let i=0; i<model.carousel.length; i++) {  %>
+                      <div class="carousel-item <%  if (i == 0) { %> active <% } %>" style="background-image: url('/uploads/<%=model.carousel[i].file_name_new %>')">
+                        <div class="carousel-caption d-none d-md-block">
+                          <h3 class="display-4 autoinspecTitleColor" style="<%=model.carousel[i].title_style %>"><%=model.carousel[i].title %></h3>
+                          <p class="lead autoinspecTitleColor" style="<%=model.carousel[i].contents_style %>"><%=model.carousel[i].contents %></p>
+                        </div>
                       </div>
-                    </div>  
-                <% }}} %> 
-  
+                <% }}} %>
+
               </div>
               <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -73,10 +73,10 @@
           </div>
         </div>
         <!-- <div class="content-wrapper"> -->
-          <!-- <div class="row mt-4"> -->
-              <section class="features-icons bg-light text-center">
-                <div class="container">
-              <div class="row">
+        <!-- <div class="row mt-4"> -->
+        <section class="features-icons bg-light text-center">
+          <div class="container">
+            <div class="row">
               <div class="col-lg-4">
                 <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
                   <div class="features-icons-icon d-flex">
@@ -108,35 +108,35 @@
           </div>
         </section>
 
-            <div class="row" style="padding-top: 1.5em;">
-              <div class="col-lg-6 grid-margin stretch-card" style="overflow-x: auto;">
-                <div class="card" style="overflow-x: auto;">
-                  <div class="card-body">
-                    <div id="regions_div" ></div>
-                  </div>
-                </div>
+        <div class="row" style="padding-top: 1.5em;">
+          <div class="col-lg-6 grid-margin stretch-card" style="overflow-x: auto;">
+            <div class="card" style="overflow-x: auto;">
+              <div class="card-body">
+                <div id="regions_div" ></div>
               </div>
-              <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Please select a category !</h4>
-                    <p class="card-description">
-                      Search by region or select a region on the map to find businesses near you.
-                    </p>
-                    <div class="form-group">
-                      <select name="country_id" class="form-control" id="country_id">
-                        <option value="">- ALL Country -</option>
+            </div>
+          </div>
+          <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Please select a category !</h4>
+                <p class="card-description">
+                  Search by region or select a region on the map to find businesses near you.
+                </p>
+                <div class="form-group">
+                  <select name="country_id" class="form-control" id="country_id">
+                    <option value="">- ALL Country -</option>
 
-                        <% if (model.countries) { %>
-                         <% if (model.countries.length > 0) { %> 
-                            <% for(let i=0; i<model.countries.length; i++) { %> 
-                              <option id=<%=model.countries[i].id %> value=<%=model.countries[i].id %>><%=model.countries[i].country_name %></option>                 
-                            <%  } } }  %>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <div class="row">
-                      <div class="col-lg-7">
+                    <% if (model.countries) { %>
+                      <% if (model.countries.length > 0) { %>
+                        <% for(let i=0; i<model.countries.length; i++) { %>
+                        <option id=<%=model.countries[i].id %> value=<%=model.countries[i].id %>><%=model.countries[i].country_name %></option>
+                    <%  } } }  %>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-lg-7">
                       <select name="search_bn" class="form-control" id="search_bn">
                         <option value="">- ALL Business Nature -</option>
                         <option value="1">Manufacturer</option>
@@ -160,49 +160,49 @@
                       </select>
                     </div>
                   </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                  <div class="input-group">
+                    <input type="hidden" name="search_cate" id="search_cate" >
+                    <input class="form-control " id="categoryText" name="categoryText" type="text" placeholder="Category" >
+                    <div class="input-group-append">
+                      <button class="btn btn-sm" type="button" style="background-color: #317376; color:white;" onclick="removeCategory();">X</button>
                     </div>
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                      <div class="input-group">
-                        <input type="hidden" name="search_cate" id="search_cate" >
-                        <input class="form-control " id="categoryText" name="categoryText" type="text" placeholder="Category" >
-                        <div class="input-group-append">
-                          <button class="btn btn-sm" type="button" style="background-color: #317376; color:white;" onclick="removeCategory();">X</button>
-                        </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-inline">
+                    <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
+                      <option value="1" selected>ALL</option>
+                      <option value="2" >COMPANY</option>
+                      <option value="3" >CEO</option>
+                      <option value="4" >MAIN PRODUCT</option>
+                    </select>
+                    <div class="input-group">
+                      <input id="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-primary mb-2 mr-sm-2" style="background-color: #317376;" onClick="search('1');">Search</button>
                       </div>
                     </div>
-                    
-                    <div class="form-group">
-                      <div class="form-inline">
-                        <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
-                            <option value="1" selected>ALL</option>
-                            <option value="2" >COMPANY</option>
-                            <option value="3" >CEO</option>
-                            <option value="4" >MAIN PRODUCT</option>
-                        </select>
-                          <div class="input-group">
-                            <input id="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
-                            <div class="input-group-append">
-                              <button type="button" class="btn btn-primary mb-2 mr-sm-2" style="background-color: #317376;" onClick="search('1');">Search</button>
-                            </div>
-                          </div>
-                    </div>
-                  </div>
-                  </div>
                   </div>
                 </div>
               </div>
-
             </div>
-            <!-- </div> -->
-          <!-- </div> -->
-          <%- include ('./layout/footer.ejs') -%>
+          </div>
+        </div>
+
+      </div>
+      <!-- </div> -->
+      <!-- </div> -->
+      <%- include ('./layout/footer.ejs') -%>
       <!-- partial -->
     </div>
     <!-- main-panel ends -->
   </div>
   <!-- page-body-wrapper ends -->
-  </div>
-  <!-- container-scroller -->
+</div>
+<!-- container-scroller -->
 </body>
 
 <script>
@@ -213,7 +213,7 @@
   var oldVal;
   var arr = [];
 
-  $("document").ready(function() { 
+  $("document").ready(function() {
 
     $("#categoryText").autocomplete({source: arr});
 
@@ -225,142 +225,142 @@
     }
 
     google.charts.load('current', {
-          'packages': ['geochart'],
-          'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+      'packages': ['geochart'],
+      'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
     });
     google.charts.setOnLoadCallback(drawRegionsMap);
 
 
     //카테고리 입력 이벤트
-      $("#categoryText").on("propertychange change keyup paste input", function() {
+    $("#categoryText").on("propertychange change keyup paste input", function() {
 
-        var currentVal = $(this).val();
-        if(currentVal == oldVal) {
-            return;
-        } 
-    
-        oldVal = currentVal;
-        arr = [];
-        
-        if (currentVal != '') {
+      var currentVal = $(this).val();
+      if(currentVal == oldVal) {
+        return;
+      }
 
-          $.ajax({
-            type: "POST",
-            url: "/category/getlist",
-            dataType: 'json',
-            data: { 'query': oldVal },
-            success: function (data) {
+      oldVal = currentVal;
+      arr = [];
 
-                for (var i=0; i<data.data.length; i++) {
-                  
-                    var id = data.data[i].id
+      if (currentVal != '') {
 
-                    var p1 = (data.data[i].p1_name != undefined) ? data.data[i].p1_name: '';
-                    var p2 = (data.data[i].p2_name != undefined) ? data.data[i].p2_name: '';
-                    var p3 = (data.data[i].p3_name != undefined) ? data.data[i].p3_name: '';
-                    var parents = "";
-                    if (p1 != '') parents += (p1 + " > ")
-                    if (p2 != '') parents += (p2 + " > ")
-                    if (p3 != '') parents += (p3 + " > ")
+        $.ajax({
+          type: "POST",
+          url: "/category/getlist",
+          dataType: 'json',
+          data: { 'query': oldVal },
+          success: function (data) {
 
-                    arr.push({ value: id, label: parents + data.data[i].category_name})
-                  } 
+            for (var i=0; i<data.data.length; i++) {
 
-                $("#categoryText").autocomplete({
+              var id = data.data[i].id
 
-                    source: arr,
-                    select: function(event, ui) {
-                      $("#categoryText").val(ui.item.label); // display the selected text
-                      $("#search_cate").val(ui.item.value); // display the selected text
-                      $("#categoryText").attr('readonly', true);
-                      return false;
-                    },
+              var p1 = (data.data[i].p1_name != undefined) ? data.data[i].p1_name: '';
+              var p2 = (data.data[i].p2_name != undefined) ? data.data[i].p2_name: '';
+              var p3 = (data.data[i].p3_name != undefined) ? data.data[i].p3_name: '';
+              var parents = "";
+              if (p1 != '') parents += (p1 + " > ")
+              if (p2 != '') parents += (p2 + " > ")
+              if (p3 != '') parents += (p3 + " > ")
 
-                    focus: function(event, ui) {
-                        return false;
-                    }
-                });
-                    
-            },
-            error: function (e) {
-                console.log("ERROR : ", e);
+              arr.push({ value: id, label: parents + data.data[i].category_name})
             }
+
+            $("#categoryText").autocomplete({
+
+              source: arr,
+              select: function(event, ui) {
+                $("#categoryText").val(ui.item.label); // display the selected text
+                $("#search_cate").val(ui.item.value); // display the selected text
+                $("#categoryText").attr('readonly', true);
+                return false;
+              },
+
+              focus: function(event, ui) {
+                return false;
+              }
+            });
+
+          },
+          error: function (e) {
+            console.log("ERROR : ", e);
+          }
         });
-        } else {
-          $("#search_cate").val("");
-        }
-          
+      } else {
+        $("#search_cate").val("");
+      }
+
     });
   });
 
   //검색 버튼 이벤트
   function search(num) {
 
-      var search_type = $("#search_type").val();
-      var country_id= $("#country_id").val();
-      var search_txt = $("#search_txt").val();
-      var search_bn = $("#search_bn").val();
-      var search_pg = $("#search_pg").val();
-      var search_cate = $("#search_cate").val();
-      var categoryText = $("#categoryText").val();
+    var search_type = $("#search_type").val();
+    var country_id= $("#country_id").val();
+    var search_txt = $("#search_txt").val();
+    var search_bn = $("#search_bn").val();
+    var search_pg = $("#search_pg").val();
+    var search_cate = $("#search_cate").val();
+    var categoryText = $("#categoryText").val();
 
-      var url = "/company/search?pageNum=1" + "&search_type=" + search_type + "&country_id=" + country_id + "&search_txt=" + search_txt + 
+    var url = "/company/search?pageNum=1" + "&search_type=" + search_type + "&country_id=" + country_id + "&search_txt=" + search_txt +
             "&search_bn=" + search_bn + "&search_pg=" + search_pg + "&search_cate=" + search_cate + "&categoryText=" + categoryText;
 
-      window.location.href = url;        
- }
+    window.location.href = url;
+  }
 
   //카테고리 제거
   function removeCategory() {
-      $("#categoryText").val(""); // display the selected text
-      $("#search_cate").val(""); // display the selected text
-      $("#categoryText").attr('readonly', false);
-    }
+    $("#categoryText").val(""); // display the selected text
+    $("#search_cate").val(""); // display the selected text
+    $("#categoryText").attr('readonly', false);
+  }
 
   //지도 그리기
   function drawRegionsMap() {
 
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Country');
-      data.addColumn('number', 'Count');
-      
-      data.addColumn({
-          type: 'string',
-          role: 'tooltip',
-          'p': {'html': true}//added html version
-      });
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Country');
+    data.addColumn('number', 'Count');
 
-      data.addRows(array)
+    data.addColumn({
+      type: 'string',
+      role: 'tooltip',
+      'p': {'html': true}//added html version
+    });
 
-      var options = { legend: 'none', tooltip: { isHtml: true } };
+    data.addRows(array)
 
-      var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-      function myClickHandler() {
-        var selection = chart.getSelection();
+    var options = { legend: 'none', tooltip: { isHtml: true } };
 
-        //클릭시 table.html 넘어감
-        $("#country_id").val(countryMap[data.getValue(chart.getSelection()[0].row, 0)]);
-        search();
-      }
+    var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+    function myClickHandler() {
+      var selection = chart.getSelection();
 
-      google.visualization.events.addListener(chart, 'select', myClickHandler);
-
-      chart.draw(data, options);
-
-      
- 
+      //클릭시 table.html 넘어감
+      $("#country_id").val(countryMap[data.getValue(chart.getSelection()[0].row, 0)]);
+      search();
     }
 
+    google.visualization.events.addListener(chart, 'select', myClickHandler);
+
+    chart.draw(data, options);
+
+
+
+  }
+
   function htmlDecode(input){
-      var e = document.createElement('div');
-      e.innerHTML = input;
-      return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+    var e = document.createElement('div');
+    e.innerHTML = input;
+    return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
   }
 
 </script>
 <style>
 
-.google-visualization-tooltip {
+  .google-visualization-tooltip {
     background-color: white;
     border-radius: 6px;
     color: #3c4043;
@@ -368,27 +368,27 @@
     width: 120px;
     padding: 2px;
     margin-left: 2px;
-}
-.google-visualization-tooltip-item-list {
-  list-style-type: none;
-  margin: 0!important;
-  padding: 0!important;
-}
+  }
+  .google-visualization-tooltip-item-list {
+    list-style-type: none;
+    margin: 0!important;
+    padding: 0!important;
+  }
 
-.google-visualization-tooltip-item:first-child {
-  margin: 0!important;
-}
-.google-visualization-tooltip-item {
-  margin: 0!important;
-  padding: 0!important;
-}
-.ui-autocomplete {
-  max-height: 200px;
-  width: auto;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 20px;
-} 
+  .google-visualization-tooltip-item:first-child {
+    margin: 0!important;
+  }
+  .google-visualization-tooltip-item {
+    margin: 0!important;
+    padding: 0!important;
+  }
+  .ui-autocomplete {
+    max-height: 200px;
+    width: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 20px;
+  }
 
 </style>
 </html>

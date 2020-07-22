@@ -19,11 +19,12 @@ var nodemailer = require('nodemailer');
 var smtpTransporter = require('nodemailer-smtp-transport');
 
 //메일 서버
+//AWS 서버로 수정 필요
 var smtpTransport = nodemailer.createTransport(smtpTransporter ( {
-  service: 'Cafe24',
-  host:'smtp.cafe24.com',
-  secure: false, 
-  port:'587',
+  service: 'Lineworks',
+  host:'smtp.worksmobile.com',
+  secure: true,
+  port:'465',
   tls: {
     rejectUnauthorized: false,
     ignoreTLS: false,
@@ -31,11 +32,9 @@ var smtpTransport = nodemailer.createTransport(smtpTransporter ( {
     secureProtocol: "TLSv1_method"
   },
   auth:{
-      user:'kjh@autoingroup.com',
-      pass:'autoin2020', 
-  },
-  maxConnections:5,
-  maxMessages:10
+      user:'service@autoingroup.com',
+      pass:'autoin2020$',
+  }
 
 }));
 

@@ -8,6 +8,9 @@ var moment = require('moment');
 require('moment-timezone');
 const format = 'YYYY-MM-DD HH:mm:ss';
 
+exports.test = (req, res) => {
+    res.render('search/test',{userObj: req.cookies.userObj});
+}
 // 목록 GET
 exports.search = (req, res) => {
 
@@ -63,6 +66,7 @@ exports.search = (req, res) => {
         where += " AND (d.id =" + search_cate + " OR e.id =" + search_cate + " OR f.id =" + search_cate + " OR f.parent_id =" + search_cate + ")";
     }
 
+    //등록된 기업 개수 쿼리문
     var count_sql = 'SELECT COUNT(DISTINCT a.id) AS cnt FROM company a ' + join + where;
     
 

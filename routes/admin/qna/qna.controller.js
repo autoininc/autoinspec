@@ -23,22 +23,20 @@ var smtpTransporter = require('nodemailer-smtp-transport');
 
 //메일 서버
 var smtpTransport = nodemailer.createTransport(smtpTransporter ( {
-  service: 'Cafe24',
-  host:'smtp.cafe24.com',
-  secure: false, 
-  port:'587',
-  tls: {
-    rejectUnauthorized: false,
-    ignoreTLS: false,
-    requireTLS: true,
-    secureProtocol: "TLSv1_method"
-  },
-  auth:{
-      user:'autoingroup@autoingroup.com',
-      pass:'autoin102030', 
-  },
-  maxConnections:5,
-  maxMessages:10
+    service: 'Lineworks',
+    host:'smtp.worksmobile.com',
+    secure: true,
+    port:'465',
+    tls: {
+        rejectUnauthorized: false,
+        ignoreTLS: false,
+        requireTLS: true,
+        secureProtocol: "TLSv1_method"
+    },
+    auth:{
+        user:'service@autoingroup.com',
+        pass:'autoin2020$',
+    }
 }));
 
 //리스트

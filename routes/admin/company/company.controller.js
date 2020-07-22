@@ -54,9 +54,9 @@ exports.list = (req, res) => {
     var where = "";
 
     //통합 검색
-    if (search_type == 1) 
+    if (search_type == 1) //ALL
         where += "  WHERE (name_eng LIKE '%" + search_txt + "%' OR ceo LIKE '%" + search_txt + "%' OR main_product LIKE '%" + search_txt + "%') "
-    else if (search_type == 2)
+    else if (search_type == 2) //COMPANY
         where += "  WHERE (name_eng LIKE '%" + search_txt + "%') "
     else if (search_type == 3)
         where += "  WHERE (ceo LIKE '%" + search_txt + "%') "

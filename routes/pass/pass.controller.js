@@ -27,7 +27,7 @@ var fs = require('fs');
 //페이팔 관련
 var paypal = require('paypal-rest-sdk');
 paypal.configure({
-  'mode': 'live', //sandbox or live - paypal local test용 = sandbox
+  'mode': 'sandbox', //sandbox or live - paypal local test용!
   'client_id': 'Aa6b2sCxlNbK8iJEAQwSq9HoD8aQjzOBSAYNbqW__JjWjtzcQzogyUwJikMAis22kKI87nZj9W0l_IYn',
   'client_secret': 'EK08BO0p6CzmisVklCVcvW5o0p309mVmkIL6cKiXfvFYd1XWzIMIarQyEqEBa9iZ0V4WThMcyRkKy-EJ'
 });
@@ -42,22 +42,20 @@ var smtpTransporter = require('nodemailer-smtp-transport');
 
 //메일 서버
 var smtpTransport = nodemailer.createTransport(smtpTransporter ( {
-  service: 'Cafe24',
-  host:'smtp.cafe24.com',
-  secure: false, 
-  port:'587',
-  tls: {
-    rejectUnauthorized: false,
-    ignoreTLS: false,
-    requireTLS: true,
-    secureProtocol: "TLSv1_method"
-  },
-  auth:{
-      user:'autoingroup@autoingroup.com',
-      pass:'autoin102030', 
-  },
-  maxConnections:5,
-  maxMessages:10
+    service: 'Lineworks',
+    host:'smtp.worksmobile.com',
+    secure: true,
+    port:'465',
+    tls: {
+        rejectUnauthorized: false,
+        ignoreTLS: false,
+        requireTLS: true,
+        secureProtocol: "TLSv1_method"
+    },
+    auth:{
+        user:'service@autoingroup.com',
+        pass:'autoin2020$',
+    }
 }));
 
 const queryExec = (sql, v) => new Promise ((resolve, reject) => {

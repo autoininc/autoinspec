@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:height="http://www.w3.org/1999/xhtml" xmlns:width="http://www.w3.org/1999/xhtml">
+
+<head>
+    <%- include ('../layout/head.ejs') -%>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"
+          rel="stylesheet">
+
+</head>
+
+<body>
+<div class="container-scroller" style="padding:0">
+    <input id="company_id" name="company_id" type="hidden" value="<%= company_id %>"/> <!-- company_id 값이 필요해서 변수형태로 만들기 위해 사용 -->
+
+    <% if(innerlevel.length > 0) { %>
+        <input id = "lCnt" name = "lCnt" type = "hidden" value="<%= innerlevel.length %>">
+        <input id="company_level" name="company_level" type="hidden" value="<%= innerlevel[0].innerlevel %>"/> <!-- 담당자 정보 필요해서 변수형태로 만들기 위해 사용 -->
+    <% } %>
+
+
+    <!-- 여기서부터~ 담당자 정보 가져오는 밑작업
+    이부분... 야매로 살짝 구현한 것이 없지 않아 있기 때문에... 혹시 아이디어가 있다면 수정 부탁드립니다...ㅠㅠ-->
+    <!-- 담당자 정보가 존재한다면 담당자 정보 가져오기 -->
+    <% if (model_consult.manager.length > 0 ) { %>
+        <input id = "mCnt" name = "mCnt" type = "hidden" value="<%= model_consult.manager.length %>">
+        <input id="mName" name="mName" type="hidden" value="<%= model_consult.manager[0].managerName %>">
+        <input id="mPosition" name="mPosition" type="hidden" value="<%= model_consult.manager[0].managerPosition %>">
+        <input id="mDept" name="mDept" type="hidden" value="<%= model_consult.manager[0].managerDept %>">
+        <input id="mPhone" name="mPhone" type="hidden" value="<%= model_consult.manager[0].managerPhone %>">
+        <input id="mEmail" name="mEmail" type="hidden" value="<%= model_consult.manager[0].managerEmail %>">
+    <% } %>
+    <!-- ~여기까지 -->
+    <!-- back office 상단 바 ejs-->
+    <%- include ('../layout/header.ejs') -%>
+    <div class="container-fluid page-body-wrapper">
+        <!-- back office 왼쪽 바 ejs-->
+        <%- include ('../layout/side.ejs') -%>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-md-12 grid-margin">
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <div class="d-flex align-items-end flex-wrap">
+                                <div class="mr-md-3 mr-xl-5">
+                                    <!-- 상담 옆에 x 버튼입니다. x 버튼 누르면 고객 리스트 페이지로 이동합니다.-->
+                                    <i type="button" onclick="location.href = '/admin/customerManagement/list'" class="far fa-times-circle"></i>
+                                    <h2 style="float: left; margin-right: 10px;">상담</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <div class="card"><div class="card-body"><div class="container-scroller">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="card-description" style="margin-bottom:10px">상담목록
+                                                    <button type="button" class="btn btn-primary"
+                                                            data-toggle="modal" style="float: right" data-whatever="@mdo" onclick="deleteConsulting()">삭제</button>
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal" style="float: right; margin-right: 10px;"
+                                                            id="modifyBtn"  data-whatever="@mdo" onclick="Modify()">수정</button>
+                                                </p>
+
+                                                <!-- 여기부터~ 지금까지 등록된 상담 내용을 보여주는 리스트입니다!
+                                                담당자를 선택하면 담당자의 개인 정보를 볼 수 있도록 변경해야함-->
+                                                <table id="consultList" class="table table-bordered" style="text-align: center;">
+                                                    <thead class="thead-light">
+                                                    <tr>
+                                                        <th style="width: 2%;"></th>
+                                                        <th style="width: 5%;">번호</th>
+                                                        <th style="width: 10%;">상담자</th>
+                                                        <th style="width: 20%;">내용</th>
+                                                        <th style="width: 20%;">비고</th>
+                                                        <th style="width: 20%;">날짜</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <br>
+                                                    <%
+                                                    if (model_consult.list.length > 0) { %>
+                                                        <% for(let i=0; i<model_consult.list.length; i++) {
+                                                        %>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td><input type="radio" name="check"></td>
+                                                            <td><%=model_consult.list[i].id %></td>
+                                                            <td><%=model_consult.list[i].conselor %></td>
+                                                            <td><%=model_consult.list[i].content %></td>
+                                                            <td><%=model_consult.list[i].remark %></td>
+                                                            <td><%= model_consult.list[i].consult_date %></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    <% }
+                                                    }  else { %>
+                                                        <tr>
+                                                            <th colspan="5">상담 기록이 존재하지 않습니다.</th>
+                                                        </tr>
+                                                    <% } %>
+                                                    </tbody>
+                                                </table>
+                                                <!-- ~여기까지 -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="row">
+                    <!-- 여기서부터~ 각 기업의 담당자 정보 확인 및 수정하는 부분-->
+                    <div class="col-md-3 grid-margin">
+                        <div class="card"><div class="card-body"><div class="container-scroller">
+                                    <div class="row">
+                                        <div class="col">
+                                            <p class="card-description" style="margin-bottom:10px" id="consulttitle">담당자 정보</p>
+                                            <p class="card-description" style="margin-bottom:10px; display: none;" id="modifytitle">상담 내용 수정 번호:
+                                                <span id="modifynumber"></span>
+                                            </p>
+
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <label for="recipient-name" class="col-form-label">담당자명 </label>
+                                                        <input type="text" class="form-control" id="managerName" style="width: 200px; text-align: center; float: right;"
+                                                               value="">
+                                                    </div>
+                                                    <div class="form-group" >
+                                                        <label for="message-text" class="col-form-label">담당자직급</label>
+                                                        <input type="text" class="form-control" id="managerPosition" style="width: 200px; text-align: center; float: right;"
+                                                               value="">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="message-text" class="col-form-label">담당자부서</label>
+                                                        <input type="text" class="form-control" id="managerDept" style="width: 200px; text-align: center; float: right;"
+                                                               value="">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="message-text" class="col-form-label">담당자연락처</label>
+                                                        <input type="text" class="form-control" id="managerPhone" style="width: 200px; text-align: center; float: right;"
+                                                               value="">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="message-text" class="col-form-label" style="margin-bottom: 1%">담당자이메일</label>
+                                                        <input type="text" class="form-control" id="managerEmail" style="width: 200px; text-align: center; float: right;"
+                                                               value="">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <!-- 수정 버튼 누르면 MySQL managerInfo table에 담당자 내용들이 변경됩니다.-->
+                                                <button type="button"  class="btn btn-primary" data-dismiss="modal" id="managerModify" onclick="ModifyManagerInfo()">수정</button>
+                                                <!-- 확인 버튼 누르면 MySQL managerInfo table에 담당자 내용들이 업데이트됩니다.-->
+                                                <button type="button"  class="btn btn-primary" data-dismiss="modal" id="managerModifyConfirm"
+                                                        style="display: none" onclick="ModifyManagerConfirm()">확인</button>
+                                                <!-- 확인 버튼 누르면 MySQL managerInfo table에 담당자 내용들이 추가됩니다.-->
+                                                <button type="button"  class="btn btn-primary" data-dismiss="modal" id="managerAdd"
+                                                        style="display: none" onclick="addManager()">추가</button>
+                                                <!-- 취소 버튼 누르면 상담 페이지로 이동하여 수정 페이지를 벗어납니다.-->
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" style="display: none"
+                                                        id="managermodifycancelBtn"  data-whatever="@mdo" onclick="ModifyCancelManager()">취소</button>
+                                                <!-- ~여기까지-->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ~여기까지 -->
+
+                    <!-- 여기서부터~ 상담 내용을 추가할 수 있는 부분입니다. -->
+                    <div class="col-md-9 grid-margin">
+                        <div class="card"><div class="card-body"><div class="container-scroller">
+                                    <div class="row">
+                                        <div class="col">
+                                            <p class="card-description" style="margin-bottom:10px" id="consulttitle">상담 내용</p>
+                                            <p class="card-description" style="margin-bottom:10px; display: none;" id="modifytitle">상담 내용 수정 번호:
+                                                <span id="modifynumber"></span>
+                                            </p>
+
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <label for="recipient-name" class="col-form-label">상담자 </label>
+                                                        <!-- '상담자'란은 로그인 정보를 기반으로 이름이 나옵니다.
+                                                        input 형태로 되어 있어 다른 이름 넣어서 작성 가능해요!!-->
+                                                        <input type="text" class="form-control" id="Name" style="width: 200px; text-align: center;" value="<%= model_consult.name[0].last_name %> <%= model_consult.name[0].first_name %>">
+
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="message-text" class="col-form-label">내용</label>
+                                                        <textarea class="form-control" id="Content"></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="message-text" class="col-form-label">비고</label>
+                                                        <textarea class="form-control" id="Remark"></textarea>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <!-- 확인 버튼 누르면 MySQL test table에 상담 내용들이 추가됩니다.-->
+                                                <button type="button"  class="btn btn-primary" data-dismiss="modal" id="consultConfirm" onclick="confirmConsulting()">확인</button>
+                                                <button type="button"  class="btn btn-primary" data-toggle="modal" onclick="InnerLevelInfo()" id="innerlevelBtn">사내등급</button>
+                                                <!-- 여기서부터~ 상담 목록에 있는 수정 버튼을 클릭하면 나오는 버튼들-->
+                                                <!-- 수정 버튼 누르면 MySQL test table에 상담 내용들이 업데이트됩니다.-->
+                                                <button type="button"  class="btn btn-primary" data-dismiss="modal" id="consultModifyConfirm"
+                                                        style="display: none" onclick="ModifyConfirm()">수정</button>
+                                                <!-- 취소 버튼 누르면 상담 페이지로 이동하여 수정 페이지를 벗어납니다.-->
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" style="display: none"
+                                                        id="modifycancelBtn"  data-whatever="@mdo" onclick="ModifyCancel()">취소</button>
+                                                <!-- ~여기까지-->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ~여기까지 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--여기서부터~ UI에 필요한 기능들 추가-->
+<script>
+    $("document").ready(function(){
+        //manager 정보 가져오기 위한 밑작업입니다!
+        var cnt = $("#mCnt").val();
+        if(cnt>0) {
+            $("#managerName").val($("#mName").val());
+            $("#managerDept").val($("#mDept").val());
+            $("#managerPosition").val($("#mPosition").val());
+            $("#managerPhone").val($("#mPhone").val());
+            $("#managerEmail").val($("#mEmail").val());
+        }
+
+
+    })
+
+    //사내등급 버튼 클릭 시 level 변경 다이어로그 띄우기
+    //확인 버튼 누르면 level 값 가져옴
+    async function InnerLevelInfo()
+    {
+        var level;
+        if($("#lCnt").val() > 0) level = $("#company_level").val();
+        var inputA = '<input type="radio" name="chk_level" value = "A" style="margin-left: 20px"';
+        var inputB = '<input type="radio" name="chk_level" value = "B" style="margin-left: 20px"';
+        var inputC = '<input type="radio" name="chk_level" value = "C" style="margin-left: 20px"';
+        var inputD = '<input type="radio" name="chk_level" value = "D" style="margin-left: 20px"';
+        var inputF = '<input type="radio" name="chk_level" value = "F" style="margin-left: 20px"';
+
+        switch(level)
+        {
+            case 'A':
+                inputA = inputA + 'checked = "checked"> A';
+                inputB = inputB + '> B';
+                inputC = inputC + '> C';
+                inputD = inputD + '> D';
+                inputF = inputF + '> F';
+                break;
+            case 'B':
+                inputB = inputB + 'checked = "checked"> B';
+                inputA = inputA + '> A';
+                inputC = inputC + '> C';
+                inputD = inputD + '> D';
+                inputF = inputF + '> F';
+                break;
+            case 'C':
+                inputC = inputC + 'checked = "checked"> C';
+                inputB = inputB + '> B';
+                inputA = inputA + '> A';
+                inputD = inputD + '> D';
+                inputF = inputF + '> F';
+                break;
+            case 'D':
+                inputD = inputD + 'checked = "checked"> D';
+                inputB = inputB + '> B';
+                inputC = inputC + '> C';
+                inputA = inputA + '> A';
+                inputF = inputF + '> F';
+                break;
+            case 'F':
+                inputF = inputF + 'checked = "checked"> F';
+                inputB = inputB + '> B';
+                inputC = inputC + '> C';
+                inputD = inputD + '> D';
+                inputA = inputA + '> A';
+                break;
+            default:
+                inputA = inputA + '> A';
+                inputB = inputB + '> B';
+                inputC = inputC + '> C';
+                inputD = inputD + '> D';
+                inputF = inputF + '> F';
+                break;
+        }
+
+
+        const { value: formValues } = await Swal.fire({
+            title: '사내 등급',
+            html:
+                inputA + inputB + inputC + inputD + inputF,
+            focusConfirm: false,
+            preConfirm: () => {
+                var radiobtn = $("input[name=chk_level]:checked").val();
+                var preRemark = $("#Remark").val();
+                if(preRemark == "") $("#Remark").val("사내등급 " + radiobtn +"로 수정\n");
+                else $("#Remark").val(preRemark + "\n사내등급 " + radiobtn +"로 수정\n");
+                $("#company_innerlevel").val(radiobtn);
+            }
+        });
+    }
+
+    //상담 내용 수정 취소 버튼
+    function ModifyCancel()
+    {
+        var incompanyid = $("#company_id").val();
+        location.href = '/admin/customerManagement/consult?id='+incompanyid;
+    }
+
+    //상담 내용 및 비고 입력하면 json 형태로 넘김
+    function confirmConsulting() {
+        var incompanyid = $("#company_id").val();
+        var inname = $("#Name").val();
+        var incontent = $("#Content").val();
+        var inremark = $("#Remark").val();
+        var level = $("#company_innerlevel").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/customerManagement/add",
+            dataType: "json",
+            data: {
+                inCompanyid : incompanyid,
+                inName: inname,
+                inContent: incontent,
+                inRemark: inremark,
+                inInnerlevel: level
+            },
+            success: function (data) {
+                alert(data.msg);
+                window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+    //상담 내용 삭제
+    function deleteConsulting() {
+        var radiobtn = $("input[name=check]:checked");
+        var tr = radiobtn.parent().parent();
+        var td = tr.children();
+        var id = td.eq(1).text();
+        var incompanyid = $("#company_id").val();
+
+        $.ajax({
+            type : "POST",
+            url: "/admin/customerManagement/deleteconsult",
+            data: {'id':id},
+            success: function (data) {
+                alert("삭제되었습니다!");
+                window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
+            },
+            error: function (e) {
+                console.log(e)
+            }
+        })
+    }
+
+    //상담 내용 수정
+    //사용자와 이름이 같아야 가능하도록 추가하기
+    function Modify()
+    {
+        //확인 버튼 사라지고 수정 버튼 나옴
+        document.getElementById('consultConfirm').style.display="none";
+        document.getElementById('consulttitle').style.display="none";
+        document.getElementById('modifyBtn').style.display="block";
+        document.getElementById('consultModifyConfirm').style.display="";
+        document.getElementById('modifytitle').style.display="";
+        document.getElementById('modifycancelBtn').style.display="";
+
+
+
+        var radiobtn = $("input[name=check]:checked");
+
+
+        var tr = radiobtn.parent().parent();
+        var td = tr.children();
+        var id = td.eq(1).text();
+
+        $.ajax({
+            type : "POST",
+            url: "/admin/customerManagement/getconsult",
+            data: {'id':id},
+            success: function (data) {
+                $("#Content").val(data.data[0].content);
+                $("#Remark").val(data.data[0].remark);
+                $("#modifynumber").html(id);
+            },
+            error: function (e) {
+                console.log(e)
+            }
+        })
+
+
+    }
+
+    //수정 확정
+    //사용자와 이름이 같아야 가능하도록 추가하기
+    function ModifyConfirm()
+    {
+        var incompanyid = $("#company_id").val();
+        $.ajax({
+            type: "POST",
+            url: "/admin/customerManagement/modifyconsult",
+            dataType: "json",
+            data: { 'company_id': incompanyid, 'content': $("#Content").val(), 'remark': $("#Remark").val(), 'id': $("#modifynumber").html(), 'innerlevel': $("#company_innerlevel").val() },
+            success: function (data) {
+                alert("수정되었습니다!");
+                window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
+            },
+            error: function (e) {
+                alert(e.responseJSON.msg)
+            }
+        });
+    }
+
+
+    //담당자 정보 추가
+    function ModifyManagerInfo()
+    {
+        document.getElementById('managerModify').style.display="none";
+
+
+        var inmanagername = $("#managerName").val();
+        var inmanagerposition = $("#managerPosition").val();
+        var inmanagerdept = $("#managerDept").val();
+        var inmanageremail = $("#managerEmail").val();
+        var inmanagerphone = $("#managerPhone").val();
+
+        console.log("name : " + inmanagername + "\npos:" + inmanagerposition + "\ndept:"+inmanagerdept + "\nmail:"+inmanageremail + "\nphone:"+inmanagerphone);
+        //담당자 란이 전부 빈칸인 경우에는 추가 버튼
+        if(inmanagername == "" && inmanagerposition == "" && inmanagerdept == "" && inmanageremail == "" && inmanagerphone == "")
+        {
+            document.getElementById('managerAdd').style.display="";
+            document.getElementById('managermodifycancelBtn').style.display="";
+        }
+
+        //담당자 란 중 한칸이라도 채워져있는 경우 수정 버튼
+        else
+        {
+            console.log("수정할거 있음!")
+            document.getElementById('managerModifyConfirm').style.display="";
+            document.getElementById('managermodifycancelBtn').style.display="";
+        }
+
+    }
+
+
+    //담당자 정보 추가
+    function addManager()
+    {
+        var inmanagername = $("#managerName").val();
+        var inmanagerposition = $("#managerPosition").val();
+        var inmanagerdept = $("#managerDept").val();
+        var inmanageremail = $("#managerEmail").val();
+        var inmanagerphone = $("#managerPhone").val();
+        var incompanyid = $("#company_id").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/customerManagement/managerAdd",
+            dataType: "json",
+            data: {
+                companyid : incompanyid,
+                managername : inmanagername,
+                managerposition : inmanagerposition,
+                managerdept : inmanagerdept,
+                manageremail: inmanageremail,
+                managerphone : inmanagerphone
+            },
+            success: function (data) {
+                alert(data.msg);
+                window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+    //담당자 정보 추가 혹은 수정 확정 버튼
+    function ModifyManagerConfirm()
+    {
+        var inmanagername = $("#managerName").val();
+        var inmanagerposition = $("#managerPosition").val();
+        var inmanagerdept = $("#managerDept").val();
+        var inmanageremail = $("#managerEmail").val();
+        var inmanagerphone = $("#managerPhone").val();
+        var incompanyid = $("#company_id").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/customerManagement/managerModify",
+            dataType: "json",
+            data: {
+                companyid : incompanyid,
+                managername : inmanagername,
+                managerposition : inmanagerposition,
+                managerdept : inmanagerdept,
+                manageremail: inmanageremail,
+                managerphone : inmanagerphone
+            },
+            success: function (data) {
+                alert(data.msg);
+                window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+    //담당자 정보 수정 취소 버튼
+    function ModifyCancelManager()
+    {
+        var incompanyid = $("#company_id").val();
+        window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
+    }
+
+
+
+</script>
+</body>
+</html>
