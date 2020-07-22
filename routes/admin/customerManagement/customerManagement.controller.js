@@ -40,7 +40,7 @@ exports.list = (req, res) =>
 
 
     //쿼리문이 많이 복잡해보이지만 company, company_innerlevel, managerInfo 테이블에서 값을 가져오는 문장입니다...
-    join += "LEFT JOIN company_innerlevel AS L ON L.company_id = C.id "+ "LEFT JOIN managerinfo AS M ON M.company_id = C.id " + "LEFT JOIN countries AS CC ON CC.id = C.country_id";
+    join += "LEFT JOIN company_innerlevel AS L ON L.company_id = C.id "+ "LEFT JOIN managerInfo AS M ON M.company_id = C.id " + "LEFT JOIN countries AS CC ON CC.id = C.country_id";
     var sqlBase = 'SELECT C.id, C.address, C.name_eng, L.innerlevel, M.*, CC.country_name FROM company AS C ' + join;
     var sql_search_list = sqlBase + where + " ORDER BY C.id LIMIT ?,?;";
 
