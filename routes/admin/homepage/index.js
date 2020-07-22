@@ -7,8 +7,8 @@ const controller = require('./homepage.controller');
 const multer = require("multer");
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, '/home/hosting_users/autoinspec/apps/autoinspec_autoinspec/public/uploads/')
-        // cb(null, './upload/homepage/')
+        //cb(null, '/home/hosting_users/autoinspec/apps/autoinspec/public/uploads/')
+        cb(null, 'public/uploads');
     },
     filename: function(req, file, cb) {
         var mimeType;
@@ -33,6 +33,7 @@ const storage = multer.diskStorage({
         cb(null, makeid(4) + '_' + Date.now() + "." + mimeType);
     }
 })
+
 const upload = multer({ storage: storage })
 
 //파일 이름 랜덤..
