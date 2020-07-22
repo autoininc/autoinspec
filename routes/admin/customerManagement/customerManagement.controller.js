@@ -1,6 +1,9 @@
-const config = require('../../../conf/environments').info;
+const config = require('../../../conf/environments');
 const mysql = require('sync-mysql'); //원래 javascript는 비동기인데 sync-mysql로 동기 설정 가능
-var connection = new mysql(config);
+var connection = new mysql(config.info);
+
+const mysql2 = require('mysql');
+const connection2 = mysql2.createConnection(config.info);
 
 //오늘 날짜
 var moment = require('moment');
@@ -37,7 +40,7 @@ exports.list = (req, res) =>
 
 
     //쿼리문이 많이 복잡해보이지만 company, company_innerlevel, managerInfo 테이블에서 값을 가져오는 문장입니다...
-    join += "LEFT JOIN company_innerlevel AS L ON L.company_id = C.id "+ "LEFT JOIN managerInfo AS M ON M.company_id = C.id " + "LEFT JOIN countries AS CC ON CC.id = C.country_id";
+    join += "LEFT JOIN company_innerlevel AS L ON L.company_id = C.id "+ "LEFT JOIN managerinfo AS M ON M.company_id = C.id " + "LEFT JOIN countries AS CC ON CC.id = C.country_id";
     var sqlBase = 'SELECT C.id, C.address, C.name_eng, L.innerlevel, M.*, CC.country_name FROM company AS C ' + join;
     var sql_search_list = sqlBase + where + " ORDER BY C.id LIMIT ?,?;";
 
@@ -133,10 +136,26 @@ exports.modify = (req, res) =>
     var sql = 'UPDATE consult SET content = ?, remark = ?, consult_date = ? WHERE id = ?';
     var sqlL = 'UPDATE company_innerlevel SET innerlevel = ? WHERE company_id = ?';
 
-    connection.query(sql, [jsonData['content'], jsonData['remark'], jsonData['id'], moment.utc().format(format)]);
-    connection.query(sqlL, [jsonData['innerlevel'], jsonData['company_id']]);
+    connection2.query(sql, [jsonData['content'], jsonData['remark'],  moment.utc().format(format), jsonData['id']], (err, rs) => {
+        if(err)
+        {
+            console.log(err);
+            res.end();
+        }
+        else
+        {
+            connection2.query(sqlL, [jsonData['innerlevel'], jsonData['company_id']], (err,rs) => {
+                if(err)
+                {
+                    console.log(err);
+                    res.end();
+                }
+                else res.status(200).json({ 'msg': "수정되었습니다" });
+            });
+        }
+    });
 
-    res.status(200).json({ 'msg': "수정되었습니다" });
+
 }
 
 //상담 정보 삭제

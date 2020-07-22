@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:height="http://www.w3.org/1999/xhtml" xmlns:width="http://www.w3.org/1999/xhtml">
+<html lang="en">
 
 <head>
     <%- include ('../layout/head.ejs') -%>
@@ -16,8 +16,10 @@
 
     <% if(innerlevel.length > 0) { %>
         <input id = "lCnt" name = "lCnt" type = "hidden" value="<%= innerlevel.length %>">
-        <input id="company_level" name="company_level" type="hidden" value="<%= innerlevel[0].innerlevel %>"/> <!-- 담당자 정보 필요해서 변수형태로 만들기 위해 사용 -->
+        <input id="company_prelevel" name="company_prelevel" type="hidden" value="<%= innerlevel[0].innerlevel %>"/> <!-- 담당자 정보 필요해서 변수형태로 만들기 위해 사용 -->
     <% } %>
+
+    <input id="company_level" name="company_level" type="hidden" value=""/>
 
 
     <!-- 여기서부터~ 담당자 정보 가져오는 밑작업
@@ -53,61 +55,61 @@
                     </div>
                 </div>
                 <div class="row">
-                        <div class="col-md-12 grid-margin">
-                            <div class="card"><div class="card-body"><div class="container-scroller">
-                                        <div class="row">
-                                            <div class="col">
-                                                <p class="card-description" style="margin-bottom:10px">상담목록
-                                                    <button type="button" class="btn btn-primary"
-                                                            data-toggle="modal" style="float: right" data-whatever="@mdo" onclick="deleteConsulting()">삭제</button>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal" style="float: right; margin-right: 10px;"
-                                                            id="modifyBtn"  data-whatever="@mdo" onclick="Modify()">수정</button>
-                                                </p>
+                    <div class="col-md-12 grid-margin">
+                        <div class="card"><div class="card-body"><div class="container-scroller">
+                                    <div class="row">
+                                        <div class="col">
+                                            <p class="card-description" style="margin-bottom:10px">상담목록
+                                                <button type="button" class="btn btn-primary"
+                                                        data-toggle="modal" style="float: right" data-whatever="@mdo" onclick="deleteConsulting()">삭제</button>
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" style="float: right; margin-right: 10px;"
+                                                        id="modifyBtn"  data-whatever="@mdo" onclick="Modify()">수정</button>
+                                            </p>
 
-                                                <!-- 여기부터~ 지금까지 등록된 상담 내용을 보여주는 리스트입니다!
-                                                담당자를 선택하면 담당자의 개인 정보를 볼 수 있도록 변경해야함-->
-                                                <table id="consultList" class="table table-bordered" style="text-align: center;">
-                                                    <thead class="thead-light">
+                                            <!-- 여기부터~ 지금까지 등록된 상담 내용을 보여주는 리스트입니다!
+                                            담당자를 선택하면 담당자의 개인 정보를 볼 수 있도록 변경해야함-->
+                                            <table id="consultList" class="table table-bordered" style="text-align: center;">
+                                                <thead class="thead-light">
+                                                <tr>
+                                                    <th style="width: 2%;"></th>
+                                                    <th style="width: 5%;">번호</th>
+                                                    <th style="width: 10%;">상담자</th>
+                                                    <th style="width: 20%;">내용</th>
+                                                    <th style="width: 20%;">비고</th>
+                                                    <th style="width: 20%;">날짜</th>
+                                                </tr>
+                                                </thead>
+                                                <br>
+                                                <%
+                                                if (model_consult.list.length > 0) { %>
+                                                    <% for(let i=0; i<model_consult.list.length; i++) {
+                                                    %>
+                                                    <tbody>
                                                     <tr>
-                                                        <th style="width: 2%;"></th>
-                                                        <th style="width: 5%;">번호</th>
-                                                        <th style="width: 10%;">상담자</th>
-                                                        <th style="width: 20%;">내용</th>
-                                                        <th style="width: 20%;">비고</th>
-                                                        <th style="width: 20%;">날짜</th>
+                                                        <td><input type="radio" name="check"></td>
+                                                        <td><%=model_consult.list[i].id %></td>
+                                                        <td><%=model_consult.list[i].conselor %></td>
+                                                        <td><%=model_consult.list[i].content %></td>
+                                                        <td><%=model_consult.list[i].remark %></td>
+                                                        <td><%= model_consult.list[i].consult_date %></td>
                                                     </tr>
-                                                    </thead>
-                                                    <br>
-                                                    <%
-                                                    if (model_consult.list.length > 0) { %>
-                                                        <% for(let i=0; i<model_consult.list.length; i++) {
-                                                        %>
-                                                        <tbody>
-                                                        <tr>
-                                                            <td><input type="radio" name="check"></td>
-                                                            <td><%=model_consult.list[i].id %></td>
-                                                            <td><%=model_consult.list[i].conselor %></td>
-                                                            <td><%=model_consult.list[i].content %></td>
-                                                            <td><%=model_consult.list[i].remark %></td>
-                                                            <td><%= model_consult.list[i].consult_date %></td>
-                                                        </tr>
-                                                        </tbody>
-                                                    <% }
-                                                    }  else { %>
-                                                        <tr>
-                                                            <th colspan="5">상담 기록이 존재하지 않습니다.</th>
-                                                        </tr>
-                                                    <% } %>
                                                     </tbody>
-                                                </table>
-                                                <!-- ~여기까지 -->
-                                            </div>
-
+                                                <% }
+                                                }  else { %>
+                                                    <tr>
+                                                        <th colspan="5">상담 기록이 존재하지 않습니다.</th>
+                                                    </tr>
+                                                <% } %>
+                                                </tbody>
+                                            </table>
+                                            <!-- ~여기까지 -->
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -116,10 +118,7 @@
                         <div class="card"><div class="card-body"><div class="container-scroller">
                                     <div class="row">
                                         <div class="col">
-                                            <p class="card-description" style="margin-bottom:10px" id="consulttitle">담당자 정보</p>
-                                            <p class="card-description" style="margin-bottom:10px; display: none;" id="modifytitle">상담 내용 수정 번호:
-                                                <span id="modifynumber"></span>
-                                            </p>
+                                            <p class="card-description" style="margin-bottom:10px" id="managertitle">담당자 정보</p>
 
                                             <div class="modal-body">
                                                 <form>
@@ -252,7 +251,7 @@
     async function InnerLevelInfo()
     {
         var level;
-        if($("#lCnt").val() > 0) level = $("#company_level").val();
+        if($("#lCnt").val() > 0) level = $("#company_prelevel").val();
         var inputA = '<input type="radio" name="chk_level" value = "A" style="margin-left: 20px"';
         var inputB = '<input type="radio" name="chk_level" value = "B" style="margin-left: 20px"';
         var inputC = '<input type="radio" name="chk_level" value = "C" style="margin-left: 20px"';
@@ -316,7 +315,8 @@
                 var preRemark = $("#Remark").val();
                 if(preRemark == "") $("#Remark").val("사내등급 " + radiobtn +"로 수정\n");
                 else $("#Remark").val(preRemark + "\n사내등급 " + radiobtn +"로 수정\n");
-                $("#company_innerlevel").val(radiobtn);
+
+                $("#company_level").val(radiobtn);
             }
         });
     }
@@ -334,7 +334,7 @@
         var inname = $("#Name").val();
         var incontent = $("#Content").val();
         var inremark = $("#Remark").val();
-        var level = $("#company_innerlevel").val();
+        var level = $("#company_level").val();
 
         $.ajax({
             type: "POST",
@@ -426,7 +426,7 @@
             type: "POST",
             url: "/admin/customerManagement/modifyconsult",
             dataType: "json",
-            data: { 'company_id': incompanyid, 'content': $("#Content").val(), 'remark': $("#Remark").val(), 'id': $("#modifynumber").html(), 'innerlevel': $("#company_innerlevel").val() },
+            data: { 'company_id': incompanyid, 'content': $("#Content").val(), 'remark': $("#Remark").val(), 'id': $("#modifynumber").html(), 'innerlevel': $("#company_level").val() },
             success: function (data) {
                 alert("수정되었습니다!");
                 window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
