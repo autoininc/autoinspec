@@ -90,7 +90,7 @@ app.use('/admin/payment', require('./routes/admin/payment/index'));
 app.use('/admin/user', require('./routes/admin/user/index'));
 app.use('/admin/creditReport', require('./routes/admin/creditReport/index'));
 app.use('/admin/qna', require('./routes/admin/qna/index'));
-
+app.use('/admin/customerManagement', require('./routes/admin/customerManagement/index'));
 
 
 /** 홈페이지 관련 */

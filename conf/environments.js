@@ -25,7 +25,7 @@ const environments = {
   },
   //AWS 버전
   production: {
-    host: "13.124.33.232",
+    host: "autoinspec.com",
       port: "8001",
       mysql: {
         host: '127.0.0.1',
