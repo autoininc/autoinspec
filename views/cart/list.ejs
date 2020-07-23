@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../layout/head.ejs') -%>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+</head>
+
+<body>
+<div class="container-scroller">
+    <%- include ('../layout/header.ejs') -%>
+
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper" style="padding-left: 15px; padding-right: 15px; background-color: #f0f3f6;">
+                <div class="row">
+                    <div class="col-sm-10 offset-sm-1 d-flex stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div>
+                                    <ul class="nav nav-tabs tab-no-active-fill" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active pl-2 pr-2" href="/account/setting">My Account</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link pl-2 pr-2 dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Purchase list</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="/account/purchaseList">Company information</a>
+                                                <a class="dropdown-item" href="/account/creditReportList">Credit report</a>
+                                            </div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link pl-2 pr-2" href="/account/subscriptionList">Subscription</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link pl-2 pr-2" href="/account/transactions">Coin details</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link pl-2 pr-2" href="/account/payList">Payment details</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link pl-2 pr-2 dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">1:1 Inquiry</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="/account/qna/list">List</a>
+                                                <a class="dropdown-item" href="/info/qnaForm">Ask</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <%- include ('../layout/footer.ejs') -%>
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+</div>
+
+<script>
+
+
+
+</script>
+</body>
+</html>

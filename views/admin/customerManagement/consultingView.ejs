@@ -205,9 +205,11 @@
                                             <div class="modal-footer">
                                                 <!-- 확인 버튼 누르면 MySQL test table에 상담 내용들이 추가됩니다.-->
                                                 <button type="button"  class="btn btn-primary" data-dismiss="modal" id="consultConfirm" onclick="confirmConsulting()">확인</button>
-                                                <button type="button"  class="btn btn-primary" data-toggle="modal" onclick="InnerLevelInfo()" id="innerlevelBtn">사내등급</button>
+                                                <button type="button"  class="btn btn-primary" data-toggle="modal" onclick="InnerLevelInfo()" id="innerlevelBtn">등급추가</button>
                                                 <!-- 여기서부터~ 상담 목록에 있는 수정 버튼을 클릭하면 나오는 버튼들-->
                                                 <!-- 수정 버튼 누르면 MySQL test table에 상담 내용들이 업데이트됩니다.-->
+                                                <button type="button"  class="btn btn-primary" data-toggle="modal" onclick="ModifyInnerlevel()" id="innerlevelModifyBtn"
+                                                style="display: none">등급수정</button>
                                                 <button type="button"  class="btn btn-primary" data-dismiss="modal" id="consultModifyConfirm"
                                                         style="display: none" onclick="ModifyConfirm()">수정</button>
                                                 <!-- 취소 버튼 누르면 상담 페이지로 이동하여 수정 페이지를 벗어납니다.-->
@@ -243,6 +245,10 @@
             $("#managerEmail").val($("#mEmail").val());
         }
 
+        if($("#lCnt").val() > 0)
+        {
+            document.getElementById('innerlevelBtn').style.display="none";
+        }
 
     })
 
@@ -251,7 +257,10 @@
     async function InnerLevelInfo()
     {
         var level;
-        if($("#lCnt").val() > 0) level = $("#company_prelevel").val();
+        if($("#lCnt").val() > 0)
+        {
+            level = $("#company_prelevel").val();
+        }
         var inputA = '<input type="radio" name="chk_level" value = "A" style="margin-left: 20px"';
         var inputB = '<input type="radio" name="chk_level" value = "B" style="margin-left: 20px"';
         var inputC = '<input type="radio" name="chk_level" value = "C" style="margin-left: 20px"';
@@ -321,6 +330,11 @@
         });
     }
 
+    function ModifyInnerlevel()
+    {
+        InnerLevelInfo();
+    }
+
     //상담 내용 수정 취소 버튼
     function ModifyCancel()
     {
@@ -379,6 +393,8 @@
         })
     }
 
+
+
     //상담 내용 수정
     //사용자와 이름이 같아야 가능하도록 추가하기
     function Modify()
@@ -386,10 +402,13 @@
         //확인 버튼 사라지고 수정 버튼 나옴
         document.getElementById('consultConfirm').style.display="none";
         document.getElementById('consulttitle').style.display="none";
+        document.getElementById('innerlevelBtn').style.display="none";
         document.getElementById('modifyBtn').style.display="block";
         document.getElementById('consultModifyConfirm').style.display="";
         document.getElementById('modifytitle').style.display="";
         document.getElementById('modifycancelBtn').style.display="";
+        document.getElementById('innerlevelModifyBtn').style.display="";
+
 
 
 

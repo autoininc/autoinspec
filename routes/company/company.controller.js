@@ -8,9 +8,6 @@ var moment = require('moment');
 require('moment-timezone');
 const format = 'YYYY-MM-DD HH:mm:ss';
 
-exports.test = (req, res) => {
-    res.render('search/test',{userObj: req.cookies.userObj});
-}
 // 목록 GET
 exports.search = (req, res) => {
 

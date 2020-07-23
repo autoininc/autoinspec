@@ -4,7 +4,6 @@ const router = express.Router();
 
 const controller = require('./company.controller');
 
-router.get('/mainsearch',controller.test);
 router.get('/search', controller.search);
 
 router.get('/detail/:id', controller.detail);

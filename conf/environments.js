@@ -1,5 +1,6 @@
 const environments = {
   development: {
+      //이부분 로컬 디비에 맞게 전부 수정하세용~
       host: "localhost",
       port: "8001",
       mysql: {
@@ -38,5 +39,7 @@ const environments = {
   }
 }
 
+//로컬 작업시 : development
+//서버 작업시: production
 const nodeEnv =  process.env.NODE_ENV || 'production';
 exports.info = environments[nodeEnv].mysql;

@@ -25,7 +25,7 @@
                     <h3 class="font-weight-bold mb-2">&nbsp;&nbsp;(1) Use coins</h3>
                     <h6 class="font-weight-normal mb-2">&nbsp;&nbsp;click button after checkbox checked</h6>
                 </div>
-                <div class="mt-2">
+                <div class="mt-2" style="margin-right: 20px; ">
                     <button class="btn btn-outline-dark btn-icon-text" onclick="check();">
                       <i class="mdi mdi-coin btn-icon-prepend mdi-36px"></i>
                       <span class="d-inline-block text-left">
@@ -33,10 +33,19 @@
                         Coins
                       </span>
                     </button>
-                  </div>
+                </div>
+                <!-- 장바구니 버튼 -->
+                <div class="mt-2">
+                    <button class="btn btn-outline-dark btn-icon-text" onclick="checkForcart();">
+                        <i class="mdi mdi-cart btn-icon-prepend mdi-36px"></i>
+                        <span class="d-inline-block text-left"> Add to cart </span>
+                    </button>
+                </div>
             </div>
             
         </div>
+
+
         <div class="col-sm-6">
             <div class="d-flex align-items-center justify-content-md-end">
                 <div>
@@ -130,15 +139,14 @@
                     <div>
                         <div class="form-check form-check-success">
                             <label class="form-check-label font-weight-bold mb-2">
-                              <input type="checkbox" class="form-check-input" id="chk1" onclick="calc(this.id)">
-                              Detailed Data ( 5 Coins ) 
-                            <i class="input-helper"></i></label>
-                          </div>
-                        <!-- <h3 class="text-dark font-weight-bold mb-2"></h3> -->
-                        <!-- <h6 class="font-weight-normal mb-2">You can pick subscription or use 5 coins to view below data.</h6> -->
-                    </div>
-                </div>
-            </div>
+                                <input type="checkbox" class="form-check-input" id="chk1" onclick="calc(this.id)">  Detailed Data ( 5 Coins )
+                                <i class="input-helper"></i></label>
+                            </div>
+                    <!-- <h3 class="text-dark font-weight-bold mb-2"></h3> -->
+                    <!-- <h6 class="font-weight-normal mb-2">You can pick subscription or use 5 coins to view below data.</h6> -->
+                        </div>
+                 </div>
+             </div>
             <!-- <div class="col-sm-6">
                 <div class="d-flex align-items-center justify-content-md-end">
                     <div class="ml-lg-5 d-lg-flex d-none">
@@ -359,10 +367,11 @@
 </blockquote>
 <script>
 
-    var total = 0;
 
+    var total = 0;
     //체크박스 이벤트
     function calc(id) {
+
         if (document.getElementById(id).checked) {
 
             //modal 항목 수정
@@ -432,6 +441,24 @@
       });
 
     }
+
+    //장바구니 담기 전 선택사항 확인
+    function checkForcart() {
+
+        if (total == 0) {
+            alert("No selected item!");
+            return;
+        }
+
+        //장바구니 이동 or 계속 쇼핑 묻기 - 다이어로그
+
+    }
+
+
+
+
+
+
 
     function openModal() {
     
