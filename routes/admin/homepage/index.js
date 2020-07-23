@@ -7,11 +7,7 @@ const controller = require('./homepage.controller');
 const multer = require("multer");
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-<<<<<<< HEAD
         //cb(null, '/home/hosting_users/autoinspec/apps/autoinspec_autoinspec/public/uploads/')
-=======
-        //cb(null, '/home/hosting_users/autoinspec/apps/autoinspec/public/uploads/')
->>>>>>> da86aa2936eefd0f8097b60dcacc0c8abd10731d
         cb(null, 'public/uploads');
     },
     filename: function(req, file, cb) {
