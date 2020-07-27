@@ -9201,8 +9201,8 @@ pre code {
 
 .container {
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
   margin-right: auto;
   margin-left: auto;
 }
@@ -9233,8 +9233,8 @@ pre code {
 
 .container-fluid {
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
   margin-right: auto;
   margin-left: auto;
 }
@@ -18860,7 +18860,7 @@ code {
 }
 
 .footer .footer-wrap {
-  background: #343a40;
+  background: #4FC2A5;
   padding: 30px 1rem;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
@@ -21958,7 +21958,6 @@ dl li {
 
 @media (max-width: 991.98px) {
   .main-panel {
-    padding-top: 80px;
   }
 }
 
@@ -21976,8 +21975,8 @@ dl li {
 
 .horizontal-menu .top-navbar {
   font-weight: 400;
-  background: #343a40;
-  border-bottom: 1px solid #f1f6f8;
+  background: #4FC2A5;
+  margin-bottom: 0 !important;
 }
 
 .horizontal-menu .top-navbar .navbar-brand-wrapper {
@@ -22124,7 +22123,7 @@ dl li {
 }
 
 .horizontal-menu .top-navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-profile-name {
-  color: #ff;
+  color: #ffffff;
   font-weight: 600;
   margin-right: .5rem;
 }
@@ -22333,7 +22332,7 @@ dl li {
 }
 
 .horizontal-menu .bottom-navbar {
-  background: #343a40;
+  background: #4FC2A5;
   position: relative;
   top: 0;
   right: 0;
@@ -22351,9 +22350,6 @@ dl li {
   -moz-transition-property: position, left, right, top, z-index;
   -o-transition-property: position, left, right, top, z-index;
   transition-property: position, left, right, top, z-index;
-  box-shadow: 0 19px 34px -15px #f1f6f8;
-  -webkit-box-shadow: 0 19px 34px -15px #f1f6f8;
-  -moz-box-shadow: 0 19px 34px -15px #f1f6f8;
 }
 
 @media (max-width: 991.98px) {
@@ -22773,7 +22769,7 @@ dl li {
   .horizontal-menu .bottom-navbar .page-navigation > .nav-item.mega-menu .submenu .col-group-wrapper .col-group {
     padding-left: 0;
     padding-right: 0;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
   }
   .horizontal-menu .bottom-navbar .page-navigation > .nav-item.mega-menu .submenu .col-group-wrapper .col-group .category-heading:after {
     display: none;

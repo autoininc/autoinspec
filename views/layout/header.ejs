@@ -1,90 +1,93 @@
 <div class="horizontal-menu">
-  <nav class="navbar top-navbar col-lg-12 col-12 p-0" style="margin-bottom: 0 !important;">
+  <nav class="navbar top-navbar col-lg-12 col-12 p-0" style="padding: 0 !important;">
     <div class="container-fluid">
-      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-between">
-        <!-- <ul class="navbar-nav navbar-nav-left"></ul>
-        <ul class="navbar-nav navbar-nav-left"></ul> -->
-        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-between" >
+          <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
             <a class="navbar-brand brand-logo" href="/"><img src="/img/logo.png" alt="logo"/></a>
             <a class="navbar-brand brand-logo-mini" href="/"><img src="/img/logo.png" alt="logo"/></a>
-        </div>
-        <ul class="navbar-nav navbar-nav-right">
-          
-          <% if(userObj) { %>
-          <li class="nav-item nav-profile dropdown" >
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <span class="nav-profile-name" id="displayName" style="margin-right: 0;"><%= userObj.first_name %> <%= userObj.last_name %></span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                <a class="dropdown-item" href="/account/setting">
-                  <i class="mdi mdi-settings text-primary"></i>
-                  Dashboard
+          </div>
+
+          <ul class="navbar-nav navbar-nav-right">
+            <% if(userObj) { %>
+              <li class="nav-item nav-profile dropdown" >
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                  <span class="nav-profile-name" id="displayName" style="margin-right: 0;"><%= userObj.first_name %> <%= userObj.last_name %></span>
                 </a>
-                <a class="dropdown-item" href="/user/logout">
-                  <i class="mdi mdi-logout text-primary"></i>
-                  Logout
-                </a>
-            </div>
-          </li>
-          <% } else { %>
-            <li class="nav-item nav-profile dropdown" >
-              <button type="button" class="btn btn-inverse-secondary btn-fw" onclick="location.href='/user/login'">Login</button>
-            </li>
-          <% } %>
-            <!-- 장바구니 페이지 버튼 -->
-            <li class="nav-item nav-profile" style="margin-left: 0;">
-              <a class="btn" href="/cart/list" style="font-size: 16px; font-weight: 600; height: 35px; color: #d8d8d8;">CART</a>
-            </li>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                  <a class="dropdown-item" href="/account/setting">
+                    <i class="mdi mdi-settings text-primary"></i>
+                    Dashboard
+                  </a>
+                  <a class="dropdown-item" href="/user/logout">
+                    <i class="mdi mdi-logout text-primary"></i>
+                    Logout
+                  </a>
+                </div>
+              </li>
+            <% } else { %>
+              <li class="nav-item nav-profile dropdown" >
+                <button type="button" class="btn btn-inverse-secondary btn-fw" onclick="location.href='/user/login'">Login</button>
+              </li>
+            <% } %>
             <!-- 결제 페이지 버튼 -->
             <li class="nav-item nav-profile" style="margin-left: 0;">
               <a class="btn" href="/pass/index" style="font-size: 16px; font-weight: 600; height: 35px; color: #d8d8d8;">Subscprtion</a>
             </li>
-        </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="horizontal-menu-toggle">
-          <span class="mdi mdi-menu"></span>
-        </button>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="horizontal-menu-toggle">
+            <span class="mdi mdi-menu"></span>
+          </button>
+
       </div>
     </div>
   </nav>
+
+
   <nav class="bottom-navbar">
     <div class="container">
-        <ul class="nav page-navigation">
-          <li class="nav-item">
-            <a class="nav-link" href="/info/about">
-              <span class="menu-title">ABOUT AUTOINSPEC</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/company/search">
-              <span class="menu-title">SEARCH</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/info/service">
-              <span class="menu-title">SERVICE</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <span class="menu-title">HELP</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="submenu">
-                <ul>
-                    <li class="nav-item"><a class="nav-link" href="/info/help">FAQ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/info/qnaForm">1:1 Inquiry</a></li>
-                </ul>
-            </div>
+      <ul class="nav page-navigation">
+        <!-- autoinspec 설명 나오는 부분인데 대표님이 필요 없다고 하심-->
+        <!--<li class="nav-item">
+          <a class="nav-link" href="/info/about">
+            <span class="menu-title">ABOUT AUTOINSPEC</span>
+          </a>
+        </li>-->
+        <li class="nav-item">
+          <a class="nav-link" href="/company/search">
+            <span class="menu-title">SEARCH</span>
+          </a>
         </li>
-          <% if(userObj) { %>
-            <% if(userObj.level == 4) { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/admin/company/before">
-              <span class="menu-title">BACKOFFICE</span>
-            </a>
-          </li>
-          <% }}  %>
-        </ul>
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="/info/service">
+            <span class="menu-title">SERVICE</span>
+          </a>
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link" href="/info/service">
+            <span class="menu-title">AUTOINMAP</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <span class="menu-title">HELP</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="submenu">
+            <ul>
+              <li class="nav-item"><a class="nav-link" href="/info/help">FAQ</a></li>
+              <li class="nav-item"><a class="nav-link" href="/info/qnaForm">1:1 Inquiry</a></li>
+            </ul>
+          </div>
+        </li>
+        <% if(userObj) { %>
+          <% if(userObj.level == 4) { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/company/before">
+                <span class="menu-title">BACKOFFICE</span>
+              </a>
+            </li>
+        <% }}  %>
+      </ul>
     </div>
   </nav>
 </div>

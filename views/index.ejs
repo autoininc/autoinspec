@@ -36,141 +36,205 @@
   <%- include ('./layout/header.ejs') -%>
   <!-- partial -->
 
-  <div class="container-fluid page-body-wrapper">
+  <div class="container-fluid page-body-wrapper" >
+    <!-- 메인 검색 페이지-->
     <div class="main-panel">
-      <div class="content-wrapper" style="padding: 0 !important;">
-        <div class="row">
-          <div class="col-lg-12" style="background-color:#343a40;">
-            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-          </div>
-        </div>
-        <section class="features-icons bg-light text-center">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-4">
-                <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                  <div class="features-icons-icon d-flex">
-                    <i class="icon-speedometer m-auto text-primary" style="color: #317376 !important;"></i>
-                  </div>
-                  <h3><span><%= comma(model.company[0].cnt) %></span></h3>
-                  <p class="lead mb-0">Registered companies</p>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                  <div class="features-icons-icon d-flex">
-                    <i class="icon-layers m-auto text-primary" style="color: #317376 !important;"></i>
-                  </div>
-                  <h3><span><%= comma(model.category[0].cnt) %></span></h3>
-                  <p class="lead mb-0">Detailed Categories</p>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="features-icons-item mx-auto mb-0 mb-lg-3">
-                  <div class="features-icons-icon d-flex">
-                    <i class="icon-globe m-auto text-primary" style="color: #317376 !important;"></i>
-                  </div>
-                  <h3><span> <%= comma(model.countriesCnt) %></span></h3>
-                  <p class="lead mb-0">Country</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        <div class="row" style="padding-top: 1.5em;">
-          <div class="col-lg-6 grid-margin stretch-card" style="overflow-x: auto;">
-            <div class="card" style="overflow-x: auto;">
-              <div class="card-body">
-                <div id="regions_div" ></div>
+      <!-- 여기서부터~ 민트색 바탕을 가진 검색창 부분 -->
+      <div class="content-wrapper" style="background-color:#4FC2A5;">
+        <div class="row" style=" width: 100%; height: 40% !important; ">
+          <div class="content-wrapper" style="text-align: center !important;">
+            <h3 style="display: inline-block; margin-top: 7%;color: #ffffff">
+              <strong>DATABASE FOR GLOBAL AUTOMOTIVE INDUSTRY</strong>
+            </h3>
+            <br>
+            <div class="form-group" style="display: inline-block;">
+              <div class="form-inline">
+                <div class="input-group  input-group-lg" style="width: 25cm; ">
+                  <input type="text" id="search_txt" class="form-control" placeholder="What do you need?" aria-describedby="button-addon4"
+                         style="text-align: center" onKeyDown="onKeyDown();" >
+                  <div class="input-group-append" id="button-addon4">
+                    <button class="btn btn-outline-secondary" type="button" style="background-color: #317376; color: #ffffff;" onClick="search('1');">
+                      <i class="mdi mdi-magnify btn-icon-prepend mdi-18px"></i>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
+            <br>
+            <div class="form-group" style="display: inline-block; width: 200px">
+              <select name="country_id" class="form-control" id="country_id">
+                <option value="">- ALL Country -</option>
+
+                <% if (model.countries) { %>
+                  <% if (model.countries.length > 0) { %>
+                    <% for(let i=0; i<model.countries.length; i++) { %>
+                    <option id=<%=model.countries[i].id %> value=<%=model.countries[i].id %>><%=model.countries[i].country_name %></option>
+                <%  } } }  %>
+              </select>
+            </div>
+            <div class="form-group" style="display: inline-block; width: 400px;" >
+              <select name="search_bn" class="form-control" id="search_bn">
+                <option value="">- ALL Business Nature -</option>
+                <option value="1">Manufacturer</option>
+                <option value="2">Dealer, agent, distributor, wholesaler</option>
+                <option value="3">Retailer</option>
+                <option value="4">Service supplier(Auto refitter / tuner / garage / workshop)</option>
+                <option value="5">Private & official fleetts</option>
+                <option value="6">Trade associations/government agencies</option>
+                <option value="7">Publisher</option>
+                <option value="8">Research institutions / universities / polytechnic</option>
+                <option value="9">Others</option>
+              </select>
+            </div>
+            <div class="form-group" style="display: inline-block; width: 200px; margin-bottom: 100px;" >
+              <select name="search_pg" class="form-control" id="search_pg">
+                <option value="">- ALL Product Group -</option>
+                <option value="1">Commercial Vehicle</option>
+                <option value="2">Passenger Vehicle</option>
+                <option value="3">OEM</option>
+                <option value="4">Aftermarket</option>
+              </select>
+            </div>
+            <br>
+            <div class="form-group" style="display: inline-block; margin: 0 !important;">
+              <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3" style="color: #ffffff; float:left; margin-right: 20px !important;">
+                <div class="features-icons-icon d-flex">
+                  <i class="icon-speedometer m-auto text-primary" style="color: #ffffff !important;"></i>
+                </div>
+                <h3><span><%= comma(model.company[0].cnt) %></span></h3>
+                <p class="lead mb-0">Registered companies</p>
+              </div>
+              <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3" style="color: #ffffff; float: left; margin-right: 20px !important;" >
+                <div class="features-icons-icon d-flex">
+                  <i class="icon-layers m-auto text-primary" style="color: #ffffff !important;"></i>
+                </div>
+                <h3><span><%= comma(model.category[0].cnt) %></span></h3>
+                <p class="lead mb-0">Detailed Categories</p>
+              </div>
+              <div class="features-icons-item mx-auto mb-0 mb-lg-3" style="color: #ffffff; float:left; margin-right: 20px !important;">
+                <div class="features-icons-icon d-flex">
+                  <i class="icon-globe m-auto text-primary" style="color: #ffffff !important;"></i>
+                </div>
+                <h3><span> <%= comma(model.countriesCnt) %></span></h3>
+                <p class="lead mb-0">Country</p>
+              </div>
+            </div>
+            <br>
+            <!-- 수정 필요 : 카테고리란 그닥 필요 없을 듯;;-->
+            <div class="form-group" style="display: inline-block; display: none;margin: 0 !important;">
+              <div class="input-group">
+                <input type="hidden" name="search_cate" id="search_cate" >
+                <input class="form-control " id="categoryText" name="categoryText" type="text" placeholder="Category" >
+                <div class="input-group-append">
+                  <button class="btn btn-sm" type="button" style="background-color: #317376; color:white;" onclick="removeCategory();">X</button>
+                </div>
+              </div>
+            </div>
+
           </div>
-          <div class="col-lg-6 grid-margin stretch-card">
+
+        </div>
+      </div>
+      <!-- 여기서부터~ 하단 정보 부분-->
+      <div class="content" style="background-color: #ffffff; margin-top: 40px; margin-bottom:50px; margin-right: 10%; margin-left: 10%;" >
+        <h3 style="text-align: center; color: #317376; margin-top: 30px; margin-bottom: 30px">
+          <strong>Current Data Ranking</strong>
+        </h3>
+
+        <div class="row">
+
+          <!-- 데이터베이스 - recently_viewed 테이블 정렬-->
+          <div class="col-lg-4 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">Please select a category !</h4>
-                <p class="card-description">
-                  Search by region or select a region on the map to find businesses near you.
-                </p>
-                <div class="form-group">
-                  <select name="country_id" class="form-control" id="country_id">
-                    <option value="">- ALL Country -</option>
+                <h5 class="card-title">VIEWS
+                  <br>
+                  <small style="font-size: 12px; color: #6b6d7d">Cumulative Company Search Base</small>
+                </h5>
+                <%if(model.inquery.length > 0 ) { %>
+                  <% for(var i=0; i<model.inquery.length; i++) { %>
+                    <strong><%= i+1 %></strong>
+                    <a href='/company/detail/<%= model.inquery[i].companyId %>?first=1' style="color: #317376;">
+                      <span data-toggle="tooltip" data-placement="left" title="<%= model.inquery[i].name_eng %>">
+                        <%= model.inquery[i].name_eng %></span>
+                    </a>
+                    <br>
+                  <% } %>
+                <% } else { %>
+                  No data to display.
+                <%}%>
 
-                    <% if (model.countries) { %>
-                      <% if (model.countries.length > 0) { %>
-                        <% for(let i=0; i<model.countries.length; i++) { %>
-                        <option id=<%=model.countries[i].id %> value=<%=model.countries[i].id %>><%=model.countries[i].country_name %></option>
-                    <%  } } }  %>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <div class="row">
-                    <div class="col-lg-7">
-                      <select name="search_bn" class="form-control" id="search_bn">
-                        <option value="">- ALL Business Nature -</option>
-                        <option value="1">Manufacturer</option>
-                        <option value="2">Dealer, agent, distributor, wholesaler</option>
-                        <option value="3">Retailer</option>
-                        <option value="4">Service supplier(Auto refitter / tuner / garage / workshop)</option>
-                        <option value="5">Private & official fleetts</option>
-                        <option value="6">Trade associations/government agencies</option>
-                        <option value="7">Publisher</option>
-                        <option value="8">Research institutions / universities / polytechnic</option>
-                        <option value="9">Others</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-5">
-                      <select name="search_pg" class="form-control" id="search_pg">
-                        <option value="">- ALL Product Group -</option>
-                        <option value="1">Commercial Vehicle</option>
-                        <option value="2">Passenger Vehicle</option>
-                        <option value="3">OEM</option>
-                        <option value="4">Aftermarket</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group" style="margin-bottom: 1rem;">
-                  <div class="input-group">
-                    <input type="hidden" name="search_cate" id="search_cate" >
-                    <input class="form-control " id="categoryText" name="categoryText" type="text" placeholder="Category" >
-                    <div class="input-group-append">
-                      <button class="btn btn-sm" type="button" style="background-color: #317376; color:white;" onclick="removeCategory();">X</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <div class="form-inline">
-                    <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
-                      <option value="1" selected>ALL</option>
-                      <option value="2" >COMPANY</option>
-                      <option value="3" >CEO</option>
-                      <option value="4" >MAIN PRODUCT</option>
-                    </select>
-                    <div class="input-group">
-                      <input id="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
-                      <div class="input-group-append">
-                        <button type="button" class="btn btn-primary mb-2 mr-sm-2" style="background-color: #317376;" onClick="search('1');">Search</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
-        </div>
+
+          <!-- 데이터베이스 - purchaseproduct 테이블 정렬-->
+          <div class="col-lg-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title">POPULAR
+                  <br>
+                  <small style="font-size: 12px; color: #6b6d7d">Cumulative Data Purchase Base</small>
+                </h3>
+                <%if(model.product.length > 0 ) { %>
+                  <% for(var i=0; i<model.product.length; i++) { %>
+                    <strong><%= i+1 %></strong>
+                    <a href='/company/detail/<%= model.product[i].companyId %>?first=1' style="color: #317376;">
+                      <span data-toggle="tooltip" data-placement="left" title="<%= model.product[i].name_eng %>">
+                       <%= model.product[i].name_eng %>></span>
+                    </a>
+                    <br>
+                  <% } %>
+                <% } else { %>
+                  No data to display.
+                <%}%>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- 데이터베이스 - company 테이블 updatedAt 정렬-->
+          <div class="col-lg-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title">UPDATE
+                  <span class="badge badge-pill badge-primary">update</span>
+                  <br>
+                  <small style="font-size: 12px; color: #6b6d7d">Cumulative Update Data Base</small>
+                </h3>
+                <%if(model.update.length > 0 ) { %>
+                  <% for(var i=0; i<model.update.length; i++) { %>
+                    <strong><%= i+1 %></strong>
+                    <a href='/company/detail/<%= model.update[i].id %>?first=1' style="color: #317376;">
+                      <span data-toggle="tooltip" data-placement="left" title="<%= model.update[i].name_eng %>">
+                      <%= model.update[i].name_eng %></span>
+                    </a>
+                    <br>
+                  <% } %>
+                <% } else { %>
+                  No data to display.
+                <%}%>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div> <!-- ~여기까지 -->
 
       </div>
+
+
       <!-- </div> -->
       <!-- </div> -->
       <%- include ('./layout/footer.ejs') -%>
       <!-- partial -->
-    </div>
-    <!-- main-panel ends -->
+      <!-- page-body-wrapper ends -->
+    </div>   <!-- main-panel ends -->
+
   </div>
-  <!-- page-body-wrapper ends -->
+
 </div>
 <!-- container-scroller -->
 </body>
@@ -200,72 +264,11 @@
     });
     google.charts.setOnLoadCallback(drawRegionsMap);
 
-
-    //카테고리 입력 이벤트
-    $("#categoryText").on("propertychange change keyup paste input", function() {
-
-      var currentVal = $(this).val();
-      if(currentVal == oldVal) {
-        return;
-      }
-
-      oldVal = currentVal;
-      arr = [];
-
-      if (currentVal != '') {
-
-        $.ajax({
-          type: "POST",
-          url: "/category/getlist",
-          dataType: 'json',
-          data: { 'query': oldVal },
-          success: function (data) {
-
-            for (var i=0; i<data.data.length; i++) {
-
-              var id = data.data[i].id
-
-              var p1 = (data.data[i].p1_name != undefined) ? data.data[i].p1_name: '';
-              var p2 = (data.data[i].p2_name != undefined) ? data.data[i].p2_name: '';
-              var p3 = (data.data[i].p3_name != undefined) ? data.data[i].p3_name: '';
-              var parents = "";
-              if (p1 != '') parents += (p1 + " > ")
-              if (p2 != '') parents += (p2 + " > ")
-              if (p3 != '') parents += (p3 + " > ")
-
-              arr.push({ value: id, label: parents + data.data[i].category_name})
-            }
-
-            $("#categoryText").autocomplete({
-
-              source: arr,
-              select: function(event, ui) {
-                $("#categoryText").val(ui.item.label); // display the selected text
-                $("#search_cate").val(ui.item.value); // display the selected text
-                $("#categoryText").attr('readonly', true);
-                return false;
-              },
-
-              focus: function(event, ui) {
-                return false;
-              }
-            });
-
-          },
-          error: function (e) {
-            console.log("ERROR : ", e);
-          }
-        });
-      } else {
-        $("#search_cate").val("");
-      }
-
-    });
   });
 
   //검색 버튼 이벤트
   function search(num) {
-
+    console.log("num:::" + num);
     var search_type = $("#search_type").val();
     var country_id= $("#country_id").val();
     var search_txt = $("#search_txt").val();
@@ -280,85 +283,11 @@
     window.location.href = url;
   }
 
-  //카테고리 제거
-  function removeCategory() {
-    $("#categoryText").val(""); // display the selected text
-    $("#search_cate").val(""); // display the selected text
-    $("#categoryText").attr('readonly', false);
-  }
-
-  //지도 그리기
-  function drawRegionsMap() {
-
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Country');
-    data.addColumn('number', 'Count');
-
-    data.addColumn({
-      type: 'string',
-      role: 'tooltip',
-      'p': {'html': true}//added html version
-    });
-
-    data.addRows(array)
-
-    var options = { legend: 'none', tooltip: { isHtml: true } };
-
-    var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-    function myClickHandler() {
-      var selection = chart.getSelection();
-
-      //클릭시 table.html 넘어감
-      $("#country_id").val(countryMap[data.getValue(chart.getSelection()[0].row, 0)]);
-      search();
-    }
-
-    google.visualization.events.addListener(chart, 'select', myClickHandler);
-
-    chart.draw(data, options);
-
-
-
-  }
-
-  function htmlDecode(input){
-    var e = document.createElement('div');
-    e.innerHTML = input;
-    return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+  function clickRanking(name)
+  {
+    $("#search_txt").val(name);
+    search(1);
   }
 
 </script>
-<style>
-
-  .google-visualization-tooltip {
-    background-color: white;
-    border-radius: 6px;
-    color: #3c4043;
-    font: 400 14px/20px Roboto,Arial,Helvetica,sans-serif;
-    width: 120px;
-    padding: 2px;
-    margin-left: 2px;
-  }
-  .google-visualization-tooltip-item-list {
-    list-style-type: none;
-    margin: 0!important;
-    padding: 0!important;
-  }
-
-  .google-visualization-tooltip-item:first-child {
-    margin: 0!important;
-  }
-  .google-visualization-tooltip-item {
-    margin: 0!important;
-    padding: 0!important;
-  }
-  .ui-autocomplete {
-    max-height: 200px;
-    width: auto;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 20px;
-  }
-
-</style>
 </html>

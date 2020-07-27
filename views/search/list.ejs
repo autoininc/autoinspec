@@ -21,203 +21,203 @@
 
                 <div class="row">
                   <div class="col-lg-12 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="card-body">
-                        <h3 class="card-title">Company Database</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Company Database</h3>
 
-                        <div class="form-inline">
-                          <div class="form-group">
-                            <select id="country_id" name="country_id" class="form-control mb-2 mr-sm-2" >
-                                <option value="" selected>- ALL Country -</option>
-                                <%
-                                    if (model.countriesList.length > 0) { %>
-                                    <% for(let i=0; i<model.countriesList.length; i++) {
-                                %>
-                                <option id=<%=model.countriesList[i].id %> value=<%=model.countriesList[i].id %>><%=model.countriesList[i].country_name %></option>
-                                <%  }}  %>
-                            </select>
-                          </div>
-                          <div class="form-group">
-                            <select name="search_bn" class="form-control mb-2 mr-sm-2" id="search_bn">
-                              <option value="">- ALL Business Nature -</option>
-                              <option value="1">Manufacturer</option>
-                              <option value="2">Dealer, agent, distributor, wholesaler</option>
-                              <option value="3">Retailer</option>
-                              <option value="4">Service supplier(Auto refitter / tuner / garage / workshop)</option>
-                              <option value="5">Private & official fleetts</option>
-                              <option value="6">Trade associations/government agencies</option>
-                              <option value="7">Publisher</option>
-                              <option value="8">Research institutions / universities / polytechnic</option>
-                              <option value="9">Others</option>
-                            </select>
-                          </div>
-                          <div class="form-group">
-                            <select name="search_pg" class="form-control mb-2 mr-sm-2" id="search_pg">
-                              <option value="">- ALL Product Group -</option>
-                              <option value="1">Commercial Vehicle</option>
-                              <option value="2">Passenger Vehicle</option>
-                              <option value="3">OEM</option>
-                              <option value="4">Aftermarket</option>
-                            </select>
-                          </div>
-                        </div>
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <select id="country_id" name="country_id" class="form-control mb-2 mr-sm-2" >
+                                            <option value="" selected>- ALL Country -</option>
+                                            <%
+                                            if (model.countriesList.length > 0) { %>
+                                                <% for(let i=0; i<model.countriesList.length; i++) {
+                                                %>
+                                                <option id=<%=model.countriesList[i].id %> value=<%=model.countriesList[i].id %>><%=model.countriesList[i].country_name %></option>
+                                            <%  }}  %>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select name="search_bn" class="form-control mb-2 mr-sm-2" id="search_bn">
+                                            <option value="">- ALL Business Nature -</option>
+                                            <option value="1">Manufacturer</option>
+                                            <option value="2">Dealer, agent, distributor, wholesaler</option>
+                                            <option value="3">Retailer</option>
+                                            <option value="4">Service supplier(Auto refitter / tuner / garage / workshop)</option>
+                                            <option value="5">Private & official fleetts</option>
+                                            <option value="6">Trade associations/government agencies</option>
+                                            <option value="7">Publisher</option>
+                                            <option value="8">Research institutions / universities / polytechnic</option>
+                                            <option value="9">Others</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select name="search_pg" class="form-control mb-2 mr-sm-2" id="search_pg">
+                                            <option value="">- ALL Product Group -</option>
+                                            <option value="1">Commercial Vehicle</option>
+                                            <option value="2">Passenger Vehicle</option>
+                                            <option value="3">OEM</option>
+                                            <option value="4">Aftermarket</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                          <div class="form-group" style="margin-bottom: 1rem;">
-                            <div class="input-group">
-                                  <input type="hidden" name="search_cate" id="search_cate" >
-                                  <input class="form-control " id="categoryText" name="categoryText" type="text" placeholder="Category" >
-                                  <div class="input-group-append">
-                                      <button class="btn btn-sm" type="button" style="background-color: #317376; color:white" onclick="removeCategory();">X</button>
-                                  </div>
-                              </div>
-                          </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <div class="input-group">
+                                        <input type="hidden" name="search_cate" id="search_cate" >
+                                        <input class="form-control " id="categoryText" name="categoryText" type="text" placeholder="Category" >
+                                        <div class="input-group-append">
+                                            <button class="btn btn-sm" type="button" style="background-color: #317376; color:white" onclick="removeCategory();">X</button>
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <div class="form-inline">
-                          <div class="form-group" >
-                          <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
-                              <option value="1" selected>ALL</option>
-                              <option value="2" >COMPANY</option>
-                              <option value="3" >CEO</option>
-                              <option value="4" >MAIN_PRODUCT</option>
-                          </select>
-                        </div>
-                        <div class="form-group" >
-                          <input id="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
-                        </div>
-                          <button type="button" class="btn btn-primary mb-2" style="background-color: #317376;" onClick="search('1');">Search</button>
+                                <div class="form-inline">
+                                    <div class="form-group" >
+                                        <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
+                                            <option value="1" selected>ALL</option>
+                                            <option value="2" >COMPANY</option>
+                                            <option value="3" >CEO</option>
+                                            <option value="4" >MAIN_PRODUCT</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" >
+                                        <input id="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
+                                    </div>
+                                    <button type="button" class="btn btn-primary mb-2" style="background-color: #317376;" onClick="search('1');">Search</button>
 
 
-                    </div>
-                    <div class="row">
-                      <div class="spinner-border text-primary spinner" role="status" id="spinner" style="display: none;">
-                      </div>
-                    </div>
-                    <div class="d-flex" style="padding-top: 20px;">
-                      <div class="mr-auto p-2">
-                        <p class="card-description">
-                            <strong>Register Companies</strong> <code class="font-weight-bold"><%= comma(model.totalCount) %></code>
-                        </p>
-                      </div>
+                                </div>
+                                <div class="row">
+                                    <div class="spinner-border text-primary spinner" role="status" id="spinner" style="display: none;">
+                                    </div>
+                                </div>
+                                <div class="d-flex" style="padding-top: 20px;">
+                                    <div class="mr-auto p-2">
+                                        <p class="card-description">
+                                            <strong>Register Companies</strong> <code class="font-weight-bold"><%= comma(model.totalCount) %></code>
+                                        </p>
+                                    </div>
 
-                      <div class="p-2">
-                          <span style="padding-right: 0.55em;"><i class="fas fa-home" style="color: #317376"></i><label>&nbsp;Website</label></span>
-                           <span style="padding-right: 0.55em;"><i class="fas fa-envelope-square" style="color: #317376"></i><label>&nbsp;Email</label></span>
-                           <span style="padding-right: 0.55em;"><i class="fas fa-tachometer-alt" style="color: #317376;"></i> <label>&nbsp;Credit </label></span>
-                           <span style="padding-right: 0.55em;"><i class="fas fa-users" style="color: #317376;"></i> <label>&nbsp;Shareholders </label></span>
-                           <span style="padding-right: 0.55em;"><i class="fas fa-handshake" style="color: #317376;"></i> <label>&nbsp;Partner</label></span>
-                           <span style="padding-right: 0.55em;"><i class="fas fa-chart-line" style="color: #317376;"></i> <label>&nbsp;Finance</label></span>
-                           <span style="padding-right: 0.55em;"><i class="fas fa-comment-dots" style="color: #317376;"></i> <label>&nbsp;Opinion</label></span>
-                           <span><i class="fas fa-industry" style="color: #317376;"></i> <label>&nbsp;Component</label></span>
-                          </div>
-                    </div>
+                                    <div class="p-2">
+                                        <span style="padding-right: 0.55em;"><i class="fas fa-home" style="color: #317376"></i><label>&nbsp;Website</label></span>
+                                        <span style="padding-right: 0.55em;"><i class="fas fa-envelope-square" style="color: #317376"></i><label>&nbsp;Email</label></span>
+                                        <span style="padding-right: 0.55em;"><i class="fas fa-tachometer-alt" style="color: #317376;"></i> <label>&nbsp;Credit </label></span>
+                                        <span style="padding-right: 0.55em;"><i class="fas fa-users" style="color: #317376;"></i> <label>&nbsp;Shareholders </label></span>
+                                        <span style="padding-right: 0.55em;"><i class="fas fa-handshake" style="color: #317376;"></i> <label>&nbsp;Partner</label></span>
+                                        <span style="padding-right: 0.55em;"><i class="fas fa-chart-line" style="color: #317376;"></i> <label>&nbsp;Finance</label></span>
+                                        <span style="padding-right: 0.55em;"><i class="fas fa-comment-dots" style="color: #317376;"></i> <label>&nbsp;Opinion</label></span>
+                                        <span><i class="fas fa-industry" style="color: #317376;"></i> <label>&nbsp;Component</label></span>
+                                    </div>
+                                </div>
 
-                        <div class="table-responsive bd_pg">
+                                <div class="table-responsive bd_pg">
 
-                          <table class="table table-bordered">
-                            <thead>
-                              <tr>
-                                <th style="width: 10%">Country</th>
-                                <th style="width: 15%">Data</th>
-                                <th>Company</th>
-                                <th>CEO</th>
-                                <th>Address</th>
-                                <th>Main product</th>
-                              </tr>
-                            </thead>
-                            <tbody id="tbd">
-                                <%
-                                if (model.contents.length > 0) { %>
-                                    <% for(let i=0; i<model.contents.length; i++) {
-                                %>
-                                <tr>
-                                    <th><%=model.contents[i].country_name %></th>
-                                    <th>
-                                      <% if (model.contents[i].map['website']) { %>&nbsp;<i class="fas fa-home" style="color: #317376"></i>&nbsp;<% } %>
-                                      <% if (model.contents[i].map['email']) { %>&nbsp;<i class="fas fa-envelope-square" style="color: #317376;"></i>&nbsp;<% } %>
-                                      <% if (model.contents[i].map['creditRating'] || model.contents[i].map['cashFlowRating'] || model.contents[i].map['watchRating']) { %>
-                                        &nbsp;<i class="fas fa-tachometer-alt" style="color: #317376;"></i>&nbsp;
-                                      <% } %>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10%">Country</th>
+                                            <th style="width: 15%">Data</th>
+                                            <th>Company</th>
+                                            <th>CEO</th>
+                                            <th>Address</th>
+                                            <th>Main product</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="tbd">
+                                        <%
+                                        if (model.contents.length > 0) { %>
+                                            <% for(let i=0; i<model.contents.length; i++) {
+                                            %>
+                                            <tr>
+                                                <th><%=model.contents[i].country_name %></th>
+                                                <th>
+                                                    <% if (model.contents[i].map['website']) { %>&nbsp;<i class="fas fa-home" style="color: #317376"></i>&nbsp;<% } %>
+                                                    <% if (model.contents[i].map['email']) { %>&nbsp;<i class="fas fa-envelope-square" style="color: #317376;"></i>&nbsp;<% } %>
+                                                    <% if (model.contents[i].map['creditRating'] || model.contents[i].map['cashFlowRating'] || model.contents[i].map['watchRating']) { %>
+                                                        &nbsp;<i class="fas fa-tachometer-alt" style="color: #317376;"></i>&nbsp;
+                                                    <% } %>
 
-                                      <% if (model.contents[i].map['ms'] || model.contents[i].map['rc']) { %> &nbsp;<i class="fas fa-users" style="color: #317376;"></i>&nbsp; <% } %>
-                                      <% if (model.contents[i].map['msp'] || model.contents[i].map['mpp']) { %> &nbsp;<i class="fas fa-handshake" style="color: #317376;"></i>&nbsp; <% } %>
-                                      <% if (model.contents[i].map['ssofp'] || model.contents[i].map['cis'] || model.contents[i].map['sfr']) { %> &nbsp;<i class="fas fa-chart-line" style="color: #317376;"></i>&nbsp; <% } %>
-                                      <% if (model.contents[i].map['opinion']) { %> &nbsp;<i class="fas fa-comment-dots" style="color: #317376;"></i>&nbsp;<% } %>
-                                      <% if (model.contents[i].map['pr'] || model.contents[i].map['sr'] || model.contents[i].map['cc'] || model.contents[i].map['mv'] || model.contents[i].map['for'] || model.contents[i].map['es']) { %>
-                                        &nbsp;<i class="fas fa-industry" style="color: #317376;"></i>&nbsp; <% } %>
-                                    </th>
-                                    <th class="over"><a href='/company/detail/<%=model.contents[i].id %>?first=1' style="color: #317376;"><span data-toggle="tooltip" data-placement="left" title="<%=model.contents[i].name_eng %>"><%=model.contents[i].name_eng %></span></a></th>
-                                    <th class="over"><%=model.contents[i].ceo %></th>
-                                    <th class="over"><span data-toggle="tooltip" data-placement="left" title="<%=model.contents[i].address %>"><%=model.contents[i].address %></span></th>
-                                    <th class="over"><span data-toggle="tooltip" data-placement="left" title="<%=model.contents[i].main_product %>"><%=model.contents[i].main_product %></span></th class="over" >
-                                </tr>
-                                <%
-                                }
-                                } else {  %>
-                                    <tr>
-                                        <th colspan="5">No data to display.</th>
-                                    </tr>
-                                    <% } %>
-                              </tbody>
-                          </table>
-                            <br>
-                          <% if (model.contents.length != 0) { %>
-                                <div class="col-lg-12">
-                                    <%# 페이지 버튼들 %>
-                                    <ul class="pagination" style="display: table; margin-right: auto; margin-left: auto;">
-                                        <%# [<<]버튼 = 첫 페이지로 이동 %>
-                                        <li  style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
-                                            <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>>
-                                                <i class="fas fa-angle-double-left"></i></a>
-                                        </li>
-                                        <%# [<]버튼 = 1, 11, 21 페이지로 back 이동 %>
-                                        <li style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
-                                            <a <%if(model.pageNum > 10){%> href="javascript:search(<%=10*(parseInt((model.pageNum-1)/10)-1)+1%>);" <%}
-                                            else {%>href="javascript:search(1);"<%}%> >
-                                                <i class="fa fa-angle-left"> </i>
-                                            </a>
-                                        </li>
-                                        <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %>
-                                        <li style="display:inline-block;" <%if(i===model.pageNum){%> class="active"<%}%>>
-                                            <a  class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%>
-                                            </a>
-                                        </li>
+                                                    <% if (model.contents[i].map['ms'] || model.contents[i].map['rc']) { %> &nbsp;<i class="fas fa-users" style="color: #317376;"></i>&nbsp; <% } %>
+                                                    <% if (model.contents[i].map['msp'] || model.contents[i].map['mpp']) { %> &nbsp;<i class="fas fa-handshake" style="color: #317376;"></i>&nbsp; <% } %>
+                                                    <% if (model.contents[i].map['ssofp'] || model.contents[i].map['cis'] || model.contents[i].map['sfr']) { %> &nbsp;<i class="fas fa-chart-line" style="color: #317376;"></i>&nbsp; <% } %>
+                                                    <% if (model.contents[i].map['opinion']) { %> &nbsp;<i class="fas fa-comment-dots" style="color: #317376;"></i>&nbsp;<% } %>
+                                                    <% if (model.contents[i].map['pr'] || model.contents[i].map['sr'] || model.contents[i].map['cc'] || model.contents[i].map['mv'] || model.contents[i].map['for'] || model.contents[i].map['es']) { %>
+                                                        &nbsp;<i class="fas fa-industry" style="color: #317376;"></i>&nbsp; <% } %>
+                                                </th>
+                                                <th class="over"><a href='/company/detail/<%=model.contents[i].id %>?first=1' style="color: #317376;"><span data-toggle="tooltip" data-placement="left" title="<%=model.contents[i].name_eng %>"><%=model.contents[i].name_eng %></span></a></th>
+                                                <th class="over"><%=model.contents[i].ceo %></th>
+                                                <th class="over"><span data-toggle="tooltip" data-placement="left" title="<%=model.contents[i].address %>"><%=model.contents[i].address %></span></th>
+                                                <th class="over"><span data-toggle="tooltip" data-placement="left" title="<%=model.contents[i].main_product %>"><%=model.contents[i].main_product %></span></th class="over" >
+                                            </tr>
+                                        <%
+                                        }
+                                        } else {  %>
+                                            <tr>
+                                                <th colspan="5">No data to display.</th>
+                                            </tr>
                                         <% } %>
-                                        <%# [>]버튼 = 1, 11, 21 페이지로 front 이동 %>
-                                        <li style="display:inline-block; margin-right: 0px;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
-                                            <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=10*(1+parseInt((model.pageNum-1)/10))+1%>);" <%}%>class="waves-effect">
-                                                <i class="fa fa-angle-right"></i>
-                                            </a>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <% if (model.contents.length != 0) { %>
+                                    <div class="col-lg-12">
+                                        <%# 페이지 버튼들 %>
+                                        <ul class="pagination" style="display: table; margin-right: auto; margin-left: auto;">
+                                            <%# [<<]버튼 = 첫 페이지로 이동 %>
+                                            <li  style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>>
+                                                    <i class="fas fa-angle-double-left"></i></a>
+                                            </li>
+                                            <%# [<]버튼 = 1, 11, 21 페이지로 back 이동 %>
+                                            <li style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                <a <%if(model.pageNum > 10){%> href="javascript:search(<%=10*(parseInt((model.pageNum-1)/10)-1)+1%>);" <%}
+                                                else {%>href="javascript:search(1);"<%}%> >
+                                                    <i class="fa fa-angle-left"> </i>
+                                                </a>
+                                            </li>
+                                            <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %>
+                                            <li style="display:inline-block;" <%if(i===model.pageNum){%> class="active"<%}%>>
+                                                <a  class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%>
+                                                </a>
+                                            </li>
+                                            <% } %>
+                                            <%# [>]버튼 = 1, 11, 21 페이지로 front 이동 %>
+                                            <li style="display:inline-block; margin-right: 0px;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=10*(1+parseInt((model.pageNum-1)/10))+1%>);" <%}%>class="waves-effect">
+                                                    <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            </li>
+                                            <%# [>>]버튼 = 마지막 페이지로 이동 %>
+                                            <li style="display:inline-block;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                                    <i class="fas fa-angle-double-right">  </i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <% } %>
+                                    <%# 페이지 검색 %>
+                                    <%# 현재 존재하는 페이지보다 큰 수를 입력해도 해당 부분은 볼 수 있음 %>
+                                    <ul style="text-align: center;">
+                                        <li style="display: inline-block; margin-right: 5px;">
+                                            <p class="card-description">
+                                                <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
+                                            </p>
                                         </li>
-                                        <%# [>>]버튼 = 마지막 페이지로 이동 %>
-                                        <li style="display:inline-block;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
-                                            <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
-                                                <i class="fas fa-angle-double-right">  </i>
-                                            </a>
+                                        <li style="display: inline-block;">
+                                            <p class="input-group mb-3" >
+                                                <input type="text" style="width: 80px; height: 35px" id="search-page" style="text-align: center; " placeholder="page"
+                                                       class="form-control" aria-label="pageNumber" aria-describedby="button-addon2" onKeyDown="onKeyDown(parseInt($('#search-page').val()))";>
+                                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #317376; color:white; width: 80px; height: 35px "
+                                                        onClick="search(parseInt($('#search-page').val()))" ;>search</button>
+                                            </p>
                                         </li>
                                     </ul>
                                 </div>
-                            <% } %>
-                            <%# 페이지 검색 %>
-                            <%# 현재 존재하는 페이지보다 큰 수를 입력해도 해당 부분은 볼 수 있음 %>
-                            <ul style="text-align: center;">
-                                <li style="display: inline-block; margin-right: 5px;">
-                                    <p class="card-description">
-                                        <code><%=model.pageNum%></code> &nbsp;/ &nbsp;<%=model.pnTotal%>
-                                    </p>
-                                </li>
-                                <li style="display: inline-block;">
-                                    <p class="input-group mb-3" >
-                                        <input type="text" style="width: 80px; height: 35px" id="search-page" style="text-align: center; " placeholder="page"
-                                               class="form-control" aria-label="pageNumber" aria-describedby="button-addon2" onKeyDown="onKeyDown(parseInt($('#search-page').val()))";>
-                                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #317376; color:white; width: 80px; height: 35px "
-                                                onClick="search(parseInt($('#search-page').val()))" ;>search</button>
-                                    </p>
-                                </li>
-                            </ul>
+                            </div>
                         </div>
                     </div>
-                  </div>
-                </div>
               </div>
               <!-- content-wrapper ends -->
               <!-- partial:../../partials/_footer.html -->

@@ -20,13 +20,19 @@ exports.about = (req, res) => {
     });
 };
 
+//autoinmap
 exports.service = (req, res) => {
-    connection.query('SELECT id, title, file_name_org, file_name_new, size, order_, createdAt, useYN FROM homepage WHERE useYN = "Y" AND type = 3 ORDER BY order_', (err,rs) => {   
+    let model = {};
+    var countries_result;
+    connection.query('SELECT a.id, a.country_name, a.code, COUNT(b.id) as count FROM countries a LEFT OUTER JOIN company b ON a.id = b.country_id WHERE a.showYN = "Y"  GROUP BY a.id ORDER BY id DESC; ',
+        (err,result) => {
         if (err) {   
             console.log(err);
             res.end();
         } else {
-            res.render("info/service",{list: rs, userObj: req.cookies.userObj});
+            countries_result = result;
+            model.countries = countries_result;
+            res.render("info/service",{model: model, userObj: req.cookies.userObj});
         }
     });
 };

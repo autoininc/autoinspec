@@ -23,46 +23,136 @@
     <!-- JavaScript Libraries -->
     <script src="/assets/rapid/lib/lightbox/js/lightbox.min.js"></script>
 
+    <!-- Google geo chart-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <script src="/assets/js/slider/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/style.min.css" rel="stylesheet"/>
+    <link href="/css/main.css" rel="stylesheet" />
+
 </head>
 
 <body>
- 
-        <%- include ('../layout/header.ejs') -%>
- 
-        <div class="container mt-5">
-        <!--==========================
-        Services Section
-        ============================-->
-        <section id="services" class="section-bg">
-            <div class="container">
+<%- include ('../layout/header.ejs') -%>
+<div class="main-panel">
+    <input id="country_id" name="country_id" type="hidden"/>
+    <div class="container mt-5">
+        <section>
+            <header class="section-header">
+                <h3>AUTOIN MAP</h3>
+                <p>You can see whatever you want!</p>
+            </header>
 
-                <header class="section-header">
-                    <h3>Services</h3>                    
-                    <p>EASY TO CHECK</br>Reduce the Time, Cost and Risk ! </p>
-                </header>
 
-                <div class="row">
+        </section>
+        <div class="row">
+            <div class="col-lg-2 grid-margin stretch-card" style="overflow-x: auto;">
+                <div class="card" style="overflow-x: auto;">
 
-                    <%         
-                        if (list.length > 0) { %> 
-                        <% for(let i=0; i<list.length; i++) {        
-                    %> 
-                    <div class="col-md-6 col-lg-4 wow bounceInUp" data-wow-duration="1.4s">
-                        <div class="box">
-                            <h4 class="title"><a href=""><%=list[i].title %></a></h4>
-                            <p class="description">
-                                <a href="/uploads/<%=list[i].file_name_new %>" data-lightbox="service"><img src="/uploads/<%=list[i].file_name_new %>" alt=""></a></p>
-                        </div>
-                    </div>            
-                    <%  }}  %>
                 </div>
             </div>
-        </section><!-- #services -->
+            <div class="col-lg-10 grid-margin stretch-card" style="overflow-x: auto;">
+                <div class="card" style="overflow-x: auto;">
+                    <div class="card-body">
+                        <div id="regions_div" ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
- 
+
+
+</div>
+
     <%- include ('../layout/footer.ejs') -%>
  
 </body>
+
+<script>
+
+    var array = [];
+    var countryMap = {};
+    var countriesList = JSON.parse(htmlDecode("<%= JSON.stringify(model.countries) %>"));
+
+    $("document").ready(function() {
+        //지도 값 설정
+        for(var i=0; i<countriesList.length; i++) {
+            var img = '<div style="padding:5px"><img src="/img/flag/' + countriesList[i].code + '.png" >&nbsp;&nbsp;' + comma(countriesList[i].count) +'</div>'
+            array.push([countriesList[i].country_name, countriesList[i].count, img]);
+            countryMap[countriesList[i].country_name] = countriesList[i].id;
+        }
+
+        google.charts.load('current', {
+            'packages': ['geochart'],
+            'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+        });
+        google.charts.setOnLoadCallback(drawRegionsMap);
+    });
+
+    //검색 버튼 이벤트
+    function search(num) {
+
+        var search_type = "";
+        var country_id= "";
+        var search_txt = "";
+        var search_bn = "";
+        var search_pg = "";
+        var search_cate = "";
+        var categoryText = "";
+
+        var url = "/company/search?pageNum=1" + "&search_type=" + search_type + "&country_id=" + country_id + "&search_txt=" + search_txt +
+            "&search_bn=" + search_bn + "&search_pg=" + search_pg + "&search_cate=" + search_cate + "&categoryText=" + categoryText;
+
+        window.location.href = url;
+    }
+
+    //지도 그리기
+    function drawRegionsMap() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'Count');
+
+        data.addColumn({
+            type: 'string',
+            role: 'tooltip',
+            'p': {'html': true}//added html version
+        });
+
+        data.addRows(array)
+
+        var options = { legend: 'none', tooltip: { isHtml: true } };
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+        function myClickHandler() {
+            var selection = chart.getSelection();
+
+            //클릭시 table.html 넘어감
+            $("#country_id").val(countryMap[data.getValue(chart.getSelection()[0].row, 0)]);
+            search();
+        }
+
+        google.visualization.events.addListener(chart, 'select', myClickHandler);
+
+        chart.draw(data, options);
+
+
+
+    }
+
+    function htmlDecode(input){
+        var e = document.createElement('div');
+        e.innerHTML = input;
+        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+    }
+
+</script>
 <style>
     body {
         margin: 0;
