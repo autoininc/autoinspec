@@ -268,8 +268,8 @@
 
   //검색 버튼 이벤트
   function search(num) {
-    console.log("num:::" + num);
-    var search_type = $("#search_type").val();
+
+    var search_type = $("#search_type").val() || 1;
     var country_id= $("#country_id").val();
     var search_txt = $("#search_txt").val();
     var search_bn = $("#search_bn").val();
@@ -283,11 +283,6 @@
     window.location.href = url;
   }
 
-  function clickRanking(name)
-  {
-    $("#search_txt").val(name);
-    search(1);
-  }
 
 </script>
 </html>
