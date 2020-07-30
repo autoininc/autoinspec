@@ -75,10 +75,8 @@ exports.list = (req, res) =>
 
 exports.consultForm = (req, res) =>
 {
-    //수정해야할 부분
-    // 회사 id를 기반으로 상담 내용 리스트 가져오기
     let model_consult = {};
-    var company_id = req.query.id;
+    var company_id = req.query.id; //고객관리시스템 메인페이지에서 업체 선택하면 해당 업체 페이지로 넘어옴
 
     var sql_getCompanyInfo = 'SELECT * from managerInfo where company_id = ' +company_id; //담당자 정보 가져오기
     var sql_getConsultList = 'SELECT * from consult WHERE company_id = '+company_id; //상담 내용 전부 가져오기
@@ -92,6 +90,7 @@ exports.consultForm = (req, res) =>
     model_consult.manager = connection.query(sql_getCompanyInfo); //상담자 정보 가져오기
     let inlevel = connection.query(sql_getInnerlevel);
 
+    //회사 정보 상담 입력 페이지에 뿌리기
     res.render('admin/customerManagement/consultingView', {model_consult:model_consult, company_id: company_id, innerlevel:inlevel, userObj: req.cookies.userObj});
 };
 

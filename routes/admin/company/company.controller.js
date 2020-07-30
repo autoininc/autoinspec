@@ -904,7 +904,7 @@ exports.modify = (req, res) => {
             company.updatedAt = moment.utc().format(format);
         }
 
-        console.log(company)
+
 
         query.push(connection.beginTransaction());
     

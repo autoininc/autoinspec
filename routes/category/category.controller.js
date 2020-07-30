@@ -170,7 +170,8 @@ exports.get3rdCategories = (req, res) => {
 exports.addForm = (req, res) => {
 
     let model = {};
-    connection.query('SELECT id, category_name, depth, parent_id, useYN, delYN FROM category WHERE depth = 1 ORDER BY id DESC' , (err,rs) => {   
+    connection.query('SELECT id, category_name, depth, parent_id, u' +
+        'seYN, delYN FROM category WHERE depth = 1 ORDER BY id DESC' , (err,rs) => {
         if(err) {   
             console.log(err);
             res.end();

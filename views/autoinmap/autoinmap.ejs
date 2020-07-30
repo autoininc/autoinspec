@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <%- include ('../layout/head.ejs') -%>
+
+    <!-- CSS Files -->
+    <link href="/assets/css/now-ui-dashboard.css?v=1.3.0" rel="stylesheet" />
+
+    <!-- Bootstrap CSS File -->
+    <link href="/assets/rapid/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries CSS Files -->
+    <link href="/assets/rapid/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/rapid/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="/assets/rapid/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Main Stylesheet File -->
+    <link href="/assets/rapid/css/style.css" rel="stylesheet">
+    <script src="/assets/js/core/jquery.min.js"></script>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="/assets/rapid/lib/lightbox/js/lightbox.min.js"></script>
+
+    <!-- Google geo chart-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <!-- Google tree map chart-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+</head>
+
+<body>
+<%- include ('../layout/header.ejs') -%>
+<div class="main-panel">
+    <input id="country_id" name="country_id" type="hidden"/>
+    <div class="container mt-5">
+        <section>
+            <header class="section-header">
+                <h3>AUTOIN MAP</h3>
+                <p>You can see whatever you want!</p>
+            </header>
+        </section>
+
+        <!-- 여기서부터~ 카테고리 검색창-->
+        <div class="row">
+            <div class="col-lg-1 grid-margin stretch-card"></div>
+            <div class="col-lg-10 grid-margin stretch-card">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="CATEGORY SEARCH" aria-label="Recipient's username with two button addons" aria-describedby="button-addon4"
+                    style="text-align: center" id="categoryText" name="categoryText">
+                    <div class="input-group-append" id="button-addon4">
+                        <button class="btn btn-outline-secondary" type="button" style="margin: 0; background-color: #317376; color:white;" onclick="search(1)">search</button>
+                        <button class="btn btn-outline-secondary" type="button" style="margin: 0; background-color: #317376; color:white;" onclick="removeCategory()">remove</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1 grid-margin stretch-card"></div>
+        </div>
+        <!-- ~여기까지 -->
+
+        <!-- 여기서부터~ 왼쪽 카테고리 목록-->
+        <div class="row">
+            <div class="col-lg-3 grid-margin stretch-card" style="overflow-x: auto;">
+                <div class="card" style="overflow-x: auto;">
+                    <h3 style="font-size: 15px; margin-top: 10px; text-align: center">CATEGORY</h3>
+                    <div class="dropdown-divider"></div>
+                        <% if(model.category1.length > 0) {%>
+                            <% for(var i=0; i<model.category1.length;i++) { %>
+                                <li class="nav-item" style="list-style: none">
+                                    <a class="nav-link" data-toggle="collapse" aria-expanded="false" href="#cat<%= model.category1[i].id%>" aria-controls="cat<%= model.category1[i].id%>">
+                                        <span class="menu-title" style="color: #317376;"> <%= model.category1[i].category_name %> </span>
+                                        <i class="menu-arrow"></i>
+                                    </a>
+                                    <div class="collapse" id="cat<%= model.category1[i].id %>">
+                                        <ul class="nav flex-column sub-menu" style="padding-left: 30px; list-style: square">
+                                            <% for(var j=0;j<model.category2.length;j++) { %>
+                                                <% if(model.category1[i].id == model.category2[j].parent_id) { %>
+                                                    <li class="nav-item" style="color: #317376;">
+                                                        <a><%= model.category2[j].category_name %></a>
+                                                    </li>
+                                                <% } %>
+                                            <% } %>
+                                        </ul>
+                                    </div>
+                                </li>
+                            <% } %>
+                        <% } %>
+                </div>
+            </div>
+            <!-- ~여기까지 -->
+
+            <!-- 여기서부터~ 지도 -->
+            <div class="col-lg-9 grid-margin stretch-card" style="overflow-x: auto;">
+                <div class="card" style="overflow-x: auto;">
+                    <div class="card-body" style="padding: 0 !important;">
+                        <div id="regions_div" style="height: 600px;"></div>
+                        <div id="chart_div" style="display: none;height: 600px;">
+                            <input id="category" name="total" type="hidden"/>
+                        </div>
+                        <div id="regionbutton" style="text-align: center">
+                            <input type="radio" name="region" id="all" value="all" checked /><label for="all">All</label>
+                            <input type="radio" name="region" id="africa" value="002" /><label for="africa">Africa</label>
+                            <input type="radio" name="region" id="americas" value="019" /><label for="americas">Americas</label>
+                            <input type="radio" name="region" id="europe" value="150" /><label for="europe">Europe</label>
+                            <input type="radio" name="region" id="asia" value="142" /><label for="asia">Asia/Middle East</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ~여기까지 -->
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<%- include ('../layout/footer.ejs') -%>
+
+</body>
+
+<script>
+
+    //for geo chart
+    var array = []; //국가
+    var countryMap = {};
+    var countriesList = JSON.parse(htmlDecode("<%= JSON.stringify(model.countries) %>"));
+    var currentContinent;
+    var countryId;
+
+
+    //for cateogry search
+    var oldVal;
+    var arr = [];
+
+    $("document").ready(function() {
+
+        //라디오버튼 선택시 대륙 변경
+        $('input[name="region"]').on('click', function () {
+            if ($(this).val() != currentContinent) {
+                console.log("이전값: " + currentContinent);
+                currentContinent = $(this).val();
+                console.log("바뀐값: " + $(this).val());
+                google.charts.setOnLoadCallback(drawRegionsMap);
+            }
+        });
+
+
+        //지도에 data 값 추가하기
+        for(var i=0; i<countriesList.length; i++) {
+            var img = '<div style="padding:5px"><img src="/img/flag/' + countriesList[i].code + '.png" >&nbsp;&nbsp;' + comma(countriesList[i].count) +'</div>'
+            array.push([countriesList[i].country_name, countriesList[i].count, img]);
+            countryMap[countriesList[i].country_name] = countriesList[i].id;
+        }
+
+
+
+        //지도 사용을 위한 API key 값 설정하는 함수
+        google.charts.load('current', {
+            'packages': ['geochart'],
+            'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+        });
+        google.charts.setOnLoadCallback(drawRegionsMap);
+
+
+
+
+
+        //카테고리 입력 이벤트
+        $("#categoryText").autocomplete({source: arr});
+
+        $("#categoryText").on("propertychange change keyup paste input", function() {
+
+            var currentVal = $(this).val();
+            if(currentVal == oldVal) {
+                return;
+            }
+
+            oldVal = currentVal;
+            arr = [];
+
+            if (currentVal != '') {
+
+                $.ajax({
+                    type: "POST",
+                    url: "../category/getlist",
+                    dataType: 'json',
+                    data: { 'query': oldVal },
+                    success: function (data) {
+
+                        for (var i=0; i<data.data.length; i++) {
+
+                            var id = data.data[i].id
+
+                            var p1 = (data.data[i].p1_name != undefined) ? data.data[i].p1_name: '';
+                            var p2 = (data.data[i].p2_name != undefined) ? data.data[i].p2_name: '';
+                            var p3 = (data.data[i].p3_name != undefined) ? data.data[i].p3_name: '';
+                            var parents = "";
+                            if (p1 != '') parents += (p1 + " > ")
+                            if (p2 != '') parents += (p2 + " > ")
+                            if (p3 != '') parents += (p3 + " > ")
+
+                            arr.push({ value: id, label: parents + data.data[i].category_name})
+                        }
+
+                        $("#categoryText").autocomplete({
+
+                            source: arr,
+                            select: function(event, ui) {
+                                $("#categoryText").val(ui.item.label); // display the selected text
+                                $("#search_cate").val(ui.item.value); // display the selected text
+                                $("#categoryText").attr('readonly', true);
+                                return false;
+                            },
+
+                            focus: function(event, ui) {
+                                return false;
+                            }
+                        });
+
+                    },
+                    error: function (e) {
+                        console.log("ERROR : ", e);
+                    }
+                });
+            } else {
+                $("#search_cate").val("");
+            }
+
+        });
+
+    });
+
+    //카테고리 제거
+    function removeCategory() {
+        $("#categoryText").val(""); // display the selected text
+        $("#search_cate").val(""); // display the selected text
+        $("#categoryText").attr('readonly', false);
+    }
+
+
+
+    //지도 그리기
+    function drawRegionsMap() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'Count');
+
+        //국기
+        data.addColumn({
+            type: 'string',
+            role: 'tooltip',
+            'p': {'html': true}//added html version
+        });
+
+        data.addRows(array)
+
+        var options = {
+            legend: 'none',
+            tooltip: {isHtml: true},
+        };
+
+        var options2 = {
+            region: currentContinent,
+            legend: 'none',
+            tooltip: {isHtml: true},
+        }
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        //지도에서 국가 선택할 때
+        function myClickHandler() {
+            countryId = countryMap[data.getValue(chart.getSelection()[0].row, 0)]
+
+            document.getElementById('chart_div').style.display="";
+            document.getElementById('regions_div').style.display='none';
+            document.getElementById('regionbutton').style.display='none';
+
+            getCategory_depth1();
+        }
+
+        google.visualization.events.addListener(chart, 'select', myClickHandler);
+
+
+        //참고링크: https://developers.google.com/chart/interactive/docs/gallery/geochart#Continent_Hierarchy
+        //대륙 all
+        if(currentContinent == 'all') chart.draw(data, options);
+        //대륙선택
+        else chart.draw(data, options2);
+
+    }
+
+    function htmlDecode(input){
+        var e = document.createElement('div');
+        e.innerHTML = input;
+        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+    }
+
+
+    //검색 버튼 이벤트
+    function search(num) {
+
+        var search_type = "";
+        var country_id= "";
+        var search_txt = "";
+        var search_bn = "";
+        var search_pg = "";
+        var search_cate = "";
+        var categoryText = $("#categoryText").val();
+
+        var url = "/company/search?pageNum=1" + "&search_type=" + search_type + "&country_id=" + country_id + "&search_txt=" + search_txt +
+            "&search_bn=" + search_bn + "&search_pg=" + search_pg + "&search_cate=" + search_cate + "&categoryText=" + categoryText;
+
+        window.location.href = url;
+    }
+
+
+
+    //지도에서 국가를 선택하면 국가에 따른 카테고리 비율을 DB에서 가져옴
+    var category_array = []; //카테고리
+    var categoryMap = {};
+    var country_name;
+    var totalCount = 0;
+    var totalCount2=0;
+
+    function getCategory_depth1()
+    {
+        var categoryId;
+        var category_name="";
+        var total;
+        var depth;
+        var parentId;
+
+        $.ajax({
+            type: "POST",
+            url: "/autoinmap/getcategory",
+            dataType: "json",
+            data: {
+                'countryId' : countryId
+            },
+            success: function (data) {
+                country_name = data.country[0].country_name;
+                category_array.push([country_name,null,0]);
+
+                for(var i=0; i<data.data.length;i++)
+                {
+                    category_name = data.data[i].cn;
+                    categoryId = data.data[i].caid;
+                    categoryMap[categoryId] = category_name;
+                    depth = data.data[i].dp;
+                    parentId = data.data[i].cp;
+                    total = data.data[i].total;
+
+                    if(depth == 1)
+                    {
+                        totalCount += Number(total);
+                        category_array.push([category_name,country_name,total]);
+                    }
+                    else{
+                        var parentName = categoryMap[parentId];
+                        console.log(category_name + " ::: " + parentName);
+                        totalCount2 += Number(total);
+                        category_array.push([category_name,parentName,total]);
+                    }
+
+                }
+                google.charts.load('current', {'packages':['treemap']});
+                google.charts.setOnLoadCallback(drawChart);
+
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+
+
+    }
+
+
+    function drawChart() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'category');
+        data.addColumn('string', 'parent');
+        data.addColumn('number', 'total');
+
+
+        data.addRows(category_array);
+
+
+        var options = {
+            minColor: '#52CFAD',
+            midColor: '#43A691',
+            maxColor: '#36837A',
+            fontColor: 'white',
+            bold: true,
+            fontSize: 15,
+            showScale: true,
+            generateTooltip: showFullTooltip
+        }
+
+        var tree = new google.visualization.TreeMap(document.getElementById('chart_div'));
+        tree.draw(data, options);
+
+        function showFullTooltip(row, size, value) {
+            return '<div style="background:#ffffff; padding:10px;">' +
+                '<span>'+ 'Category: ' + data.getValue(row,0) + '<br>'
+                +'# of company: '+data.getValue(row, 2)+'</span>';
+        }
+
+
+    }
+
+
+</script>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #f5f8fd;
+    }
+
+    #header, #footer{
+        padding: 0;
+    }
+
+</style>
+</html>

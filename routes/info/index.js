@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 router.get('/about', controller.about);
-router.get('/service', controller.service);
+//router.get('/service', controller.service);
 router.get('/help', controller.help);
 router.get('/qnaForm', controller.qnaForm);
 router.post('/qnaAdd', upload.single('file_') ,controller.qnaAdd);

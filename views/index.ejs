@@ -51,7 +51,7 @@
             <div class="form-group" style="display: inline-block;">
               <div class="form-inline">
                 <div class="input-group  input-group-lg" style="width: 25cm; ">
-                  <input type="text" id="search_txt" class="form-control" placeholder="What do you need?" aria-describedby="button-addon4"
+                  <input type="text" id="search_txt" class="form-control" placeholder="What data of automotive company do you need?" aria-describedby="button-addon4"
                          style="text-align: center" onKeyDown="onKeyDown();" >
                   <div class="input-group-append" id="button-addon4">
                     <button class="btn btn-outline-secondary" type="button" style="background-color: #317376; color: #ffffff;" onClick="search('1');">
@@ -121,17 +121,6 @@
               </div>
             </div>
             <br>
-            <!-- 수정 필요 : 카테고리란 그닥 필요 없을 듯;;-->
-            <div class="form-group" style="display: inline-block; display: none;margin: 0 !important;">
-              <div class="input-group">
-                <input type="hidden" name="search_cate" id="search_cate" >
-                <input class="form-control " id="categoryText" name="categoryText" type="text" placeholder="Category" >
-                <div class="input-group-append">
-                  <button class="btn btn-sm" type="button" style="background-color: #317376; color:white;" onclick="removeCategory();">X</button>
-                </div>
-              </div>
-            </div>
-
           </div>
 
         </div>
@@ -182,7 +171,7 @@
                     <strong><%= i+1 %></strong>
                     <a href='/company/detail/<%= model.product[i].companyId %>?first=1' style="color: #317376;">
                       <span data-toggle="tooltip" data-placement="left" title="<%= model.product[i].name_eng %>">
-                       <%= model.product[i].name_eng %>></span>
+                       <%= model.product[i].name_eng %></span>
                     </a>
                     <br>
                   <% } %>
@@ -244,12 +233,9 @@
   var array = [];
   var countryMap = {};
   var countriesList = JSON.parse(htmlDecode("<%= JSON.stringify(model.countries) %>"));
-  var oldVal;
-  var arr = [];
 
   $("document").ready(function() {
 
-    $("#categoryText").autocomplete({source: arr});
 
     //지도 값 설정
     for(var i=0; i<countriesList.length; i++) {
@@ -274,8 +260,8 @@
     var search_txt = $("#search_txt").val();
     var search_bn = $("#search_bn").val();
     var search_pg = $("#search_pg").val();
-    var search_cate = $("#search_cate").val();
-    var categoryText = $("#categoryText").val();
+    var search_cate = "";
+    var categoryText = "";
 
     var url = "/company/search?pageNum=1" + "&search_type=" + search_type + "&country_id=" + country_id + "&search_txt=" + search_txt +
             "&search_bn=" + search_bn + "&search_pg=" + search_pg + "&search_cate=" + search_cate + "&categoryText=" + categoryText;

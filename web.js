@@ -100,4 +100,4 @@ app.use('/company', require('./routes/company/index'));
 app.use('/account', require('./routes/account/index'));
 app.use('/pass', require('./routes/pass/index'));
 app.use('/category', require('./routes/category/index'));
-app.use('/cart', require('./routes/cart/index'));
+app.use('/autoinmap', require('./routes/autoinmap/index'));
