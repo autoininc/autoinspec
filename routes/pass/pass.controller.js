@@ -158,7 +158,7 @@ exports.transferCreate = (req, res) => {
   });
 };
 
-//결제 성공시
+//wiretransfer - 결제 성공시
 exports.processWireTransfer = function(req, res) {
 
   var year = new Date().getFullYear();		// 현재 월 변수에 저장
@@ -307,10 +307,10 @@ exports.paypalCreate = function (req, res) {
           "payment_method": 'paypal'
       },
       "redirect_urls": {
-          /*"return_url": encodeURI('https://' + req.headers.host + '/pass/success?method=' + method + '&title=' + title + '&start=' + start + '&end=' + end + '&months=' + months + '&price=' + price),
-          "cancel_url": 'https://' + req.headers.host + '/pass/membership'*/
-          "return_url": encodeURI('http://' + req.headers.host + '/pass/success?method=' + method + '&title=' + title + '&start=' + start + '&end=' + end + '&months=' + months + '&price=' + price),
-          "cancel_url": 'http://' + req.headers.host + '/pass/membership'
+          "return_url": encodeURI('https://' + req.headers.host + '/pass/success?method=' + method + '&title=' + title + '&start=' + start + '&end=' + end + '&months=' + months + '&price=' + price),
+          "cancel_url": 'https://' + req.headers.host + '/pass/membership'
+          //"return_url": encodeURI('http://' + req.headers.host + '/pass/success?method=' + method + '&title=' + title + '&start=' + start + '&end=' + end + '&months=' + months + '&price=' + price),
+          //"cancel_url": 'http://' + req.headers.host + '/pass/membership'
       },
       "transactions": [{
           "item_list": {
@@ -435,8 +435,8 @@ exports.transactions = (req, res) => {
 
   if (!req.cookies.userObj)  {
     var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
-    //return res.redirect('https://' + req.headers.host + '/user/login?redirect=' + fullUrl);
-    return res.redirect('http://' + req.headers.host + '/user/login?redirect=' + fullUrl);
+    return res.redirect('https://' + req.headers.host + '/user/login?redirect=' + fullUrl);
+    //return res.redirect('http://' + req.headers.host + '/user/login?redirect=' + fullUrl);
   }
     let session = req.session;
 
@@ -568,10 +568,10 @@ exports.paypalCreate_coin = function (req, res) {
           "payment_method": 'paypal'
       },
       "redirect_urls": {
-          /*"return_url": 'https://' + req.headers.host + '/pass/success_coin?method=' + method + '&coin=' + coin + '&price=' + price,
-          "cancel_url": 'https://' + req.headers.host + '/pass/coin'*/
-          "return_url": 'http://' + req.headers.host + '/pass/success_coin?method=' + method + '&coin=' + coin + '&price=' + price,
-          "cancel_url": 'http://' + req.headers.host + '/pass/coin'
+          "return_url": 'https://' + req.headers.host + '/pass/success_coin?method=' + method + '&coin=' + coin + '&price=' + price,
+          "cancel_url": 'https://' + req.headers.host + '/pass/coin'
+          /*"return_url": 'http://' + req.headers.host + '/pass/success_coin?method=' + method + '&coin=' + coin + '&price=' + price,
+          "cancel_url": 'http://' + req.headers.host + '/pass/coin'*/
       },
       "transactions": [{
           "item_list": {
@@ -614,8 +614,8 @@ exports.success_coin = function(req, res) {
   
   if (!req.cookies.userObj)  {
     var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
-    //return res.redirect('https://' + req.headers.host + '/user/login?redirect=' + fullUrl);
-    return res.redirect('http://' + req.headers.host + '/user/login?redirect=' + fullUrl);
+    return res.redirect('https://' + req.headers.host + '/user/login?redirect=' + fullUrl);
+    //return res.redirect('http://' + req.headers.host + '/user/login?redirect=' + fullUrl);
   }
 
   const payerId = req.query.PayerID;
