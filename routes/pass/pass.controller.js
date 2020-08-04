@@ -27,9 +27,9 @@ var fs = require('fs');
 //페이팔 관련
 var paypal = require('paypal-rest-sdk');
 paypal.configure({
-  'mode': 'live', //sandbox or live - paypal local test용!
-  'client_id': 'AeWe0b0gXhCtWRawY_ZFhhP4ujZxf5MhVBUFi_TzPXHZcgP_xWebP1puExRFKqgfplQxtULjGnR09gph',
-  'client_secret': 'EK0S1m_-ggKOyPSm4ytH7dwhOr5ntdJGRQUiibf-wJk0ukNQPHEntNhr87FytIKEtZukUQh7ZrrtvEi4'
+  'mode': 'live', //sandbox or live
+  'client_id': 'AVTGoMn8H9F9YqVPP8EshG1M6L0BhU9zNHWfQF9u0FdJa6PTakC1b5kwlfk77cUz81s5_QxbLz1SxFc0',
+  'client_secret': 'EFAxbYLydZBVLTWyma0PRc3qZX0n2-NqOcOv8xp_gLQcM1ayqlcCKYhYydeRKqHd5cpKdA9Tz7gnQ-ol'
 });
 
 var moment = require('moment');
@@ -542,8 +542,8 @@ exports.paypalCreate_coin = function (req, res) {
   //paypal method방법(credit_card or paypal)
   var method = req.body.method;
   var coinTemp = req.body.subscriptionKey;
-  var coin;
 
+  var coin;
   var price = 0;
 
   //가격 설정
@@ -599,7 +599,6 @@ exports.paypalCreate_coin = function (req, res) {
     } else {
 
       for(let i = 0;i < payment.links.length;i++){
-
         //승인된다면
         if(payment.links[i].rel === 'approval_url'){
           res.redirect(payment.links[i].href);
