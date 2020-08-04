@@ -1447,14 +1447,17 @@
       function write_row(id, count) {
 
             var data = $('textarea[id=' + id +'-data]').val();
-
             $('textarea[id=' + id +'-data]').val("");
-            var rows = data.split("\n");
 
+            console.log(data);
+            var rows = data.split("\n");
+            console.log(rows);
             document.getElementById(id +'-data').value = "";
 
             for(var y in rows) {
                 var cells = rows[y].split("\t");
+                console.log(cells);
+
                 var row = $('<tr />');
 
                 //row 삭제 버튼
@@ -1481,7 +1484,7 @@
 
             var data = $('textarea[id=' + id +'-data]').val();
             $('textarea[id=' + id +'-data]').val("");
-            var rows = data.split("\n");
+            var rows = data.split("\t");
             document.getElementById(id +'-data').value = "";
 
             var arr = [];
@@ -1548,6 +1551,7 @@
 
             for(var y in rows) {
                 var cells = rows[y].split("\t");
+                console.log(cells);
                 var row = $('<tr />');
 
                 //row 삭제 버튼

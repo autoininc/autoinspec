@@ -15,7 +15,7 @@ exports.list = (req, res) =>
 {
     const pageNum = Number(req.query.pageNum) || 1; // NOTE: 쿼리스트링으로 받을 페이지 번호 값, 기본값은 1
     const contentSize = 10; // NOTE: 페이지에서 보여줄 컨텐츠 수.
-    const pnSize = 10; // NOTE: 페이지네이션 개수 설정.
+    const pnSize = 10;// NOTE: 페이지네이션 개수 설정.
     const skipSize = (pageNum - 1) * contentSize; // NOTE: 다음 페이지 갈 때 건너뛸 리스트 개수.
 
     var country_id = req.query.country || 0;
@@ -75,11 +75,20 @@ exports.list = (req, res) =>
 
 exports.consultForm = (req, res) =>
 {
+    
+    //페이지네이션 기능 추가해야 함
+    //보이는 글자수 제한 추가해야함
     let model_consult = {};
     var company_id = req.query.id; //고객관리시스템 메인페이지에서 업체 선택하면 해당 업체 페이지로 넘어옴
 
+    const pageNum = Number(req.query.pageNum) || 1; // NOTE: 쿼리스트링으로 받을 페이지 번호 값, 기본값은 1
+    const contentSize = 5; // NOTE: 페이지에서 보여줄 컨텐츠 수.
+    const pnSize = 5;// NOTE: 페이지네이션 개수 설정.
+    const skipSize = (pageNum - 1) * contentSize; // NOTE: 다음 페이지 갈 때 건너뛸 리스트 개수.
+
     var sql_getCompanyInfo = 'SELECT * from managerInfo where company_id = ' +company_id; //담당자 정보 가져오기
-    var sql_getConsultList = 'SELECT * from consult WHERE company_id = '+company_id; //상담 내용 전부 가져오기
+    var sql_getConsultList = "SELECT * from consult WHERE company_id = "+company_id + " ORDER BY consult_date DESC;"; //상담 내용 전부 가져오기
+    var sql_countConsult = 'SELECT * from consult WHERE company_id = ' +company_id;
     var sql_getConsultName = 'SELECT last_name, first_name from users where id = ' //상담자 이름 DB에서 가져오기
     var sql_getInnerlevel = 'SELECT innerlevel from company_innerlevel where company_id = ' + company_id;
     var myname = req.cookies.userObj.id;
@@ -89,6 +98,23 @@ exports.consultForm = (req, res) =>
     model_consult.name = connection.query(sql_getConsultName, [myname]); //상담자 이름 가져오기
     model_consult.manager = connection.query(sql_getCompanyInfo); //상담자 정보 가져오기
     let inlevel = connection.query(sql_getInnerlevel);
+    var rowCount = connection.query(sql_countConsult);
+
+    var totalCount = Number(rowCount[0].cnt); // NOTE: 전체 글 개수.
+    var pnTotal = Math.ceil(totalCount / contentSize); // NOTE: 페이지네이션의 전체 카운트
+    var pnStart = ((Math.ceil(pageNum / pnSize) - 1) * pnSize) + 1; // NOTE: 현재 페이지의 페이지네이션 시작 번호.
+    let pnEnd = (pnStart + pnSize) - 1; // NOTE: 현재 페이지의 페이지네이션 끝 번호.
+
+    if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
+    const result = {
+        totalCount,
+        pageNum,
+        pnStart,
+        pnEnd,
+        pnTotal,
+        contents: rs_search_list,
+        countriesList: rs_country
+    };
 
     //회사 정보 상담 입력 페이지에 뿌리기
     res.render('admin/customerManagement/consultingView', {model_consult:model_consult, company_id: company_id, innerlevel:inlevel, userObj: req.cookies.userObj});

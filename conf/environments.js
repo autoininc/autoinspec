@@ -41,5 +41,5 @@ const environments = {
 
 //로컬 작업시 : development
 //서버 작업시: production
-const nodeEnv =  process.env.NODE_ENV || 'production';
+const nodeEnv =  process.env.NODE_ENV || 'development';
 exports.info = environments[nodeEnv].mysql;

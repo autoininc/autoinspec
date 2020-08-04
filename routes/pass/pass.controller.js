@@ -27,9 +27,9 @@ var fs = require('fs');
 //페이팔 관련
 var paypal = require('paypal-rest-sdk');
 paypal.configure({
-  'mode': 'sandbox', //sandbox or live - paypal local test용!
-  'client_id': 'Aa6b2sCxlNbK8iJEAQwSq9HoD8aQjzOBSAYNbqW__JjWjtzcQzogyUwJikMAis22kKI87nZj9W0l_IYn',
-  'client_secret': 'EK08BO0p6CzmisVklCVcvW5o0p309mVmkIL6cKiXfvFYd1XWzIMIarQyEqEBa9iZ0V4WThMcyRkKy-EJ'
+  'mode': 'live', //sandbox or live - paypal local test용!
+  'client_id': 'AeWe0b0gXhCtWRawY_ZFhhP4ujZxf5MhVBUFi_TzPXHZcgP_xWebP1puExRFKqgfplQxtULjGnR09gph',
+  'client_secret': 'EK0S1m_-ggKOyPSm4ytH7dwhOr5ntdJGRQUiibf-wJk0ukNQPHEntNhr87FytIKEtZukUQh7ZrrtvEi4'
 });
 
 var moment = require('moment');
@@ -103,7 +103,6 @@ exports.selMethod = (req, res) => {
             console.log(err);
             res.end();
         } else {
-            console.log(req.body.pass_num);
             cur = rs[0].value;
             res.render("pass/selMethod", {
                 session : session,
@@ -511,7 +510,6 @@ exports.selMethod_coin = (req, res) => {
     map['coin100'] = { coin: '100 coin', price:'50' };
     map['coin200'] = { coin: '200 coin', price:'100' };
   let session = req.session;
-    console.log(req.body.radio_btn);
 
     connection.query('SELECT value FROM currencies WHERE defaultYN=' + '\'Y\';', (err,rs) => {
         if (err) {

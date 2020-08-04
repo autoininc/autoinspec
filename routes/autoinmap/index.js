@@ -5,6 +5,6 @@ const controller = require('./autoinmap.controller');
 
 
 router.get('/autoinmap', controller.autoinmap);
-router.post('/getcategory', controller.getCategory1);
+router.post('/getcategory', controller.getCategory);
 
 module.exports = router;

@@ -5,15 +5,17 @@ const connection = mysql.createConnection(config.info);
 const mysql2 = require('sync-mysql'); //원래 javascript는 비동기인데 sync-mysql로 동기 설정 가능
 var connection2 = new mysql2(config.info);
 
+
 //autoinmap 첫 화면
 exports.autoinmap = (req, res) => {
     let model = {};
-    var countries_result, category1, category2, category3;
+    var countries_result, category1, category2;
     var sql_infoCountry, sql_category1, sql_category2;
 
     sql_infoCountry = 'SELECT a.id, a.country_name, a.code, COUNT(b.id) as count FROM countries a LEFT OUTER JOIN company b ON a.id = b.country_id WHERE a.showYN = "Y"  GROUP BY a.id ORDER BY id DESC; ';
     sql_category1 = 'SELECT id, category_name from category where depth=1;';
     sql_category2 = 'SELECT parent_id, category_name from category where depth=2; ';
+
 
 
 
@@ -26,9 +28,11 @@ exports.autoinmap = (req, res) => {
             res.end();
         } else {
             countries_result = result;
+
             model.countries = countries_result;
             model.category1 = category1;
             model.category2 = category2;
+
             res.render("autoinmap/autoinmap", {model: model, userObj: req.cookies.userObj});
         }
     });
@@ -36,8 +40,9 @@ exports.autoinmap = (req, res) => {
 };
 
 
-//지도에서 국가 선택시
-exports.getCategory1 = (req, res) => {
+//지도에서 국가 선택시 treemap 나오기
+//카테고리 depth2까지 나옴
+exports.getCategory = (req, res) => {
     var jsondata = req.body;
     var result;
     var countryId = jsondata['countryId'];
@@ -47,6 +52,7 @@ exports.getCategory1 = (req, res) => {
     var countryName = connection2.query(sql_countryName);
 
     //국가 선택시 depth1의 각 카테고리 별로 합계 가져오기
+    //복잡한데... 이것밖에 답이 없었어요... 진짜 죄송해요...
     var sql_depth1 =
         "SELECT k.cn, k.caid, k.dp, k.cp, SUM(k.p11+k.p21+k.p31+k.p41) AS total from (\n" +
         "SELECT ca.id AS caid, ca.category_name AS cn, ca.depth AS dp, ca.parent_id AS cp,\n" +
@@ -81,5 +87,6 @@ exports.getCategory1 = (req, res) => {
         "group by k.caid;"
 
     result = connection2.query(sql_depth1);
+
     res.status(200).json({ 'data': result, 'country':countryName});
 };

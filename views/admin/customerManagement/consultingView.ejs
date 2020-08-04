@@ -203,15 +203,16 @@
                                                 </form>
                                             </div>
                                             <div class="modal-footer">
+                                                <!-- 수정 버튼 누르면 MySQL test table에 상담 내용들이 업데이트됩니다.-->
+                                                <button type="button"  class="btn btn-primary" data-toggle="modal" onclick="ModifyInnerlevel()" id="innerlevelModifyBtn"
+                                                        style="display: none">등급수정</button>
+                                                <button type="button"  class="btn btn-primary" data-dismiss="modal" id="consultModifyConfirm"
+                                                        style="display: none" onclick="ModifyConfirm()">수정</button>
                                                 <!-- 확인 버튼 누르면 MySQL test table에 상담 내용들이 추가됩니다.-->
                                                 <button type="button"  class="btn btn-primary" data-dismiss="modal" id="consultConfirm" onclick="confirmConsulting()">확인</button>
                                                 <button type="button"  class="btn btn-primary" data-toggle="modal" onclick="InnerLevelInfo()" id="innerlevelBtn">등급추가</button>
                                                 <!-- 여기서부터~ 상담 목록에 있는 수정 버튼을 클릭하면 나오는 버튼들-->
-                                                <!-- 수정 버튼 누르면 MySQL test table에 상담 내용들이 업데이트됩니다.-->
-                                                <button type="button"  class="btn btn-primary" data-toggle="modal" onclick="ModifyInnerlevel()" id="innerlevelModifyBtn"
-                                                style="display: none">등급수정</button>
-                                                <button type="button"  class="btn btn-primary" data-dismiss="modal" id="consultModifyConfirm"
-                                                        style="display: none" onclick="ModifyConfirm()">수정</button>
+
                                                 <!-- 취소 버튼 누르면 상담 페이지로 이동하여 수정 페이지를 벗어납니다.-->
                                                 <button type="button" class="btn btn-primary" data-toggle="modal" style="display: none"
                                                         id="modifycancelBtn"  data-whatever="@mdo" onclick="ModifyCancel()">취소</button>
@@ -248,6 +249,7 @@
         if($("#lCnt").val() > 0)
         {
             document.getElementById('innerlevelBtn').style.display="none";
+            document.getElementById('innerlevelModifyBtn').style.display="";
         }
 
     })
@@ -349,6 +351,7 @@
         var incontent = $("#Content").val();
         var inremark = $("#Remark").val();
         var level = $("#company_level").val();
+
 
         $.ajax({
             type: "POST",

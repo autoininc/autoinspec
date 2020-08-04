@@ -26,9 +26,6 @@
     <!-- Google geo chart-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-    <!-- Google tree map chart-->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
 
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -46,12 +43,18 @@
         <section>
             <header class="section-header">
                 <h3>AUTOIN MAP</h3>
-                <p>You can see whatever you want!</p>
+                <p>What type of data do you want to see?
+                <br>
+                    <select class="menu-select" id="selectMenu" onchange="setSelectBox();">
+                        <option id="countryOption" value="1" selected >COUNTRY</option>
+                        <option id="categoryOption" value="2" >CATEGORY</option>
+                    </select></p>
+
             </header>
         </section>
 
         <!-- 여기서부터~ 카테고리 검색창-->
-        <div class="row">
+        <div class="row" id="category">
             <div class="col-lg-1 grid-margin stretch-card"></div>
             <div class="col-lg-10 grid-margin stretch-card">
                 <div class="input-group">
@@ -67,65 +70,160 @@
         </div>
         <!-- ~여기까지 -->
 
-        <!-- 여기서부터~ 왼쪽 카테고리 목록-->
         <div class="row">
-            <div class="col-lg-3 grid-margin stretch-card" style="overflow-x: auto;">
-                <div class="card" style="overflow-x: auto;">
-                    <h3 style="font-size: 15px; margin-top: 10px; text-align: center">CATEGORY</h3>
-                    <div class="dropdown-divider"></div>
-                        <% if(model.category1.length > 0) {%>
-                            <% for(var i=0; i<model.category1.length;i++) { %>
-                                <li class="nav-item" style="list-style: none">
-                                    <a class="nav-link" data-toggle="collapse" aria-expanded="false" href="#cat<%= model.category1[i].id%>" aria-controls="cat<%= model.category1[i].id%>">
-                                        <span class="menu-title" style="color: #317376;"> <%= model.category1[i].category_name %> </span>
-                                        <i class="menu-arrow"></i>
-                                    </a>
-                                    <div class="collapse" id="cat<%= model.category1[i].id %>">
-                                        <ul class="nav flex-column sub-menu" style="padding-left: 30px; list-style: square">
-                                            <% for(var j=0;j<model.category2.length;j++) { %>
-                                                <% if(model.category1[i].id == model.category2[j].parent_id) { %>
-                                                    <li class="nav-item" style="color: #317376;">
-                                                        <a><%= model.category2[j].category_name %></a>
-                                                    </li>
-                                                <% } %>
-                                            <% } %>
-                                        </ul>
-                                    </div>
-                                </li>
-                            <% } %>
+            <!-- 여기서부터~ 왼쪽 country 목록-->
+            <div class="col-lg-2 grid-margin stretch-card" style="overflow-x: auto;" id="countryMenu">
+                <div class="card"  style="overflow-x: auto;">
+                    <span style="text-align: center; margin-top: 10px; color: #317376;"> <strong>COUNTRY</strong></span>
+                    <div class="dropdown-divider">
+                    </div>
+                    <% if(model.countries.length > 0) {%>
+                        <% for(var i=0; i<model.countries.length;i++) { %>
+                            <div class="btn-group dropup" style="text-align: center">
+                                <button class="btn btn-secondary btn-sm " type="button"
+                                        style="color: #317376; background-color: #ffffff; border: none; box-shadow: none; text-transform: uppercase" name="categoryCountries"
+                                        value="<%= model.countries[i].id %>">
+                                    <%= model.countries[i].country_name %>
+                                </button>
+                            </div>
                         <% } %>
+                    <% } %>
+                </div>
+            </div>
+            <!-- ~여기까지 -->
+            <!-- 여기서부터~ 왼쪽 category 목록 hide -->
+            <div class="col-lg-3 grid-margin stretch-card" style="overflow-x: auto; display: none" id="categoryMenu">
+                <div class="card"  style="overflow-x: auto;">
+                    <span style="text-align: center; margin-top: 10px; color: #317376;"> <strong>CATEGORY</strong></span>
+                    <div class="dropdown-divider">
+                    </div>
+
+                    <!-- 이 부분에 카테고리 depth2까지 목록 만들어서 넣기-->
+                    <% if(model.category1.length > 0) {%>
+                        <% for(var i=0; i<model.category1.length;i++) { %>
+                            <div class="btn-group dropup" style="text-align: center">
+                                <button class="btn btn-secondary btn-sm " type="button"
+                                        style="color: #317376; background-color: #ffffff; border: none; box-shadow: none; text-transform: uppercase" name="categoryCountries"
+                                        value="<%= model.category1[i].id %>">
+                                   <%= model.category1[i].category_name %>
+                                </button>
+                            </div>
+                        <% } %>
+                    <% } %>
                 </div>
             </div>
             <!-- ~여기까지 -->
 
-            <!-- 여기서부터~ 지도 -->
-            <div class="col-lg-9 grid-margin stretch-card" style="overflow-x: auto;">
+            <!-- 여기서부터~ chart 영억 -->
+            <div class="col-lg-10 grid-margin stretch-card" style="overflow-x: auto;" id="countryChart">
                 <div class="card" style="overflow-x: auto;">
                     <div class="card-body" style="padding: 0 !important;">
-                        <div id="regions_div" style="height: 600px;"></div>
+
+                        <!-- 여기서부터~ geo chart (지도) -->
+                        <div id="regions_div"></div>
+                        <!-- ~여기까지 -->
+
+                        <!-- 여기서부터~ treemap chart -->
                         <div id="chart_div" style="display: none;height: 600px;">
-                            <input id="category" name="total" type="hidden"/>
+                            <input id="chartKey" name="chartKey" type="hidden" value="true"/>
                         </div>
+                        <!-- ~여기까지 -->
+
+
                         <div id="regionbutton" style="text-align: center">
-                            <input type="radio" name="region" id="all" value="all" checked /><label for="all">All</label>
-                            <input type="radio" name="region" id="africa" value="002" /><label for="africa">Africa</label>
-                            <input type="radio" name="region" id="americas" value="019" /><label for="americas">Americas</label>
-                            <input type="radio" name="region" id="europe" value="150" /><label for="europe">Europe</label>
-                            <input type="radio" name="region" id="asia" value="142" /><label for="asia">Asia/Middle East</label>
+                            <div class="btn-group dropup" style="text-align: center">
+                                <button class="btn btn-secondary btn-sm"
+                                        value="world" style="color: #317376; background-color: #ffffff; border: none; box-shadow: none" name="region" >
+                                    <strong>WORLD</strong>
+                                </button>
+                            </div>
+                            <div class="btn-group dropup" style="text-align: center">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        style="color: #317376; background-color: #ffffff; border: none; box-shadow: none"
+                                        value="142" name="region">
+                                    ASIA
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-lg-right">
+                                    <button class="dropdown-item" name="region" value="143">Central</button>
+                                    <button class="dropdown-item" name="region" value="030">Eastern</button>
+                                    <button class="dropdown-item" name="region" value="034">Southern</button>
+                                    <button class="dropdown-item" name="region" value="035">South-Eastern</button>
+                                    <button class="dropdown-item" name="region" value="145">Western</button>
+                                </div>
+                            </div>
+                            <div class="btn-group dropup" style="text-align: center">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        style="color: #317376; background-color: #ffffff; border: none; box-shadow: none"
+                                        value="019" name="region">
+                                    AMERICA
+                                </button>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item" name="region" value="021">Northen</button>
+                                    <button class="dropdown-item" name="region" value="029">Caribbean</button>
+                                    <button class="dropdown-item" name="region" value="013">Central</button>
+                                    <button class="dropdown-item" name="region" value="005">South</button>
+                                </div>
+                            </div>
+                            <div class="btn-group dropup" style="text-align: center">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        style="color: #317376; background-color: #ffffff; border: none; box-shadow: none"
+                                        value="150" name="region">
+                                    EUROPE
+                                </button>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item" name="region" value="154">Northern</button>
+                                    <button class="dropdown-item" name="region" value="155">Western</button>
+                                    <button class="dropdown-item" name="region" value="151">Eastern</button>
+                                    <button class="dropdown-item" name="region" value="039">Southern</button>
+                                </div>
+                            </div>
+                            <div class="btn-group dropup" style="text-align: center">
+                                <button class="btn btn-secondary btn-sm" type="button" aria-haspopup="true" aria-expanded="false"
+                                        value="009" style="color: #317376; background-color: #ffffff; border: none; box-shadow: none" name="region" >
+                                    OCEANIA
+                                </button>
+                            </div>
+                            <div class="btn-group dropup" style="text-align: center">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-toggle-split" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        style="color: #317376; background-color: #ffffff; border: none; box-shadow: none"
+                                        value="002" name="region">
+                                    AFRICA
+                                </button>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item" name="region" value="015">Northern</button>
+                                    <button class="dropdown-item" name="region" value="011">Western</button>
+                                    <button class="dropdown-item" name="region" value="017">Middle</button>
+                                    <button class="dropdown-item" name="region" value="014">Eastern</button>
+                                    <button class="dropdown-item" name="region" value="018">Southern</button>
+                                </div>
+                            </div>
                         </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- ~여기까지 -->
+            <div class="col-lg-9 grid-margin stretch-card" style="overflow-x: auto; display: none" id="categoryChart">
+                <div class="card" style="overflow-x: auto;">
+                    <div class="card-body" style="padding: 0 !important;">
+
+                        <!-- 여기서부터~ treemap chart -->
+                        <div id="chart_div2" style="display: none;height: 600px;">
+                            <input id="chartKey" name="chartKey" type="hidden" value="true"/>
+                        </div>
+                        <!-- ~여기까지 -->
+
                     </div>
                 </div>
             </div>
             <!-- ~여기까지 -->
         </div>
-
-
     </div>
-
-
+    <%- include ('../layout/footer.ejs') -%>
 </div>
 
-<%- include ('../layout/footer.ejs') -%>
+
 
 </body>
 
@@ -138,22 +236,26 @@
     var currentContinent;
     var countryId;
 
+    //country 선택
+    //지도에서 국가를 선택하면 국가에 따른 카테고리 비율을 DB에서 가져옴
+    var country_category_array = []; //카테고리
+    var country_categoryMap = {};
+    var country_name;
+    var totalCount = 0;
+    var totalCount2 = 0;
+
+    //category 선택
+    var category_arra = [];
+    var categoryMap = {};
+    var countriesList = JSON.parse(htmlDecode("<%= JSON.stringify(model.countries) %>"));
+
+
 
     //for cateogry search
     var oldVal;
     var arr = [];
 
     $("document").ready(function() {
-
-        //라디오버튼 선택시 대륙 변경
-        $('input[name="region"]').on('click', function () {
-            if ($(this).val() != currentContinent) {
-                console.log("이전값: " + currentContinent);
-                currentContinent = $(this).val();
-                console.log("바뀐값: " + $(this).val());
-                google.charts.setOnLoadCallback(drawRegionsMap);
-            }
-        });
 
 
         //지도에 data 값 추가하기
@@ -163,8 +265,6 @@
             countryMap[countriesList[i].country_name] = countriesList[i].id;
         }
 
-
-
         //지도 사용을 위한 API key 값 설정하는 함수
         google.charts.load('current', {
             'packages': ['geochart'],
@@ -172,7 +272,26 @@
         });
         google.charts.setOnLoadCallback(drawRegionsMap);
 
+        //카테고리 treemap chart 설정 함수
+        google.charts.load('current', {'packages':['treemap']});
+        google.charts.setOnLoadCallback(drawChartforCateogry);
 
+
+        //대륙선택
+        $('button[name="region"]').on('click', function () {
+            if ($(this).val() != currentContinent) {
+                currentContinent = $(this).val();
+                google.charts.setOnLoadCallback(drawRegionsMap);
+            }
+        });
+
+
+        //왼쪽 국가 선택
+        $('button[name="categoryCountries"]').on('click', function () {
+            countryId = $(this).val();
+            country_category_array = [];
+            getCategory_depth1();
+        });
 
 
 
@@ -241,13 +360,13 @@
 
     });
 
+
     //카테고리 제거
     function removeCategory() {
         $("#categoryText").val(""); // display the selected text
         $("#search_cate").val(""); // display the selected text
         $("#categoryText").attr('readonly', false);
     }
-
 
 
     //지도 그리기
@@ -281,12 +400,7 @@
 
         //지도에서 국가 선택할 때
         function myClickHandler() {
-            countryId = countryMap[data.getValue(chart.getSelection()[0].row, 0)]
-
-            document.getElementById('chart_div').style.display="";
-            document.getElementById('regions_div').style.display='none';
-            document.getElementById('regionbutton').style.display='none';
-
+            countryId = countryMap[data.getValue(chart.getSelection()[0].row, 0)];
             getCategory_depth1();
         }
 
@@ -327,12 +441,7 @@
 
 
 
-    //지도에서 국가를 선택하면 국가에 따른 카테고리 비율을 DB에서 가져옴
-    var category_array = []; //카테고리
-    var categoryMap = {};
-    var country_name;
-    var totalCount = 0;
-    var totalCount2=0;
+
 
     function getCategory_depth1()
     {
@@ -341,6 +450,13 @@
         var total;
         var depth;
         var parentId;
+
+        document.getElementById('chart_div').style.display = "";
+        document.getElementById('regions_div').style.display = 'none';
+        document.getElementById('regionbutton').style.display = 'none';
+        $("#chartKey").val('false');
+
+
 
         $.ajax({
             type: "POST",
@@ -351,13 +467,13 @@
             },
             success: function (data) {
                 country_name = data.country[0].country_name;
-                category_array.push([country_name,null,0]);
+                country_category_array.push([country_name,null,0]);
 
                 for(var i=0; i<data.data.length;i++)
                 {
                     category_name = data.data[i].cn;
                     categoryId = data.data[i].caid;
-                    categoryMap[categoryId] = category_name;
+                    country_categoryMap[categoryId] = category_name;
                     depth = data.data[i].dp;
                     parentId = data.data[i].cp;
                     total = data.data[i].total;
@@ -365,19 +481,16 @@
                     if(depth == 1)
                     {
                         totalCount += Number(total);
-                        category_array.push([category_name,country_name,total]);
+                        country_category_array.push([category_name,country_name,total]);
                     }
                     else{
-                        var parentName = categoryMap[parentId];
-                        console.log(category_name + " ::: " + parentName);
+                        var parentName = country_categoryMap[parentId];
                         totalCount2 += Number(total);
-                        category_array.push([category_name,parentName,total]);
+                        country_category_array.push([category_name,parentName,total]);
                     }
-
                 }
                 google.charts.load('current', {'packages':['treemap']});
                 google.charts.setOnLoadCallback(drawChart);
-
             },
             error: function (e) {
                 console.log("ERROR : ", e);
@@ -388,6 +501,7 @@
     }
 
 
+    //country treemap chart 그리기
     function drawChart() {
 
         var data = new google.visualization.DataTable();
@@ -396,7 +510,8 @@
         data.addColumn('number', 'total');
 
 
-        data.addRows(category_array);
+
+        data.addRows(country_category_array);
 
 
         var options = {
@@ -410,18 +525,69 @@
             generateTooltip: showFullTooltip
         }
 
-        var tree = new google.visualization.TreeMap(document.getElementById('chart_div'));
-        tree.draw(data, options);
+        var countrytree = new google.visualization.TreeMap(document.getElementById('chart_div'));
+        countrytree.draw(data, options);
 
+
+        //네모칸에 마우스 올리면 정보 나옴
         function showFullTooltip(row, size, value) {
             return '<div style="background:#ffffff; padding:10px;">' +
                 '<span>'+ 'Category: ' + data.getValue(row,0) + '<br>'
                 +'# of company: '+data.getValue(row, 2)+'</span>';
         }
 
+    }
+
+    //category treemap chart 그리기
+    function drawChartforCateogry()
+    {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'category');
+        data.addColumn('string', 'parent');
+        data.addColumn('number', 'total');
+
+        data.addRows(category_array);
+
+
+        var options = {
+            minColor: '#52CFAD',
+            midColor: '#43A691',
+            maxColor: '#36837A',
+            fontColor: 'white',
+            bold: true,
+            fontSize: 15,
+            showScale: true
+        }
+
+        var countrytree = new google.visualization.TreeMap(document.getElementById('chart_div2'));
+        countrytree.draw(data, options);
+
 
     }
 
+
+    //상단 select 메뉴 부분
+    //country 선택시 1 - default 값
+    //category 선택시 2
+    function setSelectBox() {
+        var selected = ($("#selectMenu option:selected")).val();
+
+        //카테고리 선택했을 경우
+        if(selected == 2)
+        {
+            document.getElementById('countryMenu').style.display='none';
+            document.getElementById('categoryMenu').style.display='';
+            document.getElementById('countryChart').style.display='none';
+            document.getElementById('categoryChart').style.display='';
+        }
+        else
+        {
+            document.getElementById('categoryMenu').style.display='none';
+            document.getElementById('countryMenu').style.display='';
+            document.getElementById('countryChart').style.display='';
+            document.getElementById('categoryChart').style.display='none';
+        }
+    }
 
 </script>
 <style>
@@ -435,5 +601,39 @@
         padding: 0;
     }
 
+    .google-visualization-tooltip {
+        background-color: white;
+        border-radius: 6px;
+        color: #3c4043;
+        font: 400 14px/20px Roboto,Arial,Helvetica,sans-serif;
+        width: 120px;
+        padding: 2px;
+        margin-left: 2px;
+    }
+
+    .google-visualization-tooltip-item-list {
+        list-style-type: none;
+        margin: 0!important;
+        padding: 0!important;
+    }
+
+    .google-visualization-tooltip-item:first-child {
+        margin: 0!important;
+    }
+    .google-visualization-tooltip-item {
+        margin: 0!important;
+        padding: 0!important;
+    }
+
+    .menu-select{
+        color: #317376;
+        background: none;
+        border: none;
+        box-shadow: none;
+        font-weight: bold;
+        text-align-last: center;
+        font-size: larger;
+        height: 40px;
+    }
 </style>
 </html>
