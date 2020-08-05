@@ -425,7 +425,6 @@ exports.success = function(req, res) {
                     throw err;
                   });
                 }
-                console.log('success!');
                 res.send('<script>alert("complete!"); opener.location.reload(true); self.close();</script>');
               });
             });
@@ -474,7 +473,6 @@ exports.transactions = (req, res) => {
                 console.log(err);
                 res.end();
             } else {
-                console.log(rs)
             if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
             const result = {
                 totalCount,
@@ -716,7 +714,6 @@ exports.success_coin = function(req, res) {
                         throw err;
                       });
                     }
-                    console.log('success!');
                     res.send('<script>alert("complete!"); opener.location.reload(true); self.close();</script>');
                   });
                 });
@@ -805,11 +802,12 @@ exports.processWireTransfer_coin = function(req, res) {
         if (err) { throw err; }
 
         var obj = {
-          userId: req.cookies.userObj.id,
-          status: 0,
-          coin: req.body.coin,
-          createdAt: createdAt
-      }
+            userId: req.cookies.userObj.id,
+            status: 0,
+            coin: req.body.coin,
+            createdAt: createdAt,
+            ppId: 0
+        }
       connection.query('INSERT INTO coin SET ? ', obj, function(err, result) {
 
         if (err) { 
@@ -878,8 +876,6 @@ exports.processWireTransfer_coin = function(req, res) {
                   smtpTransport.sendMail(mailOpt, function(err, res) {
                     if (err) {
                         console.log(err);
-                    } else {
-                            console.log('email has been sent.');
                     }
                     smtpTransport.close();
                   });
@@ -991,7 +987,6 @@ exports.useCoin = function (req, res) {
           } else {
             set_coin = detail_coin;
           }
-          console.log(set_coin);
 
           var obj2 = {
             userId: req.cookies.userObj.id,
@@ -1283,7 +1278,6 @@ exports.sendBonusCoin = function(req, res) {
                   throw err;
                 });
               }
-              console.log('success!');
               res.send('<script>alert("complete!"); opener.location.reload(true); self.close();</script>');
             });
         });
