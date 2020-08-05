@@ -27,11 +27,13 @@ var fs = require('fs');
 //페이팔 관련
 var paypal = require('paypal-rest-sdk');
 paypal.configure({
-  'mode': 'live', //sandbox or live
     //for sandbox
-    /*'client_id': 'AeWe0b0gXhCtWRawY_ZFhhP4ujZxf5MhVBUFi_TzPXHZcgP_xWebP1puExRFKqgfplQxtULjGnR09gph',
-     'client_secret':'EK0S1m_-ggKOyPSm4ytH7dwhOr5ntdJGRQUiibf-wJk0ukNQPHEntNhr87FytIKEtZukUQh7ZrrtvEi4'*/
+    /*'mode': 'sandbox', //sandbox or live
+    'client_id': 'AeWe0b0gXhCtWRawY_ZFhhP4ujZxf5MhVBUFi_TzPXHZcgP_xWebP1puExRFKqgfplQxtULjGnR09gph',
+    'client_secret':'EK0S1m_-ggKOyPSm4ytH7dwhOr5ntdJGRQUiibf-wJk0ukNQPHEntNhr87FytIKEtZukUQh7ZrrtvEi4'*/
+
     //for live
+    'mode': 'live',
     'client_id': 'AVTGoMn8H9F9YqVPP8EshG1M6L0BhU9zNHWfQF9u0FdJa6PTakC1b5kwlfk77cUz81s5_QxbLz1SxFc0',
     'client_secret': 'EFAxbYLydZBVLTWyma0PRc3qZX0n2-NqOcOv8xp_gLQcM1ayqlcCKYhYydeRKqHd5cpKdA9Tz7gnQ-ol'
 
@@ -163,7 +165,7 @@ exports.transferCreate = (req, res) => {
   });
 };
 
-//wiretransfer - 결제 성공시
+//wiretransfer subscription 결제 요청
 exports.processWireTransfer = function(req, res) {
 
   var year = new Date().getFullYear();		// 현재 월 변수에 저장
@@ -258,7 +260,7 @@ exports.processWireTransfer = function(req, res) {
                   from: 'service@autoinspec.com',
                   to: req.body.email,
                   subject: '[AUTOINSPEC] Wire Transfer',
-                  html: header_mail.getData(req.protocol + '://' + req.headers.host) + content_html.getData()
+                  html: header_mail.getData(req.protocol + '://' + req.headers.host) + content_html.getData2()
                     + footer_mail.getData(req.protocol + '://' + req.headers.host),
                   attachments: [{
                     filename: invoiceNo + '.pdf',
@@ -271,8 +273,6 @@ exports.processWireTransfer = function(req, res) {
                   smtpTransport.sendMail(mailOpt, function(err, res) {
                     if (err) {
                         console.log(err);
-                    } else {
-                            console.log('email has been sent.');
                     }
                     smtpTransport.close();
                 });
@@ -505,7 +505,7 @@ exports.coin = (req, res) => {
   });
 };
 
-// 멤버쉽 결제 확인 창 POST
+// 코인 결제
 exports.selMethod_coin = (req, res) => {
 
     var map = {};

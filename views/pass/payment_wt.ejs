@@ -125,19 +125,41 @@
             </div> 
             
             <div id="payment-wrap" class="popup-content">
-                <ul class="popup-btn-wrap" style="margin-top: 40px;"><li><button onclick="cancel();" type="button" class="btn-br-gray">Cancel</button></li> 
-                    <li><button type="button" class="btn-fill-purple" onclick="check();">Submit</button></li></ul></div> <div id="layer-popup" class="ticket-popup-wrap" style="visibility: hidden;"><div class="modal-mask"><div class="modal-wrapper02"><button type="button" class="modal-default-button"><img src="../Common/Images/pc/common/btn-popup-close.png" alt="팝업닫기"></button> <div class="modal-container"><div class="modal02-body"><div><div class="popup-content">
-                    
+                <ul class="popup-btn-wrap" style="margin-top: 40px;">
+                    <li>
+                        <button onclick="cancel();" type="button" class="btn-br-gray">Cancel</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn-fill-purple" onclick="check();">Submit</button>
+                    </li>
+                </ul>
+            </div>
+                <div id="layer-popup" class="ticket-popup-wrap" style="visibility: hidden;">
+                    <div class="modal-mask">
+                        <div class="modal-wrapper02">
+                            <button type="button" class="modal-default-button">
+                                <img src="../Common/Images/pc/common/btn-popup-close.png" alt="팝업닫기"></button>
+                            <div class="modal-container">
+                                <div class="modal02-body">
+                                    <div>
+                                        <div class="popup-content">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
+</body>
 <script>
 
     $(document).ready(function() {
         $('.countrypicker').countrypicker();
     });
 
-    function goCancel() {
-        window.close();  
-    }
     function check () {
 
         var remitterName = $("#remitterName").val();
@@ -159,13 +181,6 @@
         if (contactName == '') { 
             alert("Please provide a valid Contact Name!");
             $("#contactName").focus();
-            return;
-        }
-
-        var companyName = $("#companyName").val();
-        if (companyName == '') { 
-            alert("Please provide a valid Company Name!");
-            $("#companyName").focus();
             return;
         }
 
