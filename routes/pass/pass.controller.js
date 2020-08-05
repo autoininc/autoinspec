@@ -28,8 +28,13 @@ var fs = require('fs');
 var paypal = require('paypal-rest-sdk');
 paypal.configure({
   'mode': 'live', //sandbox or live
-  'client_id': 'AVTGoMn8H9F9YqVPP8EshG1M6L0BhU9zNHWfQF9u0FdJa6PTakC1b5kwlfk77cUz81s5_QxbLz1SxFc0',
-  'client_secret': 'EFAxbYLydZBVLTWyma0PRc3qZX0n2-NqOcOv8xp_gLQcM1ayqlcCKYhYydeRKqHd5cpKdA9Tz7gnQ-ol'
+    //for sandbox
+    /*'client_id': 'AeWe0b0gXhCtWRawY_ZFhhP4ujZxf5MhVBUFi_TzPXHZcgP_xWebP1puExRFKqgfplQxtULjGnR09gph',
+     'client_secret':'EK0S1m_-ggKOyPSm4ytH7dwhOr5ntdJGRQUiibf-wJk0ukNQPHEntNhr87FytIKEtZukUQh7ZrrtvEi4'*/
+    //for live
+    'client_id': 'AVTGoMn8H9F9YqVPP8EshG1M6L0BhU9zNHWfQF9u0FdJa6PTakC1b5kwlfk77cUz81s5_QxbLz1SxFc0',
+    'client_secret': 'EFAxbYLydZBVLTWyma0PRc3qZX0n2-NqOcOv8xp_gLQcM1ayqlcCKYhYydeRKqHd5cpKdA9Tz7gnQ-ol'
+
 });
 
 var moment = require('moment');
@@ -250,7 +255,7 @@ exports.processWireTransfer = function(req, res) {
 
                 //메일 옵션
                 var mailOpt = {
-                  from: 'autoinspec@autoinspec.com',
+                  from: 'service@autoinspec.com',
                   to: req.body.email,
                   subject: '[AUTOINSPEC] Wire Transfer',
                   html: header_mail.getData(req.protocol + '://' + req.headers.host) + content_html.getData()
@@ -271,7 +276,7 @@ exports.processWireTransfer = function(req, res) {
                     }
                     smtpTransport.close();
                 });
-                //success
+                    //success
                 res.send('<script>alert("Payment Notice will be provide your e-mail to your bank as needed."); opener.location.reload(true); self.close(); </script>');
                  
               });
@@ -858,7 +863,7 @@ exports.processWireTransfer_coin = function(req, res) {
 
                   //메일 옵션
                   var mailOpt = {
-                    from: 'autoinspec@autoinspec.com',
+                    from: 'service@autoinspec.com',
                     to: req.cookies.userObj.email,
                     subject: '[AUTOINSPEC] Wire Transfer',
                     html: header_mail.getData(req.protocol + '://' + req.headers.host) + content_html.getData()
@@ -877,7 +882,8 @@ exports.processWireTransfer_coin = function(req, res) {
                             console.log('email has been sent.');
                     }
                     smtpTransport.close();
-                });
+                  });
+
                 //success
                 res.send('<script>alert("Payment Notice will be provide your e-mail to your bank as needed."); opener.location.reload(true); self.close(); </script>');
                  
@@ -1154,7 +1160,7 @@ exports.approval = function(req, res) {
             if (payment_data.itemType == 'C') {
 
               //createdAt과 expiredAt 그리고 상태 변경
-              connection.query('UPDATE coin SET starteddAt = ?, expiredAt = ?, status = 1 WHERE id = ?; ', [start, end, payment_data.itemId], function(err, result) {
+              connection.query('UPDATE coin SET startedAt = ?, expiredAt = ?, status = 1 WHERE id = ?; ', [start, end, payment_data.itemId], function(err, result) {
 
                 if (err) { 
                   connection.rollback(function() {
@@ -1166,7 +1172,7 @@ exports.approval = function(req, res) {
                   status: 1, 
                   coin: payment_data.coin,
                   orgId: payment_data.itemId,
-                  starteddAt: start,
+                  startedAt: start,
                   expiredAt: end,
                 }
                 

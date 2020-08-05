@@ -391,15 +391,15 @@
   function payment() {
 
     var frm = document.modalForm;
-    var url    = "/pass/selMethod_coin" ;
-    var title  = "AUTOINPEC" ;
+    var url    = "/pass/coin" ;
+    var title  = "AUTOINSPEC" ;
     var status = "width = 710, height = 800, top = 100, left = 200, location = no" ;
-    window.open("", title,status); 
-                                              
-    frm.target = title;                   
-    frm.action = url;                    
-    frm.method = "post";
-    frm.submit();  
+    window.open("", title,status);
+
+    frm.target = title;
+    frm.action = url;
+    frm.method = "get";
+    frm.submit();
   }
 
     function requestCreditReport() {
@@ -425,6 +425,7 @@
                 console.log("ERROR : ", e);
             }
         });
+
     }
 
 </script>

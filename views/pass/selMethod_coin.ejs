@@ -13,7 +13,7 @@
 <body>
     <form name="payForm" action="" method="POST">
         <input id="subscriptionKey" name="subscriptionKey" type="hidden" value="<%= subscriptionKey %>"/>
-        <input id="coin" name="coin" type="hidden" value="<%= data.coin %>"/>
+        <input id="selectcoin" name="selectcoin" type="hidden" value="<%= data.coin %>"/>
         <input id="price" name="price" type="hidden" value="<%= data.price %>"/>
         <input id="method" name="method" type="hidden" value="01"/> <!-- 기본은 paypal-->
 
@@ -88,14 +88,12 @@
 
   $(document).ready(function() 
     {
-        var temp = $(':radio[name="coin"]:checked').val();
+        /* var temp = $(':radio[name="coin"]:checked').val();
         $("input:radio[name=coin]").click(function(){
             temp = $(':radio[name="coin"]:checked').val();
             $("#radio_btn").val(temp);
-            console.log("radio btn: " + temp);
-            console.log("radio btn: " + $("#radio_btn").val());
         });
-        console.log("radio btn: " + temp);
+        console.log("radio btn: " + temp); */
 
 
         $('#method_ul li').click(function(e) {

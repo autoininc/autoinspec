@@ -22,7 +22,7 @@ var nodemailer = require('nodemailer');
 var smtpTransporter = require('nodemailer-smtp-transport');
 
 //메일 서버
-var smtpTransport = nodemailer.createTransport(smtpTransporter ( {
+var smtpTransport = nodemailer.createTransport(smtpTransporter({
     service: 'Lineworks',
     host:'smtp.worksmobile.com',
     secure: true,
@@ -38,6 +38,7 @@ var smtpTransport = nodemailer.createTransport(smtpTransporter ( {
         pass:'autoin2020$',
     }
 }));
+
 
 //리스트
 exports.list = (req, res) => {
@@ -238,11 +239,12 @@ exports.sendMail = (req, res) => {
                 console.log(err);
                 res.end();
             }
+
             answerdata = result;
 
             //메일 옵션
             var mailOpt = {
-              from: 'autoinspec@autoinspec.com',
+              from: 'service@autoinspec.com',
               to: qnadata[0].email,
               subject: '[AUTOINSPEC] Q&A answer to your question',
               html: header_mail.getData(req.protocol + '://' + req.headers.host) + content_html.getData(req.protocol + '://' + req.headers.host, qnadata, answerdata)

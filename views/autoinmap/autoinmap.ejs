@@ -46,8 +46,8 @@
                 <p>What type of data do you want to see?
                 <br>
                     <select class="menu-select" id="selectMenu" onchange="setSelectBox();">
-                        <option id="countryOption" value="1" selected >COUNTRY</option>
-                        <option id="categoryOption" value="2" >CATEGORY</option>
+                        <option id="countryOption" value="1" style="background-color: #EBECF1;" selected >COUNTRY</option>
+                        <option id="categoryOption" value="2" style="background-color: #EBECF1; " >CATEGORY</option>
                     </select></p>
 
             </header>
@@ -77,16 +77,23 @@
                     <span style="text-align: center; margin-top: 10px; color: #317376;"> <strong>CATEGORY</strong></span>
                     <div class="dropdown-divider">
                     </div>
-
                     <!-- 이 부분에 카테고리 depth2까지 목록 만들어서 넣기-->
                     <% if(model.category1.length > 0) {%>
                         <% for(var i=0; i<model.category1.length;i++) { %>
-                            <div class="btn-group dropup" style="text-align: center">
-                                <button class="btn btn-secondary btn-sm " type="button"
-                                        style="color: #317376; background-color: #ffffff; border: none; box-shadow: none; text-transform: uppercase" name="categoryCountries"
-                                        value="<%= model.category1[i].id %>">
-                                   <%= model.category1[i].category_name %>
-                                </button>
+                            <a class="nav-link" data-toggle="collapse" href="#depth<%= model.category1[i].id %>" aria-expanded="false" aria-controls="depth<%= model.category1[i].id %>"
+                               style="color: #317376; background-color: #ffffff; border: none; box-shadow: none; text-transform: uppercase"
+                               name="categorydepth1" value="<%= model.category1[i].id %>">
+                                <span class="menu-title"> <strong> <%= model.category1[i].category_name %>  </strong></span>
+                                <i class="menu-arrow"></i>
+                            </a>
+                            <div class="collapse" id="depth<%= model.category1[i].id %>">
+                                <ul class="nav flex-column sub-menu">
+                                    <% for(var j=0;j<model.category2.length;j++) { %>
+                                        <% if(model.category2[j].parent_id == model.category1[i].id) { %>
+                                            <li class="nav-item" style="text-align: center; color: #317376;"> <%= model.category2[j].category_name %> </li>
+                                        <% } %>
+                                    <% } %>
+                                </ul>
                             </div>
                         <% } %>
                     <% } %>
@@ -105,7 +112,7 @@
 
                         <!-- 여기서부터~ treemap chart -->
                         <div id="chart_div" style="display: none;height: 600px;">
-                            <input id="chartKey" name="chartKey" type="hidden" value="true"/>
+                            <input id="chartKey" name="chartKey" type="hidden" value="false"/>
                         </div>
                         <!-- ~여기까지 -->
 
@@ -187,11 +194,8 @@
             <div class="col-lg-9 grid-margin stretch-card" style="overflow-x: auto; display: none" id="categoryChart">
                 <div class="card" style="overflow-x: auto;">
                     <div class="card-body" style="padding: 0 !important;">
-
                         <!-- 여기서부터~ treemap chart -->
-                        <div id="chart_div2" style="display: none;height: 600px;">
-                            <input id="chartKey" name="chartKey" type="hidden" value="true"/>
-                        </div>
+                        <div id="chart_div2" style="height: 600px;"></div>
                         <!-- ~여기까지 -->
 
                     </div>
@@ -225,9 +229,9 @@
     var totalCount2 = 0;
 
     //category 선택
-    var category_arra = [];
+    var category_arr = [];
     var categoryMap = {};
-    var countriesList = JSON.parse(htmlDecode("<%= JSON.stringify(model.countries) %>"));
+    var categoryList = JSON.parse(htmlDecode("<%= JSON.stringify(model.categories) %>"));
 
 
 
@@ -237,12 +241,31 @@
 
     $("document").ready(function() {
 
-
         //지도에 data 값 추가하기
         for(var i=0; i<countriesList.length; i++) {
             var img = '<div style="padding:5px"><img src="/img/flag/' + countriesList[i].code + '.png" >&nbsp;&nbsp;' + comma(countriesList[i].count) +'</div>'
             array.push([countriesList[i].country_name, countriesList[i].count, img]);
             countryMap[countriesList[i].country_name] = countriesList[i].id;
+        }
+
+        //tree map chart2 값 추가
+        category_arr.push(['all',null,0]);
+        for(var i=0; i<categoryList.length;i++)
+        {
+            var category_name = categoryList[i].category_name;
+            var category_Id = categoryList[i].id;
+            categoryMap[category_Id] = category_name;
+
+            var depth = categoryList[i].depth;
+            var parentId = categoryList[i].parent_id;
+            var total = categoryList[i].total;
+
+            if(depth == 1)
+                category_arr.push([category_name,'all',total]);
+            else {
+                var parentName = categoryMap[parentId];
+                category_arr.push([category_name,parentName,total]);
+            }
         }
 
         //지도 사용을 위한 API key 값 설정하는 함수
@@ -267,10 +290,9 @@
 
 
         //왼쪽 국가 선택
-        $('button[name="categoryCountries"]').on('click', function () {
-            countryId = $(this).val();
-            country_category_array = [];
-            getCategory_depth1();
+        $('button[name="categorydepth1"]').on('click', function ()
+        {
+            alert($(this).val());
         });
 
 
@@ -454,6 +476,7 @@
                     category_name = data.data[i].cn;
                     categoryId = data.data[i].caid;
                     country_categoryMap[categoryId] = category_name;
+
                     depth = data.data[i].dp;
                     parentId = data.data[i].cp;
                     total = data.data[i].total;
@@ -507,6 +530,7 @@
 
         var countrytree = new google.visualization.TreeMap(document.getElementById('chart_div'));
         countrytree.draw(data, options);
+        $("#chartKey").val('true');
 
 
         //네모칸에 마우스 올리면 정보 나옴
@@ -526,7 +550,7 @@
         data.addColumn('string', 'parent');
         data.addColumn('number', 'total');
 
-        data.addRows(category_array);
+        data.addRows(category_arr);
 
 
         var options = {
@@ -536,12 +560,21 @@
             fontColor: 'white',
             bold: true,
             fontSize: 15,
-            showScale: true
+            showScale: true,
+            height: 600,
+            width: 845,
+            generateTooltip: showFullTooltip
         }
 
-        var countrytree = new google.visualization.TreeMap(document.getElementById('chart_div2'));
-        countrytree.draw(data, options);
+        var categorytree = new google.visualization.TreeMap(document.getElementById('chart_div2'));
+        categorytree.draw(data, options);
 
+        //네모칸에 마우스 올리면 정보 나옴
+        function showFullTooltip(row, size, value) {
+            return '<div style="background:#ffffff; padding:10px;">' +
+                '<span>'+ 'Category: ' + data.getValue(row,0) + '<br>'
+                +'# of company: '+data.getValue(row, 2)+'</span>';
+        }
 
     }
 

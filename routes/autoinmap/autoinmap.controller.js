@@ -9,14 +9,30 @@ var connection2 = new mysql2(config.info);
 //autoinmap 첫 화면
 exports.autoinmap = (req, res) => {
     let model = {};
-    var countries_result, category1, category2;
-    var sql_infoCountry, sql_category1, sql_category2;
+    var category1, category2;
+    var sql_infoCountry, sql_category1, sql_category2, sql_infoCategory;
 
     sql_infoCountry = 'SELECT a.id, a.country_name, a.code, COUNT(b.id) as count FROM countries a LEFT OUTER JOIN company b ON a.id = b.country_id WHERE a.showYN = "Y"  GROUP BY a.id ORDER BY id DESC; ';
     sql_category1 = 'SELECT id, category_name from category where depth=1;';
     sql_category2 = 'SELECT parent_id, category_name from category where depth=2; ';
-
-
+    sql_infoCategory = "SELECT  ca.id, ca.category_name, ca.depth, ca.parent_id, COUNT(f.companyId) AS total\n" +
+        "FROM category AS ca\n" +
+        "LEFT JOIN \n" +
+        "(SELECT CC.id AS companyId,\n" +
+        "e.id AS p1_id, e.depth AS p1_depth,\n" +
+        "d.id AS p2_id, d.depth AS p2_depth,\n" +
+        "c.id AS p3_id, c.depth AS p3_depth,\n" +
+        "b.id AS p4_id, b.depth AS p4_depth\n" +
+        "FROM company_category a \n" +
+        "LEFT OUTER JOIN company CC ON CC.id = a.id \n" +
+        "LEFT OUTER JOIN category b  ON a.category_id = b.id \n" +
+        "LEFT OUTER JOIN category c ON b.parent_id = c.id\n" +
+        "LEFT OUTER JOIN category d ON c.parent_id = d.id\n" +
+        "LEFT OUTER JOIN category e ON d.parent_id = e.id\n" +
+        ") AS f\n" +
+        "ON ca.id = f.p1_id OR ca.id = f.p2_id OR ca.id = f.p3_id OR ca.id = f.p4_id\n" +
+        "WHERE ca.depth=1 OR ca.depth=2\n" +
+        "group by ca.id";
 
 
     category1 = connection2.query(sql_category1);
@@ -27,13 +43,14 @@ exports.autoinmap = (req, res) => {
             console.log(err);
             res.end();
         } else {
-            countries_result = result;
+            model.countries = result;
+            connection.query(sql_infoCategory, (err,result) => {
+                model.categories = result;
+                model.category1 = category1;
+                model.category2 = category2;
+                res.render("autoinmap/autoinmap", {model: model, userObj: req.cookies.userObj});
+            })
 
-            model.countries = countries_result;
-            model.category1 = category1;
-            model.category2 = category2;
-
-            res.render("autoinmap/autoinmap", {model: model, userObj: req.cookies.userObj});
         }
     });
 
@@ -59,11 +76,7 @@ exports.getCategory = (req, res) => {
         "COUNT(if(f.p1_depth=1,f.p1_id,null)) AS p11,\n" +
         "COUNT(if(f.p2_depth=1,f.p2_id,null)) AS p21,\n" +
         "COUNT(if(f.p3_depth=1,f.p3_id,null)) AS p31,\n" +
-        "COUNT(if(f.p4_depth=1,f.p4_id,null)) AS p41,\n" +
-        "COUNT(if(f.p1_depth=2,f.p1_id,null)) AS p1,\n" +
-        "COUNT(if(f.p2_depth=2,f.p2_id,null)) AS p2,\n" +
-        "COUNT(if(f.p3_depth=2,f.p3_id,null)) AS p3,\n" +
-        "COUNT(if(f.p4_depth=2,f.p4_id,null)) AS p4\n" +
+        "COUNT(if(f.p4_depth=1,f.p4_id,null)) AS p41\n" +
         "from category AS ca\n" +
         "LEFT JOIN \n" +
         "(\n" +

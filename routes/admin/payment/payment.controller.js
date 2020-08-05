@@ -8,6 +8,30 @@ var moment = require('moment');
 require('moment-timezone');
 const format = 'YYYY-MM-DD HH:mm:ss';
 
+//메일 관련
+var nodemailer = require('nodemailer');
+var smtpTransporter = require('nodemailer-smtp-transport');
+
+//메일 서버
+var smtpTransport = nodemailer.createTransport(smtpTransporter({
+    service: 'Lineworks',
+    host:'smtp.worksmobile.com',
+    secure: true,
+    port:'465',
+    tls: {
+        rejectUnauthorized: false,
+        ignoreTLS: false,
+        requireTLS: true,
+        secureProtocol: "TLSv1_method"
+    },
+    auth:{
+        user:'service@autoingroup.com',
+        pass:'autoin2020$',
+    }
+}));
+
+
+
 const queryExec = (sql, v) => new Promise ((resolve, reject) => {
     connection.query(sql, v, function (err, res) {
         if (err) {
