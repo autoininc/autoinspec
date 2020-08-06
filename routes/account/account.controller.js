@@ -210,7 +210,6 @@ exports.purchaseList = (req, res) => {
                 console.log(err);
                 res.end();
             } else {
-                console.log(rs)
             if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
             const result = {
                 totalCount,
@@ -266,7 +265,6 @@ exports.creditReportList = (req, res) => {
                 console.log(err);
                 res.end();
             } else {
-                console.log(rs)
             if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
             const result = {
                 totalCount,
@@ -322,7 +320,6 @@ exports.transactions = (req, res) => {
                 console.log(err);
                 res.end();
             } else {
-                console.log(rs)
             if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
             const result = {
                 totalCount,
@@ -389,7 +386,6 @@ exports.payList = (req, res) => {
               console.log(err);
               res.end();
           } else {
-              console.log(rs)
           if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
 
           const result = {
@@ -446,7 +442,6 @@ exports.subscriptionList = (req, res) => {
                 console.log(err);
                 res.end();
             } else {
-                console.log(rs)
             if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
             const result = {
                 totalCount,
@@ -506,7 +501,6 @@ exports.qnaList = (req, res) => {
               console.log(err);
               res.end();
           } else {
-              console.log(rs)
           if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
           const result = {
               totalCount,
@@ -543,7 +537,6 @@ exports.qnaView = (req, res) => {
                 console.log(err);
                 res.end();
             }
-            console.log(result[0])
             res.render("account/qna/view",{data:rs, answerdata: result, userObj: req.cookies.userObj});
           });
         

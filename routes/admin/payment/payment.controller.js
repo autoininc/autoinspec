@@ -8,29 +8,6 @@ var moment = require('moment');
 require('moment-timezone');
 const format = 'YYYY-MM-DD HH:mm:ss';
 
-//메일 관련
-var nodemailer = require('nodemailer');
-var smtpTransporter = require('nodemailer-smtp-transport');
-
-//메일 서버
-var smtpTransport = nodemailer.createTransport(smtpTransporter({
-    service: 'Lineworks',
-    host:'smtp.worksmobile.com',
-    secure: true,
-    port:'465',
-    tls: {
-        rejectUnauthorized: false,
-        ignoreTLS: false,
-        requireTLS: true,
-        secureProtocol: "TLSv1_method"
-    },
-    auth:{
-        user:'service@autoingroup.com',
-        pass:'autoin2020$',
-    }
-}));
-
-
 
 const queryExec = (sql, v) => new Promise ((resolve, reject) => {
     connection.query(sql, v, function (err, res) {
@@ -205,6 +182,8 @@ exports.list = (req, res) => {
     const pnSize = 10; // NOTE: 페이지네이션 개수 설정.
     const skipSize = (pageNum - 1) * contentSize; // NOTE: 다음 페이지 갈 때 건너뛸 리스트 개수.
     var status = (req.query.status == null) ? '':req.query.status;
+    var count;
+    var waitingcnt;
 
     //나라 목록
     var sql1 = 'SELECT COUNT(*) as cnt, COUNT(IF (status = 0, id, null)) as waiting, COUNT(IF (status = 1, id, null)) as complete, COUNT(IF (status = 2, id, null)) as request, COUNT(IF (status = 3, id, null)) as cancel FROM payment'
@@ -268,7 +247,9 @@ exports.list = (req, res) => {
                             contents: rs,
                             cnt: count
                         };
-                            res.render('admin/payment/payList', {model:result, comma: common.comma, moment: moment, userObj: req.cookies.userObj});
+
+
+                        res.render('admin/payment/payList', {model:result, comma: common.comma, moment: moment, userObj: req.cookies.userObj});
                     }
                 });
             }

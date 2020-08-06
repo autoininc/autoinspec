@@ -24,6 +24,7 @@ exports.search = (req, res) => {
     var search_type = req.query.search_type || 1;
     var search_txt = req.query.search_txt || "";
 
+
     //나라 목록
     var countries_sql = 'SELECT id, country_name FROM countries WHERE showYN = "Y" ORDER BY id DESC; '
 
@@ -160,6 +161,8 @@ exports.detail = (req, res) => {
     var currency;
     var coin_result;
     var user = undefined;
+    var creditreport={};
+    var creditreportOrNot = 0;
 
     //볼 권한이 있는지 체크
     //rm1 데이터 권한 체크
@@ -167,7 +170,27 @@ exports.detail = (req, res) => {
 
         //사용자 정보 조회
         var my_sql = 'SELECT * FROM users WHERE id = ' + req.cookies.userObj.id;
-        user = connection.query(my_sql); 
+        user = connection.query(my_sql);
+
+        //신용레포트 구매 신청
+        var creditReport_sql = 'SELECT COUNT(id) AS cnt, status FROM purchasedproduct WHERE userId = '+ req.cookies.userObj.id + ' AND companyId = ' + req.params.id +' AND type = \'R\';';
+        var purchase_result = connection.query(creditReport_sql);
+        if(purchase_result != undefined)
+        {
+            creditreport = {
+                creditreportOrNot: purchase_result[0].cnt,
+                creditreportStatus: purchase_result[0].status
+            };
+        }
+        else
+        {
+            creditreport = {
+                creditreportOrNot: 0,
+                creditreportStatus: 0
+            };
+        }
+
+        console.log(creditreport);
 
         //최초 조회시 최근 조회 테이블에 값 넣기
         if (req.query.first == 1) {
@@ -177,14 +200,15 @@ exports.detail = (req, res) => {
         //관리자니?
         if (req.cookies.userObj.level == 4) {
             auth_rm = true; auth_component = true;
-
         } else {
 
             //코인 조회
             var coin_sql = 'SELECT IFNULL(sum(coin), 0) as sum FROM coin WHERE status != 0 AND userId = ' + req.cookies.userObj.id;
-            coin_result = connection.query(coin_sql); 
+            coin_result = connection.query(coin_sql);
 
-            // 멤바쉽이니?
+
+
+            // 구독자라면 모든 data를 무료로 볼 수 있음
             let subscription_result = connection.query('SELECT a.start, a.end, b.status FROM subscription a LEFT OUTER JOIN payment b ON a.id = b.itemId WHERE a.userId = ? ORDER BY a.id DESC LIMIT 1; ', [ req.cookies.userObj.id ]);
             if (subscription_result != undefined && subscription_result.length > 0) {
                 //대기 전 상황 아니고 취소 상태가 아니라면
@@ -207,10 +231,9 @@ exports.detail = (req, res) => {
                 }
             } else {
 
-                //coin으로 샀니?
+                //coin으로 data 결제 했는지 확인 후 결제에 따라 data를 보여줌
                 let coin_reusult = connection.query('SELECT id, type FROM purchasedproduct WHERE userId = ? AND companyId = ? AND STR_TO_DATE( ?, "%Y-%m-%d %H:%i" ) <= STR_TO_DATE( end, "%Y-%m-%d %H:%i"); ', [ req.cookies.userObj.id, req.params.id, moment.utc().format('YYYY-MM-DD HH:mm') ]);
                 if (coin_reusult != undefined) {
-
                     if (coin_reusult.length > 0) {
                         for (var i=0; i<coin_reusult.length; i++) {
 
@@ -230,6 +253,7 @@ exports.detail = (req, res) => {
                         }
                     }
                 }
+                
             }
         }
     }
@@ -350,6 +374,8 @@ exports.detail = (req, res) => {
     model.product_group = product_group_arr;
     model.currencies = currencies;
     model.currency = currency;
+    model.purchase_credit_report = creditreport;
+
     res.render('search/detail', { model: model, moment: moment, userObj: req.cookies.userObj});
 };
 

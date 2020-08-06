@@ -200,7 +200,7 @@ exports.sendMail = (req, res) => {
             file = result;
              //메일 옵션
              var mailOpt = {
-              from: 'autoinspec@autoinspec.com',
+              from: 'service@autoinspec.com',
               to: data[0].email,
               subject: '[AUTOINSPEC] Credit report of ' + data[0].name_eng,
               html: header_mail.getData(req.protocol + '://' + req.headers.host) + content_html.getData(req.protocol + '://' + req.headers.host, data, file)

@@ -873,16 +873,18 @@ exports.processWireTransfer_coin = function(req, res) {
                     }],
                   };
                   //전송
-                  smtpTransport.sendMail(mailOpt, function(err, res) {
+                  smtpTransport.sendMail(mailOpt,function(err, res) {
                     if (err) {
                         console.log(err);
                     }
                     smtpTransport.close();
                   });
 
-                //success
-                res.send('<script>alert("Payment Notice will be provide your e-mail to your bank as needed."); opener.location.reload(true); self.close(); </script>');
-                 
+                    //success
+                    res.send('<script>alert("Payment Notice will be provide your e-mail to your bank as needed."); opener.location.reload(true); self.close(); </script>');
+
+
+
               });
                 pdfDoc.end();
               

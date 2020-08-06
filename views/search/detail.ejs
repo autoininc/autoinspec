@@ -31,6 +31,8 @@
                 <input type="hidden" id="currency-unit" value="<%= model.currency.unit %>">
                 <input type="hidden" id=coin name="coin" value="<%= model.coin %>">
                 <input type="hidden" id="subscription_member" value="<%= model.subscription_member %>">
+                <input type="hidden" id="purchase_credit_report" value=" <%= model.purchase_credit_report.creditreportOrNot %>">
+                <input type="hidden" id="purchase_credit_report_status" value=" <%= model.purchase_credit_report.creditreportStatus %>">
             
                 <% if (userObj) { %>
                 <div class="modal fade bd-example-modal-lg" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -345,46 +347,56 @@
     }
 
     function creditReportBtn() {
+        var purchaseOrNot = $("#purchase_credit_report").val();
+        var purchaseStatus = $("#purchase_credit_report_status").val();
+        if(purchaseStatus ==1 )
+            alert("You have already purchased!\n" + "Please check on your dashboard.");
+        else{
+            if(purchaseOrNot > 0 ) alert("You have already requested payment.\n" + "Manager is currently checking.");
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "/user/loginCheck",
+                    dataType: "json",
+                    data: {url: '/company/detail/' + $("#id").val()},
+                    success: function (data) {
+                        var total = 0;
 
-      $.ajax({
-          type: "POST",
-          url: "/user/loginCheck",
-          dataType: "json",
-          data: {url: '/company/detail/' + $("#id").val()},
-          success: function (data) {
-            var total = 0;
+                        if(data.result) {
+                            if ($("#subscription_member").val()) {
+                                total = 21;
+                            } else {
+                                total = 30;
+                            }
 
-              if(data.result) {
-                if ($("#subscription_member").val()) {
-                  total = 21;
-                } else {
-                  total = 30;
-                }
+                            var caltot = parseInt($("#coin").val()) - total;
+                            $("#r_c").text(caltot);
+                            $("#using").text( '' + total);
+                            $("#usingCoin").val(total);
 
-                var caltot = parseInt($("#coin").val()) - total; 
-                $("#r_c").text(caltot);
-                $("#using").text( '' + total);
-                $("#usingCoin").val(total);
+                            if (caltot < 0) {
+                                document.getElementById("purchase-lack-coin").style.display = "block";
+                                document.getElementById("creditReportSubmitBtn").style.display = "none";
 
-                if (caltot < 0) {
-                    document.getElementById("purchase-lack-coin").style.display = "block";
-                    document.getElementById("creditReportSubmitBtn").style.display = "none";
-                    
-                } else {
-                    document.getElementById("purchase-lack-coin").style.display = "none";
-                    document.getElementById("creditReportSubmitBtn").style.display = "inline";
-                }
-                $('#reportModal').modal('show')
-              } else {
-                if (confirm('Sign in is required. You will be moved to sign in page.')) {
-                  window.location.href = data.fullUrl;
-                }
-              }
-          },
-          error: function (e) {
-              alert(e.responseJSON.msg)
-          }
-      });
+                            } else {
+                                document.getElementById("purchase-lack-coin").style.display = "none";
+                                document.getElementById("creditReportSubmitBtn").style.display = "inline";
+                            }
+                            $('#reportModal').modal('show')
+                        } else {
+                            if (confirm('Sign in is required. You will be moved to sign in page.')) {
+                                window.location.href = data.fullUrl;
+                            }
+                        }
+                    },
+                    error: function (e) {
+                        alert(e.responseJSON.msg)
+                    }
+                });
+            }
+        }
+
     }
 
     //결제창 열기
@@ -417,7 +429,7 @@
             dataType: "json",
             data: {companyId: $("#companyId").val(), coin: $("#usingCoin").val(), typeR: $("#typeR").val(), email: $("#email").val() },
             success: function (data) {
-                alert(data.msg);
+                alert(data.msg + "\n You can receive this after manager checking!");
                 $("#reportModal").modal('hide');
                 window.location.href = '/company/detail/' + $("#companyId").val();
             },
