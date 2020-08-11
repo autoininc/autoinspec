@@ -729,12 +729,17 @@ exports.wishlist = (req, res) => {
     const pnSize = 10; // NOTE: 페이지네이션 개수 설정.
     const skipSize = (pageNum - 1) * contentSize; // NOTE: 다음 페이지 갈 때 건너뛸 리스트 개수.
 
+    var totalCount = 0;
+    var pnTotal = 0;
+    var pnStart = 0;
+    var pnEnd = 0;
+
     if(wresult != undefined)
     {
-        var totalCount = Number(wresult.length); // NOTE: 전체 글 개수.
-        var pnTotal = Math.ceil(totalCount / contentSize); // NOTE: 페이지네이션의 전체 카운트
-        var pnStart = ((Math.ceil(pageNum / pnSize) - 1) * pnSize) + 1; // NOTE: 현재 페이지의 페이지네이션 시작 번호.
-        let pnEnd = (pnStart + pnSize) - 1; // NOTE: 현재 페이지의 페이지네이션 끝 번호.
+        totalCount = Number(wresult.length); // NOTE: 전체 글 개수.
+        pnTotal = Math.ceil(totalCount / contentSize); // NOTE: 페이지네이션의 전체 카운트
+        pnStart = ((Math.ceil(pageNum / pnSize) - 1) * pnSize) + 1; // NOTE: 현재 페이지의 페이지네이션 시작 번호.
+        pnEnd = (pnStart + pnSize) - 1; // NOTE: 현재 페이지의 페이지네이션 끝 번호.
 
         var endCount = 0;
         if(skipSize + contentSize > totalCount) endCount = totalCount;
@@ -750,19 +755,19 @@ exports.wishlist = (req, res) => {
                 arr.push(temp);
             }
         }
-
-
-        if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
-        const result= {
-            totalCount,
-            pageNum,
-            pnStart,
-            pnEnd,
-            pnTotal,
-            list: arr
-        };
-        res.render("account/wishList",{ model: result, userObj: req.cookies.userObj})
     }
+
+    if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
+    const result= {
+        totalCount,
+        pageNum,
+        pnStart,
+        pnEnd,
+        pnTotal,
+        list: arr
+    };
+    console.log(result);
+    res.render("account/wishList",{ model: result, userObj: req.cookies.userObj})
 
 };
 
