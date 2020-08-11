@@ -766,7 +766,7 @@ exports.wishlist = (req, res) => {
         pnTotal,
         list: arr
     };
-    console.log(result);
+
     res.render("account/wishList",{ model: result, userObj: req.cookies.userObj})
 
 };
