@@ -25,12 +25,16 @@ router.get('/password', controller.password);
 router.post('/password', controller.changePassword);
 router.post('/modCurrency', controller.modCurrency);
 
+router.get('/wishList', controller.wishlist);
+router.post('/deletewishlist',controller.deletewishlist);
+
 router.get('/transactions', controller.transactions);
 router.get('/payList', controller.payList);
 router.get('/subscriptionList', controller.subscriptionList);
 
 router.get('/purchaseList', controller.purchaseList);
 router.get('/creditReportList', controller.creditReportList);
+
 
 //1:1문의 관련
 router.get('/qna/list', controller.qnaList);

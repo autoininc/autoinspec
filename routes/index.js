@@ -80,7 +80,7 @@ router.get('/', function(req, res) {
                     res.end();
                 } else {
 
-                    //carousel 리스트
+                    //carousel 리스트 //메인에 있던 이미지
                     /*connection.query(carousel_sql, function(err, result) {
 
                         carousel_result = result;
@@ -122,26 +122,28 @@ router.get('/', function(req, res) {
     });
 });
 
+//이 부분은 예전에 홈페이지 메인에 사진을 넣었는데
+//그로 인해 필요한 부분입니다.
 /*router.get('/download/:tableName/:id', function(req, res) {
 
     console.log(req.params)
 
     var sql = "SELECT path, filename FROM  " + req.params.tableName + " WHERE id = " + req.params.id;
-    
-    connection.query(sql, (err, result) => {   
-        if (err) {   
+
+    connection.query(sql, (err, result) => {
+        if (err) {
             console.log(err);
             res.end();
         } else {
-    
+
           var file = filePath + '/' + result[0].path + result[0].filename;
-        
+
           var filename = path.basename(file);
           var mimetype = mime.lookup(file);
-        
+
           res.setHeader('Content-disposition', 'attachment; filename=' + filename);
           res.setHeader('Content-type', mimetype);
-        
+
           var filestream = fs.createReadStream(file);
           filestream.pipe(res);
        }

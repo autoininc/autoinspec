@@ -50,7 +50,7 @@ exports.login = (req, res) => {
 exports.goLogin = (req, res) => {
 
   const format = 'YYYY-MM-DD HH:mm:ss';
-  //console.log(moment.utc().format(format));
+
 
     var obj
 
@@ -177,8 +177,6 @@ exports.gosign_up = (req, res, next) => {
                       smtpTransport.sendMail(mailOpt, function(err, res) {
                           if (err) {
                               console.log(err);
-                          } else {
-                              console.log('email has been sent.');
                           }
                           smtpTransport.close();
                       });
@@ -261,8 +259,6 @@ exports.createNewPassword = (req, res) => {
                     smtpTransport.sendMail(mailOpt, function(err, res) {
                         if (err) {
                             console.log(err);
-                        } else {
-                                console.log('email has been sent.');
                         }
                         smtpTransport.close();
                     });
@@ -306,3 +302,37 @@ exports.loginCheck = (req, res) => {
     res.status(200).json({ result: false, fullUrl: 'http://' + req.headers.host + '/user/login/?redirect=' + fullUrl });
 	}
 }
+
+exports.wishList = (req, res) =>
+{
+    var jsondata = req.body;
+    var companyId = jsondata['companyId'];
+    var companyName = jsondata['companyName'];
+    var company_wishlist = {};
+    var userObj = req.cookies.userObj;
+    var expiryDate = new Date( Date.now() + 60 * 60 * 1000 * 24 * 7); // 24 hour 7일 동안 저장
+    
+    //이미 wishlist 쿠키가 존재한다면
+    if(req.cookies.wishlist)
+    {
+        var arr = req.cookies.wishlist;
+    }
+    
+    //존재하지 않는다면
+    else
+    {
+        var arr = [];
+    }
+
+    company_wishlist.myId = userObj.id;
+    company_wishlist.companyId = companyId;
+    company_wishlist.companyName = companyName;
+
+    arr.push(company_wishlist);
+    res.cookie('wishlist',arr,{expires: expiryDate});
+    
+    res.status(200).json({ 'status': 200, 'msg': 'SUCCESS!' });
+
+    //res.clearCookie('wishlist').send(req.cookies.wishlist);
+
+};

@@ -46,7 +46,7 @@
                       <p class="card-description">
                           Total <code><%=model.totalCount %></code >
                       </p>
-                      <th class="table-responsive bd_pg" >
+                      <th class="table-responsive bd_pg">
                         <table class="table table-bordered">
                           <thead>
                             <tr>
@@ -121,15 +121,16 @@
                   </div>
                 </div>
               </div>
+              <!-- partial:partials/_footer.html -->
+              <%- include ('../layout/footer.ejs') -%>
+              <!-- partial -->
             </div>
-            <!-- partial:partials/_footer.html -->
-            <%- include ('../layout/footer.ejs') -%>
-            <!-- partial -->
           </div>
-          <!-- main-panel ends -->
-        </div>
-        <!-- page-body-wrapper ends -->
+
     </div>
+
+</body>
+
 
 <script>
 
@@ -187,11 +188,6 @@
         z-index: 1031;
         top: 50%;
         left: 50%;
-    }
-
-    .bg_pg {
-        padding: 24px 0;
-        text-align: center;
     }
 
     .clear {

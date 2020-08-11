@@ -19,4 +19,5 @@ router.get('/logout', controller.logout);
 
 router.post('/loginCheck', controller.loginCheck);
 
+router.post('/wishList', controller.wishList);
 module.exports = router;

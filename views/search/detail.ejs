@@ -33,6 +33,7 @@
                 <input type="hidden" id="subscription_member" value="<%= model.subscription_member %>">
                 <input type="hidden" id="purchase_credit_report" value=" <%= model.purchase_credit_report.creditreportOrNot %>">
                 <input type="hidden" id="purchase_credit_report_status" value=" <%= model.purchase_credit_report.creditreportStatus %>">
+                <input type="hidden" id="wishlist_status" value=" <%= status %>">
             
                 <% if (userObj) { %>
                 <div class="modal fade bd-example-modal-lg" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -131,11 +132,14 @@
                   <div class="row col-md-12 grid-margin" style="padding-right: 0;">
                     <div class="col-sm-11 text-center">
                         <div>
-                          <h2 class="text-dark font-weight-bold mb-2"><%= model.company.name_eng %></h2>
+                          <h2 class="text-dark font-weight-bold mb-2"><%= model.company.name_eng %>
+                              <input type="hidden" id="companyname" value="<%= model.company.name_eng%>">
+                          </h2>
                           <span class="font-weight-normal mb-2" style="font-size: 17.4px;"><% if (model.company.updatedAt != '') { %>(Updated date: <%= moment.utc(model.company.updatedAt).local().format('YYYY-MM-DD HH:mm') %>)<% } %></span>
                         </div>
                     </div>
                     <div class="col-sm-1">
+
                           <select name="sel_currency" class="form-control" id="sel_currency" onchange="changeCurrency();">
                             <% if (model.currencies) { %>
                               <% if (model.currencies.length > 0) { %> 
@@ -161,8 +165,7 @@
                                   <b>Business Nature&nbsp;</b>
                                 </span> 
                                   <% if (model.business_nature.length > 0) { %> 
-                                    <% for(let i=0; i<model.business_nature.length; i++) {  
-                                    %> ]
+                                    <% for(let i=0; i<model.business_nature.length; i++) { %>
                                     <label class="badge badge2 badge-light"><%= model.business_nature[i] %></label>
                                     
                                 <% }} %>
@@ -233,27 +236,36 @@
                     </div>
 
                   <div class="col-md-12 detail-item chart-wrap"></div>
-                  <% if (model.company.detailYN == 'Y') { %> 
+
                   <div class="col-md-12 grid-margin stretch-card">
-                      <div class="col-sm-6 mb-4 mb-xl-0">
-                      </div>
-                        <div class="col-sm-6">
+                      <div class="col-sm-6 mb-4 mb-xl-0"></div>
+                      <div class="col-sm-6" style="float: right">
                           <div class="d-flex align-items-center justify-content-md-end">
-                            <div class="pr-1 mb-3 mb-xl-0" style="margin-right: 1rem;">
+                              <% if (model.company.detailYN == 'Y') { %>
+                              <div class="pr-1 mb-3 mb-xl-0" style="margin-right: 1rem;">
                               <strong>Do you want a credit report?</strong>
                             </div>
-                            <div class="pr-1 mb-3 mb-xl-0">
+                            <div class="pr-1 mb-3 mb-xl-0" style="margin-right: 10px">
                               <button type="button" class="btn btn-outline-inverse-info btn-icon-text" onclick="creditReportBtn();">
                                 Pay for a credit report
                                 <i class="mdi mdi-file-document btn-icon-append"></i>
                               </button>
                             </div>
+                                  <% } %>
+                              <div class="pr-1 mb-3 mb-xl-0" style="margin-right: 1rem;">
+                                  <strong>Do you want add wish list?</strong>
+                              </div>
+                              <div class="pr-1 mb-3 mb-xl-0">
+                                  <button type="button" class="btn btn-outline-inverse-info btn-icon-text" onclick="addWishList()">
+                                      Wishlist
+                                  </button>
+                              </div>
                           </div>
                         </div>
                   </div>
-                  <% } %>
+
                     <div id="detail_"></div>
-                    <% if (model.company.detailYN == 'Y') { %> 
+                    <% if (model.company.detailYN == 'Y') { %>
                         <div id="detail_C"></div>
                       <% } %>
             </div>
@@ -437,6 +449,35 @@
                 console.log("ERROR : ", e);
             }
         });
+
+    }
+
+    function addWishList()
+    {
+        var status = $("#wishlist_status").val();
+
+        if(status == 0){
+            $.ajax({
+                type: "POST",
+                url: "/user/wishList",
+                dataType: "json",
+                data: {
+                    companyId: $("#companyId").val(),
+                    companyName: $("#companyname").val()
+                },
+                success: function (data) {
+                    alert(data.msg); //위시리스트에 추가되었습니다 문장 띄우기
+                    window.location.href = '/company/detail/' + $("#companyId").val();
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+        }
+        else
+        {
+            alert("Already Added!")
+        }
 
     }
 

@@ -1,6 +1,10 @@
 const config = require('../../conf/environments');
 const mysql = require('mysql');
 const connection = mysql.createConnection(config.info);
+const mysql2 = require('sync-mysql'); //원래 javascript는 비동기인데 sync-mysql로 동기 설정 가능
+var connection2 = new mysql2(config.info);
+
+
 const common = require('../../public/js/common');
 const fs = require('fs'); 
 const mime = require('mime-types');
@@ -713,4 +717,68 @@ exports.qnaDel = (req, res) => {
 
   });
 
+};
+
+exports.wishlist = (req, res) => {
+    let arr = [];
+    var wresult = req.cookies.wishlist
+    var myId = req.cookies.userObj.id;
+
+    const pageNum = Number(req.query.pageNum) || 1; // NOTE: 쿼리스트링으로 받을 페이지 번호 값, 기본값은 1
+    const contentSize = 5; // NOTE: 페이지에서 보여줄 컨텐츠 수.
+    const pnSize = 10; // NOTE: 페이지네이션 개수 설정.
+    const skipSize = (pageNum - 1) * contentSize; // NOTE: 다음 페이지 갈 때 건너뛸 리스트 개수.
+
+    if(wresult != undefined)
+    {
+        var totalCount = Number(wresult.length); // NOTE: 전체 글 개수.
+        var pnTotal = Math.ceil(totalCount / contentSize); // NOTE: 페이지네이션의 전체 카운트
+        var pnStart = ((Math.ceil(pageNum / pnSize) - 1) * pnSize) + 1; // NOTE: 현재 페이지의 페이지네이션 시작 번호.
+        let pnEnd = (pnStart + pnSize) - 1; // NOTE: 현재 페이지의 페이지네이션 끝 번호.
+
+        var endCount = 0;
+        if(skipSize + contentSize > totalCount) endCount = totalCount;
+        else endCount = skipSize + contentSize;
+
+        for(var i = skipSize; i < endCount ; i++)
+        {
+            if(wresult[i].myId == myId)
+            {
+                var temp = wresult[i];
+                var rs = connection2.query('SELECT updatedAt from company WHERE id = ' + wresult[i].companyId);
+                temp.update = rs[0].updatedAt;
+                arr.push(temp);
+            }
+        }
+
+
+        if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
+        const result= {
+            totalCount,
+            pageNum,
+            pnStart,
+            pnEnd,
+            pnTotal,
+            list: arr
+        };
+        res.render("account/wishList",{ model: result, userObj: req.cookies.userObj})
+    }
+
+};
+
+exports.deletewishlist = (req, res) => {
+
+    var jsonData = req.body;
+    var companyId = jsonData['companyId'];
+    var list = req.cookies.wishlist;
+    var arr = [];
+    var expiryDate = new Date( Date.now() + 60 * 60 * 1000 * 24 * 7); // 24 hour 7일 동안 저장
+
+    for(var i = 0; i < list.length; i++)
+    {
+        if(list[i].companyId != companyId) arr.push(list[i]);
+    }
+
+    res.cookie('wishlist',arr,{expires: expiryDate});
+    res.status(200).json({ 'status': 200, 'msg': 'Delete!' });
 };

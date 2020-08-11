@@ -32,6 +32,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 여기서부터~ 기업 리스트 목록 표 부분 -->
                     <div class="row">
                         <div class="col-md-12 grid-margin">
                             <div class="card"><div class="card-body"><div class="container-scroller">
@@ -53,8 +54,8 @@
                                                     <option value="1" >A</option>
                                                     <option value="2" >B</option>
                                                     <option value="3" >C</option>
-                                                    <option value="2" >D</option>
-                                                    <option value="3" >F</option>
+                                                    <option value="4" >D</option>
+                                                    <option value="5" >F</option>
                                                 </select>
                                                 <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
                                                     <option value="1" selected>전체</option>
@@ -64,14 +65,12 @@
                                                 <input id="search_txt" name="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
                                                 <button type="button" class="btn btn-primary" id="searchListBtn"
                                                         data-toggle="modal" style="float:right;" data-whatever="@mdo" onclick="search(1)">조회</button>
-                                                <button type="button" class="btn btn-primary" id="searchListBtn"
-                                                        data-toggle="modal" style="float:right; background: #228401;" data-whatever="@mdo" onclick="ExcelExportDownload()">내려받기</button>
                                             </div>
                                         </div>
 
                                         <div class="row bd_pg" style="text-align: center">
                                             <!-- 여기부터~ 위에서 업체를 클릭하면 정보를 보여줍니다 -->
-                                            <table id="selectRow" class="table table-hover" style="margin-bottom: 2%">
+                                            <table id="selectRow" class="table table-hover" style="margin-bottom: 2%;">
                                                 <thead class="thead-light">
                                                 <tr>
                                                     <th style="width: 5%;">나라</th>
@@ -79,7 +78,7 @@
                                                     <th style="width: 10%;">회사명</th>
                                                     <th style="width: 15%;">회사주소</th>
                                                     <th style="width: 10%;">담당자</th>
-                                                    <th style="width: 10%;">담당자직급</th>
+                                                    <th style="width: 10%;" >담당자직급</th>
                                                     <th style="width: 15%;">담당자 연락처</th>
                                                 </tr>
                                                 </thead>
@@ -152,6 +151,127 @@
                             </div>
                         </div>
                     </div>
+                    <!-- ~여기까지 -->
+                    <!-- 여기서부터~ 전체 상담 내용 부분 -->
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <div class="card"><div class="card-body"><div class="container-scroller">
+                                        <p class="card-description">전체상담정보</p>
+                                        <!-- 검색 영역 -->
+                                        <div class="row">
+                                            <div class="form-inline" >
+                                                <select id="country_id" name="country_id" class="form-control mb-2 mr-sm-2" >
+                                                    <option value="" selected>국가전체</option>
+                                                    <%
+                                                    if (model.countriesList.length > 0) { %>
+                                                        <% for(let i=0; i<model.countriesList.length; i++) {
+                                                        %>
+                                                        <option id=<%=model.countriesList[i].id %> value=<%=model.countriesList[i].id %>><%=model.countriesList[i].country_name %></option>
+                                                    <%  }}  %>
+                                                </select>
+                                                <select id="level_id" name="level_id" class="form-control mb-2 mr-sm-2" >
+                                                    <option value="" selected>사내등급전체</option>
+                                                    <option value="1" >A</option>
+                                                    <option value="2" >B</option>
+                                                    <option value="3" >C</option>
+                                                    <option value="2" >D</option>
+                                                    <option value="3" >F</option>
+                                                </select>
+                                                <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
+                                                    <option value="1" selected>전체</option>
+                                                    <option value="2" >회사명</option>
+                                                    <option value="3" >담당자</option>
+                                                </select>
+                                                <input id="search_txt" name="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
+                                                <button type="button" class="btn btn-primary" id="searchListBtn"
+                                                        data-toggle="modal" style="float:right;" data-whatever="@mdo" onclick="search(1)">조회</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="row bd_pg" style="text-align: center">
+                                            <!-- 여기부터~ 위에서 업체를 클릭하면 정보를 보여줍니다 -->
+                                            <table id="selectRow" class="table table-hover" style="margin-bottom: 2%; table-layout: fixed">
+                                                <thead class="thead-light">
+                                                <tr>
+                                                    <th style="width: 5%;">나라</th>
+                                                    <th style="width: 5%;">등급</th>
+                                                    <th style="width: 10%;">회사명</th>
+                                                    <th style="width: 15%;">회사주소</th>
+                                                    <th style="width: 10%;">담당자</th>
+                                                    <th style="width: 10%;" >담당자직급</th>
+                                                    <th style="width: 15%;">담당자 연락처</th>
+                                                </tr>
+                                                </thead>
+                                                <%
+                                                if (model.contents.length > 0) { %>
+                                                    <% for(var i=0; i < model.contents.length; i++) {
+                                                    %>
+                                                        <tbody>
+                                                        <tr onclick="goConsult(<%= model.contents[i].id %>)">
+                                                            <th><%= model.contents[i].country_name %></th>
+                                                            <th><%= model.contents[i].innerlevel %></th>
+                                                            <th><%= model.contents[i].name_eng %></th>
+                                                            <th><%= model.contents[i].address %></th>
+                                                            <th><%= model.contents[i].managerName %></th>
+                                                            <th><%= model.contents[i].managerDept%></th>
+                                                            <th><%= model.contents[i].managerPhone%><br>
+                                                                <%= model.contents[i].managerEmail%></th>
+                                                        </tr>
+                                                        </tbody>
+                                                <% }
+                                                }
+                                                else { %>
+                                                    <tr>
+                                                        <th colspan="7">검색 기록이 존재하지 않습니다.</th>
+                                                    </tr>
+                                                <% } %>
+                                            </table>
+                                            <!-- ~여기까지 -->
+
+                                            <% if (model.contents.length != 0) { %>
+                                            <div class="col-lg-12">
+                                                <%# 페이지 버튼들 %>
+                                                <ul class="pagination" style="display: table; margin-right: auto; margin-left: auto;">
+                                                    <%# [<<]버튼 = 첫 페이지로 이동 %>
+                                                    <li  style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                        <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>>
+                                                            <i class="fas fa-angle-double-left"></i></a>
+                                                    </li>
+                                                    <%# [<]버튼 = 1, 11, 21 페이지로 back 이동 %>
+                                                    <li style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                        <a <%if(model.pageNum > 10){%> href="javascript:search(<%=10*(parseInt((model.pageNum-1)/10)-1)+1%>);" <%}
+                                                        else {%>href="javascript:search(1);"<%}%> >
+                                                            <i class="fa fa-angle-left"> </i>
+                                                        </a>
+                                                    </li>
+                                                    <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %>
+                                                    <li style="display:inline-block;" <%if(i===model.pageNum){%> class="active"<%}%>>
+                                                        <a  class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%>
+                                                        </a>
+                                                    </li>
+                                                    <% } %>
+                                                    <%# [>]버튼 = 1, 11, 21 페이지로 front 이동 %>
+                                                    <li style="display:inline-block; margin-right: 0px;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                        <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=10*(1+parseInt((model.pageNum-1)/10))+1%>);" <%}%>class="waves-effect">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                    </li>
+                                                    <%# [>>]버튼 = 마지막 페이지로 이동 %>
+                                                    <li style="display:inline-block;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                        <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                                            <i class="fas fa-angle-double-right">  </i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ~여기까지 -->
                 </div>
                 <!-- partial:partials/_footer.html -->
                 <%- include ('../layout/footer.ejs') -%>
@@ -169,7 +289,7 @@
             $("#country_id").val(getParameterByName("country_id"));
         }
         if(getParameterByName("level_id")!=""){
-            $("#country_id").val(getParameterByName("level_id"));
+            $("#level_id").val(getParameterByName("level_id"));
         }
         if(getParameterByName("searcy_type")!=""){
             $("#search_type").val(getParameterByName("search_type"));
@@ -182,7 +302,7 @@
     //고객 목록에서 행 선택했을 때 상담 페이지로 이동
     function goConsult(companyid)
     {
-        var url = "/admin/customerManagement/consult?id="+companyid;
+        var url = "/admin/customerManagement/consult?id="+companyid+"&page=1";
         window.location.href=url;
     }
 
@@ -200,48 +320,6 @@
             +"&txt="+search_text;
 
         window.location.href = url;
-    }
-
-    var header = ['국가', '사내등급', '회사명', '회사주소', '담당자', '담당자직급',  '연락처', '이메일'];
-    //폼 양식 파일 다운로드
-    function s2ab(s) {
-        var buf = new ArrayBuffer(s.length);
-        var view = new Uint8Array(buf);
-        for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-        return buf;
-    }
-    //검색 결과 엑셀파일 다운로드
-    function ExcelExportDownload()
-    {
-
-        var excelHandler = {
-            getExcelFileName : function(){
-                return 'CRM.xlsx';
-            },
-            getSheetName : function(){
-                return 'CRM Sheet';
-            },
-            getExcelData : function(){
-                return [header]
-            },
-            getWorksheet : function(){
-                return XLSX.utils.aoa_to_sheet(this.getExcelData());
-            }
-        }
-        // step 1. workbook 생성
-        var wb = XLSX.utils.book_new();
-
-        // step 2. 시트 만들기
-        var newWorksheet = excelHandler.getWorksheet();
-
-        // step 3. workbook에 새로만든 워크시트에 이름을 주고 붙인다.
-        XLSX.utils.book_append_sheet(wb, newWorksheet, excelHandler.getSheetName());
-
-        // step 4. 엑셀 파일 만들기
-        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
-
-        // step 5. 엑셀 파일 내보내기
-        saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), excelHandler.getExcelFileName());
     }
 
 

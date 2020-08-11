@@ -162,7 +162,11 @@ exports.detail = (req, res) => {
     var coin_result;
     var user = undefined;
     var creditreport={};
-    var creditreportOrNot = 0;
+    var temp = 0;
+    var wishlist = req.cookies.wishlist;
+
+
+
 
     //볼 권한이 있는지 체크
     //rm1 데이터 권한 체크
@@ -185,12 +189,10 @@ exports.detail = (req, res) => {
         else
         {
             creditreport = {
-                creditreportOrNot: 0,
-                creditreportStatus: 0
+                creditreportOrNot: temp,
+                creditreportStatus: temp
             };
         }
-
-        console.log(creditreport);
 
         //최초 조회시 최근 조회 테이블에 값 넣기
         if (req.query.first == 1) {
@@ -360,6 +362,22 @@ exports.detail = (req, res) => {
           }
     }
 
+    var status = 0;
+    if(wishlist != undefined)
+    {
+        for(var i=0;i<wishlist.length;i++)
+        {
+            if(req.cookies.userObj.id == wishlist[i].myId)
+            {
+                if(req.params.id == wishlist[i].companyId){
+                    status = 1;
+                    break;
+                }
+            }
+
+        }
+    }
+
     model.subscription_member = subscription_member;
     model.auth_rm = auth_rm;
     model.auth_component = auth_component;
@@ -376,7 +394,7 @@ exports.detail = (req, res) => {
     model.currency = currency;
     model.purchase_credit_report = creditreport;
 
-    res.render('search/detail', { model: model, moment: moment, userObj: req.cookies.userObj});
+    res.render('search/detail', { model: model, moment: moment, status:status, userObj: req.cookies.userObj});
 };
 
 exports.detail_before_ = (req, res) => {
@@ -930,3 +948,4 @@ exports.modalView = (req, res) => {
 
     res.render('search/modalView', { model: model, moment: moment, comma: common.comma, formatMoney: common.formatMoney, userObj: req.cookies.userObj});
 };
+

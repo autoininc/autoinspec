@@ -7,6 +7,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"
           rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 </head>
 
@@ -57,20 +60,19 @@
                 <div class="row">
                     <div class="col-md-12 grid-margin">
                         <div class="card"><div class="card-body"><div class="container-scroller">
-                                    <div class="row">
+                                    <div class="row bd_pg">
                                         <div class="col">
-                                            <p class="card-description" style="margin-bottom:10px">상담목록
+                                            <p class="card-description" style="margin-bottom:10px;">상담목록
                                                 <button type="button" class="btn btn-primary"
                                                         data-toggle="modal" style="float: right" data-whatever="@mdo" onclick="deleteConsulting()">삭제</button>
                                                 <button type="button" class="btn btn-primary" data-toggle="modal" style="float: right; margin-right: 10px;"
                                                         id="modifyBtn"  data-whatever="@mdo" onclick="Modify()">수정</button>
                                             </p>
-
                                             <!-- 여기부터~ 지금까지 등록된 상담 내용을 보여주는 리스트입니다!
                                             담당자를 선택하면 담당자의 개인 정보를 볼 수 있도록 변경해야함-->
-                                            <table id="consultList" class="table table-bordered" style="text-align: center;">
+                                            <table id="consultList" class="table table-bordered" style="table-layout: fixed">
                                                 <thead class="thead-light">
-                                                <tr>
+                                                <tr style="height: 10px;">
                                                     <th style="width: 2%;"></th>
                                                     <th style="width: 5%;">번호</th>
                                                     <th style="width: 10%;">상담자</th>
@@ -89,22 +91,56 @@
                                                         <td><input type="radio" name="check"></td>
                                                         <td><%=model_consult.list[i].id %></td>
                                                         <td><%=model_consult.list[i].conselor %></td>
-                                                        <td><%=model_consult.list[i].content %></td>
-                                                        <td><%=model_consult.list[i].remark %></td>
+                                                        <td style="width: 20%; overflow:hidden; white-space:nowrap;text-overflow:ellipsis" title="<%=model_consult.list[i].content %>"><%=model_consult.list[i].content %></td>
+                                                        <td style="width: 20%; overflow:hidden; white-space:nowrap;text-overflow:ellipsis" title="<%=model_consult.list[i].remark %>"><%=model_consult.list[i].remark %></td>
                                                         <td><%= model_consult.list[i].consult_date %></td>
                                                     </tr>
                                                     </tbody>
                                                 <% }
                                                 }  else { %>
                                                     <tr>
-                                                        <th colspan="5">상담 기록이 존재하지 않습니다.</th>
+                                                        <th colspan="6">상담 기록이 존재하지 않습니다.</th>
                                                     </tr>
                                                 <% } %>
                                                 </tbody>
                                             </table>
+                                            <div class="col-lg-12">
+                                                <%# 페이지 버튼들 %>
+                                                <ul class="pagination" style="display: table; margin-right: auto; margin-left: auto;">
+                                                    <%# [<<]버튼 = 첫 페이지로 이동 %>
+                                                    <li  style="display:inline-block;" <%if(model_consult.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                        <a <%if(model_consult.pageNum > 1){%> href="javascript:search(1);" <%}%>>
+                                                            <i class="fas fa-angle-double-left"></i></a>
+                                                    </li>
+                                                    <%# [<]버튼 = 1, 11, 21 페이지로 back 이동 %>
+                                                    <li style="display:inline-block;" <%if(model_consult.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                        <a <%if(model_consult.pageNum > 10){%> href="javascript:search(<%=10*(parseInt((model_consult.pageNum-1)/10)-1)+1%>);" <%}
+                                                        else {%>href="javascript:search(1);"<%}%> >
+                                                            <i class="fa fa-angle-left"> </i>
+                                                        </a>
+                                                    </li>
+                                                    <% for(var i=model_consult.pnStart; i<=model_consult.pnEnd; i++){ %>
+                                                    <li style="display:inline-block;" <%if(i===model_consult.pageNum){%> class="active"<%}%>>
+                                                        <a  class="frst_last bubble <% if (i == model_consult.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%>
+                                                        </a>
+                                                    </li>
+                                                    <% } %>
+                                                    <%# [>]버튼 = 1, 11, 21 페이지로 front 이동 %>
+                                                    <li style="display:inline-block; margin-right: 0px;" <%if(model_consult.pageNum == model_consult.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                        <a <%if(model_consult.pageNum < model_consult.pnTotal){%> href="javascript:search(<%=10*(1+parseInt((model_consult.pageNum-1)/10))+1%>);" <%}%>class="waves-effect">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                    </li>
+                                                    <%# [>>]버튼 = 마지막 페이지로 이동 %>
+                                                    <li style="display:inline-block;" <%if(model_consult.pageNum == model_consult.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                        <a <%if(model_consult.pageNum < model_consult.pnTotal){%> href="javascript:search(<%=model_consult.pnTotal%>);" <%}%> class="waves-effect">
+                                                            <i class="fas fa-angle-double-right">  </i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                             <!-- ~여기까지 -->
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -188,7 +224,7 @@
                                                         <label for="recipient-name" class="col-form-label">상담자 </label>
                                                         <!-- '상담자'란은 로그인 정보를 기반으로 이름이 나옵니다.
                                                         input 형태로 되어 있어 다른 이름 넣어서 작성 가능해요!!-->
-                                                        <input type="text" class="form-control" id="Name" style="width: 200px; text-align: center;" value="<%= model_consult.name[0].last_name %> <%= model_consult.name[0].first_name %>">
+                                                        <input type="text" class="form-control" id="Name" style="width: 200px; text-align: center;" value="<%= model_consult.name %>">
 
                                                     </div>
 
@@ -210,6 +246,7 @@
                                                         style="display: none" onclick="ModifyConfirm()">수정</button>
                                                 <!-- 확인 버튼 누르면 MySQL test table에 상담 내용들이 추가됩니다.-->
                                                 <button type="button"  class="btn btn-primary" data-dismiss="modal" id="consultConfirm" onclick="confirmConsulting()">확인</button>
+
                                                 <button type="button"  class="btn btn-primary" data-toggle="modal" onclick="InnerLevelInfo()" id="innerlevelBtn">등급추가</button>
                                                 <!-- 여기서부터~ 상담 목록에 있는 수정 버튼을 클릭하면 나오는 버튼들-->
 
@@ -235,6 +272,9 @@
 
 <!--여기서부터~ UI에 필요한 기능들 추가-->
 <script>
+    var innerlevelStatus = 0;
+    var modifyOrNot = 0;
+
     $("document").ready(function(){
         //manager 정보 가져오기 위한 밑작업입니다!
         var cnt = $("#mCnt").val();
@@ -328,12 +368,16 @@
                 else $("#Remark").val(preRemark + "\n사내등급 " + radiobtn +"로 수정\n");
 
                 $("#company_level").val(radiobtn);
+                if(modifyOrNot == 1) innerlevelStatus = 2;
+                else innerlevelStatus = 1;
             }
         });
     }
 
+    //사내 등급 수정
     function ModifyInnerlevel()
     {
+        modifyOrNot = 1;
         InnerLevelInfo();
     }
 
@@ -353,6 +397,7 @@
         var level = $("#company_level").val();
 
 
+
         $.ajax({
             type: "POST",
             url: "/admin/customerManagement/add",
@@ -362,7 +407,8 @@
                 inName: inname,
                 inContent: incontent,
                 inRemark: inremark,
-                inInnerlevel: level
+                inInnerlevel: level,
+                innerlevelStatus: innerlevelStatus
             },
             success: function (data) {
                 alert(data.msg);
@@ -372,6 +418,9 @@
                 console.log("ERROR : ", e);
             }
         });
+
+
+        innerlevelStatus = 0;
     }
 
     //상담 내용 삭제
@@ -515,7 +564,7 @@
             },
             success: function (data) {
                 alert(data.msg);
-                window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
+                window.location.href = '/admin/customerManagement/consult?id='+incompanyid+"&page=1";
             },
             error: function (e) {
                 console.log("ERROR : ", e);
@@ -547,7 +596,7 @@
             },
             success: function (data) {
                 alert(data.msg);
-                window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
+                window.location.href = '/admin/customerManagement/consult?id='+incompanyid+"&page=1";
             },
             error: function (e) {
                 console.log("ERROR : ", e);
@@ -559,11 +608,35 @@
     function ModifyCancelManager()
     {
         var incompanyid = $("#company_id").val();
-        window.location.href = '/admin/customerManagement/consult?id='+incompanyid;
+        window.location.href = '/admin/customerManagement/consult?id='+incompanyid+"&page=1";
     }
 
-
+    function search(num)
+    {
+        var url = "/admin/customerManagement/consult?id="+$("#company_id").val()+"&page="+num;
+        window.location.href = url;
+    }
 
 </script>
+
+<style>
+
+    /* Pagnation */
+    .bd_pg{padding:24px 0;text-align:center}
+    .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
+    .bd_pg a{color:#558421;text-decoration:none !important}
+    .bd_pg .this,.bd_pg a:hover,.bd_pg a:focus{background:#F9F9F9;border-color:#AAA;color:#555}
+    .bd_pg .frst_last{color:#555}
+    .bd_pg .direction{margin:0 4px;color:#555;letter-spacing:0;font-weight:400}
+    .bd_pg strong.direction{color:#999}
+    .bd .bd_go_page{left:-47px;padding:8px 2px;border-color:#AAA;*vertical-align:top}
+    .bd_go_page .itx,.bd_go_page .bd_btn{height:24px;margin:0 6px;padding:2px 8px;text-align:center;vertical-align:middle}
+    .bd_go_page .itx{width:32px;padding:2px 8px}
+
+    .td_hidden
+    {
+
+    }
+</style>
 </body>
 </html>

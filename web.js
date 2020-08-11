@@ -30,9 +30,9 @@ app.use(cookieParser());
      store: new MySQLStore(config)
    }));
 
-var httpServer = http.createServer(app);
+    var httpServer = http.createServer(app);
 
-httpServer.listen(app.get('port'), function(){
+    httpServer.listen(app.get('port'), function(){
     console.log("https Working on port");
 });
 
@@ -63,15 +63,15 @@ httpServer.listen(app.get('port'), function(){
 //admin에 접속시 권한 체크
 app.route(/^\/admin(?:\/(.*))?$/).all(function(req, res, next) {
 	var path = req.params[0];
-	if ( req.cookies.userObj ) { 
-		//console.dir( req.session.user );
+	if ( req.cookies.userObj ) {
 		next();
 	} else {
 		var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
-		//console.log( fullUrl );
 		return res.redirect('https://' + req.headers.host + '/user/login/?redirect=' + fullUrl);
 	}
 });
+
+
 
 
 /** admin 관련 */

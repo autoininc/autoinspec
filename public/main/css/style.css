@@ -21968,7 +21968,7 @@ dl li {
   padding-left: 15px; */
   margin-right: auto;
   margin-left: auto;
-  min-height: calc(100vh - 156px - 75px);
+  min-height: calc(100vh - 300px);
   -webkit-flex-grow: 1;
   flex-grow: 1;
 }

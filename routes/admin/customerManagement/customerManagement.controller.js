@@ -14,7 +14,7 @@ const format = 'YYYY-MM-DD HH:mm:ss';
 exports.list = (req, res) =>
 {
     const pageNum = Number(req.query.pageNum) || 1; // NOTE: 쿼리스트링으로 받을 페이지 번호 값, 기본값은 1
-    const contentSize = 10; // NOTE: 페이지에서 보여줄 컨텐츠 수.
+    const contentSize = 5; // NOTE: 페이지에서 보여줄 컨텐츠 수.
     const pnSize = 10;// NOTE: 페이지네이션 개수 설정.
     const skipSize = (pageNum - 1) * contentSize; // NOTE: 다음 페이지 갈 때 건너뛸 리스트 개수.
 
@@ -35,13 +35,20 @@ exports.list = (req, res) =>
     //managerInfo 테이블이랑 join 해야함
     if(country_id != 0) where += " AND country_id =" + parseInt(country_id);
 
+    var level;
     //level 선택
-    if(level_id != 0) where += " AND innerlevel =" + parseInt(level_id);
+    if(level_id == 1) level = "'A'";
+    else if(level_id == 2) level = "'B'";
+    else if(level_id == 3) level = "'C'";
+    else if(level_id == 4) level = "'D'";
+    else level = "'F'";
+
+    if(level_id != 0) where += " AND innerlevel = " + level;
 
 
     //쿼리문이 많이 복잡해보이지만 company, company_innerlevel, managerInfo 테이블에서 값을 가져오는 문장입니다...
     join += "LEFT JOIN company_innerlevel AS L ON L.company_id = C.id "+ "LEFT JOIN managerInfo AS M ON M.company_id = C.id " + "LEFT JOIN countries AS CC ON CC.id = C.country_id";
-    var sqlBase = 'SELECT C.id, C.address, C.name_eng, L.innerlevel, M.*, CC.country_name FROM company AS C ' + join;
+    var sqlBase = 'SELECT DISTINCT C.id, C.address, C.name_eng, L.innerlevel, M.*, CC.country_name FROM company AS C ' + join;
     var sql_search_list = sqlBase + where + " ORDER BY C.id LIMIT ?,?;";
 
 
@@ -75,30 +82,24 @@ exports.list = (req, res) =>
 
 exports.consultForm = (req, res) =>
 {
-    
-    //페이지네이션 기능 추가해야 함
-    //보이는 글자수 제한 추가해야함
-    let model_consult = {};
-    var company_id = req.query.id; //고객관리시스템 메인페이지에서 업체 선택하면 해당 업체 페이지로 넘어옴
-
-    const pageNum = Number(req.query.pageNum) || 1; // NOTE: 쿼리스트링으로 받을 페이지 번호 값, 기본값은 1
+    const pageNum = Number(req.query.page) || 1; // NOTE: 쿼리스트링으로 받을 페이지 번호 값, 기본값은 1
     const contentSize = 5; // NOTE: 페이지에서 보여줄 컨텐츠 수.
-    const pnSize = 5;// NOTE: 페이지네이션 개수 설정.
+    const pnSize = 10;// NOTE: 페이지네이션 개수 설정.
     const skipSize = (pageNum - 1) * contentSize; // NOTE: 다음 페이지 갈 때 건너뛸 리스트 개수.
 
-    var sql_getCompanyInfo = 'SELECT * from managerInfo where company_id = ' +company_id; //담당자 정보 가져오기
-    var sql_getConsultList = "SELECT * from consult WHERE company_id = "+company_id + " ORDER BY consult_date DESC;"; //상담 내용 전부 가져오기
-    var sql_countConsult = 'SELECT * from consult WHERE company_id = ' +company_id;
-    var sql_getConsultName = 'SELECT last_name, first_name from users where id = ' //상담자 이름 DB에서 가져오기
-    var sql_getInnerlevel = 'SELECT innerlevel from company_innerlevel where company_id = ' + company_id;
-    var myname = req.cookies.userObj.id;
+    var company_id = req.query.id; //고객관리시스템 메인페이지에서 업체 선택하면 해당 업체 페이지로 넘어옴
 
-    sql_getConsultName = sql_getConsultName + myname + ';';
-    model_consult.list = connection.query(sql_getConsultList); //상담내용 가져오기
-    model_consult.name = connection.query(sql_getConsultName, [myname]); //상담자 이름 가져오기
-    model_consult.manager = connection.query(sql_getCompanyInfo); //상담자 정보 가져오기
+
+    var sql_getCompanyInfo = 'SELECT * from managerInfo where company_id = ' +company_id; //담당자 정보 가져오기
+    var sql_getConsultList = "SELECT * from consult WHERE company_id = "+company_id + " ORDER BY consult_date DESC LIMIT ?,?;"; //상담 내용 전부 가져오기
+    var sql_rowCount = 'SELECT COUNT(*) from consult WHERE company_id = ' + company_id;
+    var sql_getInnerlevel = 'SELECT innerlevel from company_innerlevel where company_id = ' + company_id;
+
+    let list = connection.query(sql_getConsultList,[skipSize, contentSize]); //상담내용 가져오기
+    let name = req.cookies.userObj.last_name + ' ' + req.cookies.userObj.first_name;
+    let manager = connection.query(sql_getCompanyInfo); //상담자 정보 가져오기
     let inlevel = connection.query(sql_getInnerlevel);
-    var rowCount = connection.query(sql_countConsult);
+    let rowCount = connection.query(sql_rowCount);
 
     var totalCount = Number(rowCount[0].cnt); // NOTE: 전체 글 개수.
     var pnTotal = Math.ceil(totalCount / contentSize); // NOTE: 페이지네이션의 전체 카운트
@@ -112,12 +113,13 @@ exports.consultForm = (req, res) =>
         pnStart,
         pnEnd,
         pnTotal,
-        contents: rs_search_list,
-        countriesList: rs_country
+        list: list,
+        name: name,
+        manager: manager
     };
 
     //회사 정보 상담 입력 페이지에 뿌리기
-    res.render('admin/customerManagement/consultingView', {model_consult:model_consult, company_id: company_id, innerlevel:inlevel, userObj: req.cookies.userObj});
+    res.render('admin/customerManagement/consultingView', {model_consult:result, company_id: company_id, innerlevel:inlevel, userObj: req.cookies.userObj});
 };
 
 //상담 정보 추가
@@ -125,17 +127,21 @@ exports.consultForm = (req, res) =>
 exports.add = (req, res) =>
 {
     var jsondata = req.body;
+    var status = jsondata['innerlevelStatus']; //사내 등급 추가:0, 사내 등급 수정: 1
+    console.log(status);
 
     //company_id 추가해야함
     var sqlS = 'INSERT INTO consult (company_id, conselor, content, remark, consult_date) VALUES(?,?,?,?,?);';
     var sqlL = 'INSERT INTO company_innerlevel (company_id, innerlevel) VALUES (?,?);';
+    var sqlLU = 'UPDATE company_innerlevel SET innerlevel = ' + '\'' + jsondata['inInnerlevel'] + '\'' + 'WHERE company_id = ' + jsondata['inCompanyid'];
 
     var params = [jsondata['inCompanyid'], jsondata['inName'], jsondata['inContent'], jsondata['inRemark'], moment.utc().format(format)];
     var paramsL = [jsondata['inCompanyid'], jsondata['inInnerlevel']];
 
-    connection.query(sqlS,params);
-    connection.query(sqlL,paramsL);
+    if(status == 1) connection.query(sqlL,paramsL);
+    else if(status == 2) connection.query(sqlLU);
 
+    connection.query(sqlS,params);
     res.json({ 'msg': '등록이 완료되었습니다!' });
 };
 
