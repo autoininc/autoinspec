@@ -34,7 +34,8 @@ const environments = {
         user: 'root',
         password: 'autoin1020#',
         database: 'autoinspec',
-        multipleStatements: true
+        multipleStatements: true,
+          socketPath: '/var/run/mysqld/mysqld.sock'
       }
   }
 }
