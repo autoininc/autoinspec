@@ -74,7 +74,7 @@ exports.list = (req, res) =>
     let rs_search_list = connection.query(sql_search_list, [skipSize, contentSize]);
 
     //상담 내용 전체 조회
-    var sql_allConsultList = "SELECT company_id, conselor, content, remark, consult_date, a.name_eng FROM autoin.consult " +
+    var sql_allConsultList = "SELECT company_id, conselor, content, remark, consult_date, a.name_eng FROM consult " +
         "LEFT JOIN company AS a ON company_id = a.id " +
         "WHERE consult_date >= \'"+ startdate +"\' " +
         "AND consult_date <= \'"+enddate+"\'" +
