@@ -8,7 +8,7 @@ const connection2 = mysql2.createConnection(config.info);
 //오늘 날짜
 var moment = require('moment');
 require('moment-timezone');
-const format = 'YYYY-MM-DD HH:mm:ss';
+const format = 'YYYY-MM-DD';
 
 
 exports.list = (req, res) =>
@@ -17,6 +17,14 @@ exports.list = (req, res) =>
     const contentSize = 5; // NOTE: 페이지에서 보여줄 컨텐츠 수.
     const pnSize = 10;// NOTE: 페이지네이션 개수 설정.
     const skipSize = (pageNum - 1) * contentSize; // NOTE: 다음 페이지 갈 때 건너뛸 리스트 개수.
+
+    const cpageNum = Number(req.query.consultpageNum) || 1; // NOTE: 쿼리스트링으로 받을 페이지 번호 값, 기본값은 1
+    const ccontentSize = 5; // NOTE: 페이지에서 보여줄 컨텐츠 수.
+    const cpnSize = 10;// NOTE: 페이지네이션 개수 설정.
+    const cskipSize = (cpageNum - 1) * ccontentSize; // NOTE: 다음 페이지 갈 때 건너뛸 리스트 개수.
+
+    var startdate = req.query.startdate || "";
+    var enddate = req.query.enddate || "";
 
     var country_id = req.query.country || 0;
     var level_id = req.query.level || 0;
@@ -65,15 +73,41 @@ exports.list = (req, res) =>
     let rs_country = connection.query(sql_category_country); //카테고리 등록된 나라 가져오기
     let rs_search_list = connection.query(sql_search_list, [skipSize, contentSize]);
 
+    //상담 내용 전체 조회
+    var sql_allConsultList = "SELECT company_id, conselor, content, remark, consult_date, a.name_eng FROM autoin.consult " +
+        "LEFT JOIN company AS a ON company_id = a.id " +
+        "WHERE consult_date >= \'"+ startdate +"\' " +
+        "AND consult_date <= \'"+enddate+"\'" +
+        "ORDER BY consult_date DESC LIMIT ?,?;";
+    
+
+    var sql_ccount = 'SELECT COUNT(*) AS cnt FROM consult;';
+    let crowCount = connection.query(sql_ccount);
+
+    var ctotalCount = Number(crowCount[0].cnt); // NOTE: 전체 글 개수.
+    var cpnTotal = Math.ceil(ctotalCount / ccontentSize); // NOTE: 페이지네이션의 전체 카운트
+    var cpnStart = ((Math.ceil(cpageNum / cpnSize) - 1) * cpnSize) + 1; // NOTE: 현재 페이지의 페이지네이션 시작 번호.
+    let cpnEnd = (cpnStart + cpnSize) - 1; // NOTE: 현재 페이지의 페이지네이션 끝 번호.
+
+    let rs_consult_list = connection.query(sql_allConsultList,[cskipSize,ccontentSize]);
+
+
     if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
+    if (cpnEnd > cpnTotal) cpnEnd = cpnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
     const result = {
         totalCount,
         pageNum,
         pnStart,
         pnEnd,
         pnTotal,
+        ctotalCount,
+        cpageNum,
+        cpnStart,
+        cpnEnd,
+        cpnTotal,
         contents: rs_search_list,
-        countriesList: rs_country
+        countriesList: rs_country,
+        consults: rs_consult_list
     };
 
     res.render('admin/customerManagement/list',{model: result, userObj: req.cookies.userObj});
@@ -222,3 +256,5 @@ exports.addManager = (req,res) =>
     connection.query(sqlS ,params);
     res.json({ 'msg': '등록되었습니다!' });
 }
+
+

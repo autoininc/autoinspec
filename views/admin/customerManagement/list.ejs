@@ -4,12 +4,13 @@
     <!-- 오토인스펙 사이트에 적용중인 전체 사이트 스타일을 위해 반드시 필요!-->
     <%- include ('../layout/head.ejs') -%>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.3/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+
 </head>
 
 <body>
@@ -64,7 +65,7 @@
                                                 </select>
                                                 <input id="search_txt" name="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
                                                 <button type="button" class="btn btn-primary" id="searchListBtn"
-                                                        data-toggle="modal" style="float:right;" data-whatever="@mdo" onclick="search(1)">조회</button>
+                                                        data-toggle="modal" style="float:right;" data-whatever="@mdo" onclick="search(1,1)">조회</button>
                                             </div>
                                         </div>
 
@@ -114,31 +115,31 @@
                                                 <ul class="pagination" style="display: table; margin-right: auto; margin-left: auto;">
                                                     <%# [<<]버튼 = 첫 페이지로 이동 %>
                                                     <li  style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
-                                                        <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>>
+                                                        <a <%if(model.pageNum > 1){%> href="javascript:search(1,1);" <%}%>>
                                                             <i class="fas fa-angle-double-left"></i></a>
                                                     </li>
                                                     <%# [<]버튼 = 1, 11, 21 페이지로 back 이동 %>
                                                     <li style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
-                                                        <a <%if(model.pageNum > 10){%> href="javascript:search(<%=10*(parseInt((model.pageNum-1)/10)-1)+1%>);" <%}
-                                                        else {%>href="javascript:search(1);"<%}%> >
+                                                        <a <%if(model.pageNum > 10){%> href="javascript:search(<%=10*(parseInt((model.pageNum-1)/10)-1)+1%>,1);" <%}
+                                                        else {%>href="javascript:search(1,1);"<%}%> >
                                                             <i class="fa fa-angle-left"> </i>
                                                         </a>
                                                     </li>
                                                     <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %>
                                                     <li style="display:inline-block;" <%if(i===model.pageNum){%> class="active"<%}%>>
-                                                        <a  class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%>
+                                                        <a  class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>,1);"><%=i%>
                                                         </a>
                                                     </li>
                                                     <% } %>
                                                     <%# [>]버튼 = 1, 11, 21 페이지로 front 이동 %>
                                                     <li style="display:inline-block; margin-right: 0px;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
-                                                        <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=10*(1+parseInt((model.pageNum-1)/10))+1%>);" <%}%>class="waves-effect">
+                                                        <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=10*(1+parseInt((model.pageNum-1)/10))+1%>,1);" <%}%>class="waves-effect">
                                                             <i class="fa fa-angle-right"></i>
                                                         </a>
                                                     </li>
                                                     <%# [>>]버튼 = 마지막 페이지로 이동 %>
                                                     <li style="display:inline-block;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
-                                                        <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                                        <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>,1);" <%}%> class="waves-effect">
                                                             <i class="fas fa-angle-double-right">  </i>
                                                         </a>
                                                     </li>
@@ -160,31 +161,13 @@
                                         <!-- 검색 영역 -->
                                         <div class="row">
                                             <div class="form-inline" >
-                                                <select id="country_id" name="country_id" class="form-control mb-2 mr-sm-2" >
-                                                    <option value="" selected>국가전체</option>
-                                                    <%
-                                                    if (model.countriesList.length > 0) { %>
-                                                        <% for(let i=0; i<model.countriesList.length; i++) {
-                                                        %>
-                                                        <option id=<%=model.countriesList[i].id %> value=<%=model.countriesList[i].id %>><%=model.countriesList[i].country_name %></option>
-                                                    <%  }}  %>
-                                                </select>
-                                                <select id="level_id" name="level_id" class="form-control mb-2 mr-sm-2" >
-                                                    <option value="" selected>사내등급전체</option>
-                                                    <option value="1" >A</option>
-                                                    <option value="2" >B</option>
-                                                    <option value="3" >C</option>
-                                                    <option value="2" >D</option>
-                                                    <option value="3" >F</option>
-                                                </select>
-                                                <select id="search_type" class="form-control mb-2 mr-sm-2" name="search_type">
-                                                    <option value="1" selected>전체</option>
-                                                    <option value="2" >회사명</option>
-                                                    <option value="3" >담당자</option>
-                                                </select>
-                                                <input id="search_txt" name="search_txt" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" onKeyDown="onKeyDown();">
-                                                <button type="button" class="btn btn-primary" id="searchListBtn"
-                                                        data-toggle="modal" style="float:right;" data-whatever="@mdo" onclick="search(1)">조회</button>
+                                                <div class="container">
+                                                    <input id="datepicker1" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" >
+                                                    ~
+                                                    <input id="datepicker2" type="text" class="form-control mb-2 mr-sm-2" aria-describedby="button-addon5" >
+                                                    <button type="button" class="btn btn-primary" id="consultListBtn"
+                                                            data-toggle="modal" style="float:right;" data-whatever="@mdo" onclick="search(1,1)">조회</button>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -193,72 +176,57 @@
                                             <table id="selectRow" class="table table-hover" style="margin-bottom: 2%; table-layout: fixed">
                                                 <thead class="thead-light">
                                                 <tr>
-                                                    <th style="width: 5%;">나라</th>
-                                                    <th style="width: 5%;">등급</th>
-                                                    <th style="width: 10%;">회사명</th>
-                                                    <th style="width: 15%;">회사주소</th>
-                                                    <th style="width: 10%;">담당자</th>
-                                                    <th style="width: 10%;" >담당자직급</th>
-                                                    <th style="width: 15%;">담당자 연락처</th>
+                                                    <th style="width: 10%;">날짜</th>
+                                                    <th style="width: 8%;">상담자</th>
+                                                    <th style="width: 20%;">상담내용</th>
+                                                    <th style="width: 20%;">상담비고</th>
+                                                    <th style="width: 15%;">회사명</th>
                                                 </tr>
                                                 </thead>
                                                 <%
-                                                if (model.contents.length > 0) { %>
-                                                    <% for(var i=0; i < model.contents.length; i++) {
+                                                if (model.consults.length > 0) { %>
+                                                    <% for(var i=0; i < model.consults.length; i++) {
                                                     %>
                                                         <tbody>
-                                                        <tr onclick="goConsult(<%= model.contents[i].id %>)">
-                                                            <th><%= model.contents[i].country_name %></th>
-                                                            <th><%= model.contents[i].innerlevel %></th>
-                                                            <th><%= model.contents[i].name_eng %></th>
-                                                            <th><%= model.contents[i].address %></th>
-                                                            <th><%= model.contents[i].managerName %></th>
-                                                            <th><%= model.contents[i].managerDept%></th>
-                                                            <th><%= model.contents[i].managerPhone%><br>
-                                                                <%= model.contents[i].managerEmail%></th>
+                                                        <tr>
+                                                            <th><%= model.consults[i].consult_date %></th>
+                                                            <th><%= model.consults[i].conselor %></th>
+                                                            <th style="overflow:hidden; white-space:nowrap;text-overflow:ellipsis" title="<%=model.consults[i].content %>"><%= model.consults[i].content %></th>
+                                                            <th style="overflow:hidden; white-space:nowrap;text-overflow:ellipsis" title="<%=model.consults[i].remark %>"><%= model.consults[i].remark %></th>
+                                                            <th><%= model.consults[i].name_eng %></th>
                                                         </tr>
                                                         </tbody>
                                                 <% }
                                                 }
                                                 else { %>
                                                     <tr>
-                                                        <th colspan="7">검색 기록이 존재하지 않습니다.</th>
+                                                        <th colspan="5">검색 기록이 존재하지 않습니다.</th>
                                                     </tr>
                                                 <% } %>
                                             </table>
                                             <!-- ~여기까지 -->
 
-                                            <% if (model.contents.length != 0) { %>
-                                            <div class="col-lg-12">
-                                                <%# 페이지 버튼들 %>
-                                                <ul class="pagination" style="display: table; margin-right: auto; margin-left: auto;">
-                                                    <%# [<<]버튼 = 첫 페이지로 이동 %>
-                                                    <li  style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
-                                                        <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>>
-                                                            <i class="fas fa-angle-double-left"></i></a>
+                                            <% if (model.consults.length != 0) { %>
+                                            <div class="col-lg-12" style="text-align:center;">
+                                                <ul class="pagination">
+                                                    <li <%if(model.cpageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                        <a <%if(model.cpageNum > 1){%> href="javascript:search(1,1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
                                                     </li>
-                                                    <%# [<]버튼 = 1, 11, 21 페이지로 back 이동 %>
-                                                    <li style="display:inline-block;" <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
-                                                        <a <%if(model.pageNum > 10){%> href="javascript:search(<%=10*(parseInt((model.pageNum-1)/10)-1)+1%>);" <%}
-                                                        else {%>href="javascript:search(1);"<%}%> >
+                                                    <li <%if(model.cpageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
+                                                        <a <%if(model.cpageNum > 1){%> href="javascript:search(1,<%=model.cpageNum-1%>);" <%}%>>
                                                             <i class="fa fa-angle-left"> </i>
                                                         </a>
                                                     </li>
-                                                    <% for(var i=model.pnStart; i<=model.pnEnd; i++){ %>
-                                                    <li style="display:inline-block;" <%if(i===model.pageNum){%> class="active"<%}%>>
-                                                        <a  class="frst_last bubble <% if (i == model.pageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%>
-                                                        </a>
-                                                    </li>
+                                                    <% for(var i=model.cpnStart; i<=model.cpnEnd; i++){ %> <li <%if(i===model.cpageNum){%> class="active"
+                                                            <%}%>><a class="frst_last bubble <% if (i == model.cpageNum) { %> this <% } %>" href="javascript:search(<%=i%>);"><%=i%></a></li>
                                                     <% } %>
-                                                    <%# [>]버튼 = 1, 11, 21 페이지로 front 이동 %>
-                                                    <li style="display:inline-block; margin-right: 0px;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
-                                                        <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=10*(1+parseInt((model.pageNum-1)/10))+1%>);" <%}%>class="waves-effect">
+                                                    <li <%if(model.cpageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                        <a <%if(model.cpageNum < model.pnTotal){%> href="javascript:search(1,<%=model.cpageNum+1%>);" <%}%> class="waves-effect">
                                                             <i class="fa fa-angle-right"></i>
                                                         </a>
                                                     </li>
-                                                    <%# [>>]버튼 = 마지막 페이지로 이동 %>
-                                                    <li style="display:inline-block;" <%if(model.pageNum == model.pnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
-                                                        <a <%if(model.pageNum < model.pnTotal){%> href="javascript:search(<%=model.pnTotal%>);" <%}%> class="waves-effect">
+                                                    <li <%if(model.cpageNum == model.cpnTotal){%> class="disabled" <%}else{%> class="direction" <%}%>>
+                                                        <a <%if(model.cpageNum < model.cpnTotal){%> href="javascript:search(1,<%=model.cpnTotal%>);" <%}%> class="waves-effect">
                                                             <i class="fas fa-angle-double-right">  </i>
                                                         </a>
                                                     </li>
@@ -297,7 +265,28 @@
         if(getParameterByName("search_txt")!=""){
             $("#search_txt").val(getParameterByName("search_txt"));
         }
+
     })
+
+    $.datepicker.setDefaults({
+        dateFormat: 'yymmdd',
+        prevText: '이전 달',
+        nextText: '다음 달',
+        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        showMonthAfterYear: true,
+        yearSuffix: '년'
+    });
+
+    $(function() {
+        $("#datepicker1, #datepicker2").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+
 
     //고객 목록에서 행 선택했을 때 상담 페이지로 이동
     function goConsult(companyid)
@@ -309,15 +298,17 @@
 
 
     //조회 버튼 클릭시 검색 결과 나오기
-    function search(num)
+    function search(num, num2)
     {
         var country_id = $("#country_id").val();
         var level_id = $("#level_id").val();
         var search_type = $("#search_type").val();
         var search_text = $("#search_txt").val();
+        var date = $("#datepicker1").val();
+        var date2 = $("#datepicker2").val();
 
         var url = "/admin/customerManagement/list?pageNum="+num+"&country="+country_id+"&level="+level_id+"&type="+search_type
-            +"&txt="+search_text;
+            +"&txt="+search_text + "&consultpageNum=" + num2 + "&startdate="+date+"&enddate="+date2;
 
         window.location.href = url;
     }
