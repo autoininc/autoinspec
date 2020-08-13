@@ -17,4 +17,6 @@ router.get('/coin/:id', controller.coin);
 router.get('/payment/:id', controller.payment);
 router.get('/qna/:id', controller.qna);
 
+router.delete('/delItem/:id', controller.delItem);
+
 module.exports = router;

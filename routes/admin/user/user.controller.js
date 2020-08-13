@@ -3,6 +3,9 @@ const mysql = require('mysql');
 const connection = mysql.createConnection(config.info);
 const common = require('../../../public/js/common');
 
+const mysql2 = require('sync-mysql'); //원래 javascript는 비동기인데 sync-mysql로 동기 설정 가능
+var connection2 = new mysql2(config.info);
+
 //시간 관련
 var moment = require('moment');
 require('moment-timezone');
@@ -515,6 +518,19 @@ exports.qna = (req, res) => {
         }
     });
 };
-  
-  
-  
+
+// 삭제
+exports.delItem = (req, res) => {
+    var id = req.params.id;
+
+    connection2.query('DELETE from coin WHERE userId = '+id);
+    connection2.query('DELETE from coin_detail WHERE userId = '+id);
+    connection2.query('DELETE from payment WHERE userId = '+id);
+    connection2.query('DELETE from purchasedproduct WHERE userId = '+id);
+    connection2.query('DELETE from qna WHERE userId = '+id);
+    connection2.query('DELETE from recently_viewed WHERE userId = '+id);
+    connection2.query('DELETE from subscription WHERE userId = '+id);
+    connection2.query('DELETE from users WHERE id = '+id);
+
+    res.status(200).json({ 'msg': "삭제되었습니다." });
+};

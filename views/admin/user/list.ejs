@@ -27,6 +27,24 @@
                   </div>
                 </div>
               </div>
+                <div class="modal fade" id="delCheckModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">정말 삭제하시겠습니까?</h5>
+                                <input type="hidden" id="id" name="id" value="">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                <button type="button" class="btn btn-danger" onclick="deleteBtn();">삭제</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
               
               <div class="row">
                 <div class="col-lg-12 grid-margin stretch-card">
@@ -46,8 +64,8 @@
                       <p class="card-description">
                           Total <code><%=model.totalCount %></code >
                       </p>
-                      <th class="table-responsive bd_pg">
-                        <table class="table table-bordered">
+                      <th class="table-responsive">
+                        <table class="table table-bordered" style="text-align: center">
                           <thead>
                             <tr>
                               <th>이름</th>
@@ -57,7 +75,7 @@
                               <th>Email 인증 여부</th>
                               <th>최근 로그인</th>
                               <!-- <th></th> -->
-                              <th></th>
+                              <th></th> <th></th>
                             </tr>
                           </thead>
                           <tbody id="tbd">	                                        
@@ -65,7 +83,7 @@
                               if (model.contents.length > 0) { %> 
                                   <% for(let i=0; i<model.contents.length; i++) {        
                               %> 
-                              <tr>   
+                              <tr>
                                   <th><%=model.contents[i].last_name %> <%=model.contents[i].first_name %></th>
                                   <th><%=model.contents[i].email %></th>
                                   <th><%=model.contents[i].level %></th>
@@ -75,19 +93,22 @@
                                   <!-- <th><% if (model.contents[i].email_verified == 'Y') { %> <div class="input-group"><input type="number" class="form-control" id="coin<%=model.contents[i].id %>" placeholder="코인">
                                     <button type="button" class="btn btn-primary" onclick="sendCoin('<%=model.contents[i].id %>');" >주기</button><% } %></th> -->
                                   <th><a style="color: silver; font-size: 21px; border: 0px;" onclick="checkExpiredDate(<%= model.contents[i].id %>);"><i class="fas fa-search-plus"></i></a></th>
+                                  <th>
+                                      <button type="button" class="open-delCheckDialog btn btn-danger" data-id="<%=model.contents[i].id %>" data-toggle="modal" data-target="#delCheckModal">삭제</button>
+                                  </th>
                               </tr>                   
                               <%  
                               }
                               } else {  %> 
                                   <tr>   
-                                      <th colspan="5">데이터가 없습니다.</th>
+                                      <th colspan="6">데이터가 없습니다.</th>
                                   </tr> 
                                   <% } %> 	
                             </tbody>	
                         </table>
                         <br>
                         <% if (model.contents.length != 0) { %>
-                          <div class="col-lg-12" style="text-align:center;">
+                          <div class="col-lg-12 bd_pg" style="text-align:center;">
                             <ul class="pagination">
                               <li <%if(model.pageNum == 1){%> class="disabled" <%}else{%> class="direction" <%}%> >
                                   <a <%if(model.pageNum > 1){%> href="javascript:search(1);" <%}%>><i class="fas fa-angle-double-left"></i></a>
@@ -176,6 +197,26 @@
         window.location.href = url;        
     }
 
+    $(document).on("click", ".open-delCheckDialog", function () {
+        var id = $(this).data('id');
+        $(".modal-header #id").val( id );
+    });
+
+    function deleteBtn()
+    {
+        $('#delCheckModal').modal('hide');
+
+        //content-type을 설정하고 데이터 송신
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', '/admin/user/delItem/' + $("#id").val());
+        xhr.setRequestHeader('Content-type', "application/json");
+        xhr.send();
+
+        // 데이터 수신이 완료되면 표시
+        xhr.addEventListener('load', function(){
+            location.reload(true);
+        });
+    }
 
    
 
