@@ -258,6 +258,21 @@ exports.detail = (req, res) => {
                 
             }
         }
+        var status = 0;
+        if(wishlist != undefined)
+        {
+            for(var i=0;i<wishlist.length;i++)
+            {
+                if(req.cookies.userObj.id == wishlist[i].myId)
+                {
+                    if(req.params.id == wishlist[i].companyId){
+                        status = 1;
+                        break;
+                    }
+                }
+
+            }
+        }
     }
 
     //currencies 조회
@@ -362,21 +377,12 @@ exports.detail = (req, res) => {
           }
     }
 
-    var status = 0;
-    if(wishlist != undefined)
-    {
-        for(var i=0;i<wishlist.length;i++)
-        {
-            if(req.cookies.userObj.id == wishlist[i].myId)
-            {
-                if(req.params.id == wishlist[i].companyId){
-                    status = 1;
-                    break;
-                }
-            }
 
-        }
-    }
+
+
+
+
+
 
     model.subscription_member = subscription_member;
     model.auth_rm = auth_rm;

@@ -457,11 +457,20 @@
                 dataType: "json",
                 data: {
                     companyId: $("#companyId").val(),
-                    companyName: $("#companyname").val()
+                    companyName: $("#companyname").val(),
+                    url: '/company/detail/' + $("#id").val()
                 },
                 success: function (data) {
-                    alert(data.msg); //위시리스트에 추가되었습니다 문장 띄우기
-                    window.location.href = '/company/detail/' + $("#companyId").val();
+                    if(data.masg)
+                    {
+                        alert(data.msg); //위시리스트에 추가되었습니다 문장 띄우기
+                        window.location.href = '/company/detail/' + $("#companyId").val();
+                    } else {
+                        if (confirm('Sign in is required. You will be moved to sign in page.')) {
+                            window.location.href = data.fullUrl;
+                        }
+                    }
+
                 },
                 error: function (e) {
                     console.log("ERROR : ", e);
