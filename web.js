@@ -11,13 +11,15 @@ var MySQLStore = require('express-mysql-session')(session);
 var cookieParser = require('cookie-parser');
 const config = require('./conf/environments').info;
 const app = express();
+var favicon = require('serve-favicon');
 
 //express 서버 포트 설정(cafe24 호스팅 서버는 8001 포트 사용)
 app.set('views', __dirname + '/views');
 app.set("view engine", "ejs");
 app.set('port', process.env.PORT || 8001);
+app.use(favicon(path.join(__dirname,'public/img','favicon.io')));
 
-//app.use(express.static(__dirname + '/'))
+app.use(express.static(__dirname + '/'))
 app.use(bodyParser.json({limit: '100mb', type: 'application/json', parameterLimit:1000000})); // for parsing application/json
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true, parameterLimit:1000000 })); // for parsing application/x-www-form-urlencoded
 app.use(express.static(path.join(__dirname, 'public')));

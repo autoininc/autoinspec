@@ -324,17 +324,29 @@ exports.transactions = (req, res) => {
                 console.log(err);
                 res.end();
             } else {
-            if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
-            const result = {
-                totalCount,
-                pageNum,
-                pnStart,
-                pnEnd,
-                pnTotal,
-                contents: rs,
-            };
-                res.render('account/transactions', {model:result, moment: moment, userObj: req.cookies.userObj});
+                var contents = rs;
+                var sql_myCoin = 'SELECT SUM(coin) AS mycoin from coin WHERE userId = ' + req.cookies.userObj.id + ';';
+                connection.query(sql_myCoin, (err, rs) => {
+                    if(err){
+                        console.log(err);
+                        res.end();
+                    } else{
+                        if (pnEnd > pnTotal) pnEnd = pnTotal; // NOTE: 페이지네이션의 끝 번호가 페이지네이션 전체 카운트보다 높을 경우.
+                        const result = {
+                            totalCount,
+                            pageNum,
+                            pnStart,
+                            pnEnd,
+                            pnTotal,
+                            contents: contents,
+                            mycoin: rs[0].mycoin
+                        };
+                        res.render('account/transactions', {model:result, moment: moment, userObj: req.cookies.userObj});
+                    }
+
+                })
             }
+
         });
         }
         
