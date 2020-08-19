@@ -17,7 +17,7 @@ var favicon = require('serve-favicon');
 app.set('views', __dirname + '/views');
 app.set("view engine", "ejs");
 app.set('port', process.env.PORT || 8001);
-app.use(favicon(path.join(__dirname,'public/img','favicon.io')));
+app.use(favicon(path.join(__dirname,'public/img','favicon.ico')));
 
 app.use(express.static(__dirname + '/'))
 app.use(bodyParser.json({limit: '100mb', type: 'application/json', parameterLimit:1000000})); // for parsing application/json
