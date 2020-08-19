@@ -10,6 +10,7 @@
     "crypto": "^1.0.1",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
+    "express-favicon": "^2.0.1",
     "express-mysql-session": "^2.1.0",
     "express-session": "^1.17.0",
     "fs": "0.0.1-security",
@@ -28,6 +29,7 @@
     "pbkdf2-password": "^1.2.1",
     "pdfmake": "^0.1.64",
     "request": "^2.88.0",
+    "serve-favicon": "^2.5.0",
     "sync-mysql": "^3.0.1"
   },
   "devDependencies": {},

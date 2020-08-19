@@ -394,7 +394,6 @@ exports.payList = (req, res) => {
       'EXISTS (SELECT * FROM coin_detail c WHERE STR_TO_DATE( c.createdAt, "%Y-%m-%d %H:%i") >= STR_TO_DATE( b.startedAt, "%Y-%m-%d %H:%i") AND c.status = 2 AND c.userId = ?) as item_cnt, ' +
       'IF(STR_TO_DATE( b.startedAt, "%Y-%m-%d") <= DATE_ADD(STR_TO_DATE( b.startedAt, "%Y-%m-%d"), INTERVAL 14 DAY), 1, 0) as isIn ' +
       'FROM payment a LEFT OUTER JOIN coin b ON a.itemId = b.id WHERE a.userId = ? AND a.itemType = "C" ) ORDER BY id DESC LIMIT ?,?'
-      console.log(sql);
       /*var sql = 'SELECT *, a.id as gg, EXISTS (select * from coin c where c.createdAt > b.createdAt) as item_cnt, IF(a.createdAt < DATE_ADD(STR_TO_DATE( a.createdAt, "%Y-%m-%d %H:%i"), INTERVAL 5 DAY), 1, 0) as isIn, ' +
           'a.createdAt, a.invoiceNo from payment a LEFT OUTER JOIN coin b ON a.itemId = b.id LEFT OUTER JOIN subscription d ON a.itemId = d.id WHERE a.userId = ? ORDER BY a.id DESC LIMIT ?,?'*/
       connection.query(sql,[req.cookies.userObj.id, req.cookies.userObj.id, req.cookies.userObj.id, req.cookies.userObj.id, skipSize, contentSize], (err,rs) => {   
