@@ -43,12 +43,14 @@
         <section>
             <header class="section-header">
                 <h3>AUTOIN MAP</h3>
-                <p>What type of data do you want to see?
-                <br>
-                    <select class="menu-select" id="selectMenu" onchange="setSelectBox();">
-                        <option id="countryOption" value="1" style="background-color: #EBECF1;" selected >COUNTRY</option>
-                        <option id="categoryOption" value="2" style="background-color: #EBECF1; " >CATEGORY</option>
-                    </select></p>
+                <p>What type of data do you want to see?<br>
+                    <button class="bnt bnt-country" id="countryOption"
+                    style="background: #317376; color:white; border: none; border-radius: 5px; display: inline-block; margin: 1em auto; padding: 0.5em 1em;"
+                    onclick="setSelectBox(1);">COUNTRY</button>
+                    <button class="bnt bnt-category" id="categoryOption"
+                    style="background: #317376; color:white; border: none; border-radius: 5px; display: inline-block; margin: 1em auto; padding: 0.5em 1em;"
+                    onclick="setSelectBox(2);">CATEGORY</button>
+                </p>
 
             </header>
         </section>
@@ -582,11 +584,10 @@
     //상단 select 메뉴 부분
     //country 선택시 1 - default 값
     //category 선택시 2
-    function setSelectBox() {
-        var selected = ($("#selectMenu option:selected")).val();
+    function setSelectBox(val) {
 
         //카테고리 선택했을 경우
-        if(selected == 2)
+        if(val == 2)
         {
             document.getElementById('categoryMenu').style.display='';
             document.getElementById('countryChart').style.display='none';
