@@ -129,8 +129,8 @@ exports.changePassword = (req, res) => {
                 function (err, pass, salt, hash) {
 
                   connection.query(
-                    'UPDATE users SET password = ?, salt = ?, updated_at = ? WHERE id = ?',
-                    [hash, salt, moment().format('YYMMDDHHmmss'), results[0].id], 
+                    'UPDATE users SET password = ?, salt = ?, updatedAt = ? WHERE id = ?',
+                    [hash, salt, moment().format('YYYY-MM-DD HH:mm:ss'), results[0].id], 
                     function (err, result) {
                       if (err) throw err;
                       else {

@@ -160,8 +160,8 @@ exports.gosign_up = (req, res, next) => {
                   function (err, result) {
                     if (err) throw err;
                     else {
-                      //var url = 'http://' + req.get('host') + '/user/confirmEmail'+'?key=' + key_for_verify; //local에서 테스트 할 때 http로 해주셔야합니다!
-                      var url = 'https://' + req.get('host') + '/user/confirmEmail'+'?key=' + key_for_verify;
+                      var url = 'http://' + req.get('host') + '/user/confirmEmail'+'?key=' + key_for_verify; //local에서 테스트 할 때 http로 해주셔야합니다!
+                      //var url = 'https://' + req.get('host') + '/user/confirmEmail'+'?key=' + key_for_verify;
 
                       //메일 옵션
                       var mailOpt = {
