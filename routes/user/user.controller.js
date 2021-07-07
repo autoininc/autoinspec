@@ -18,20 +18,20 @@ var smtpTransporter = require('nodemailer-smtp-transport');
 
 //메일 서버
 var smtpTransport = nodemailer.createTransport(smtpTransporter({
-    service: 'Lineworks',
-    host:'smtp.worksmobile.com',
-    secure: true,
-    port:'465',
-    tls: {
-        rejectUnauthorized: false,
-        ignoreTLS: false,
-        requireTLS: true,
-        secureProtocol: "TLSv1_method"
-    },
-    auth:{
-        user:'service@autoingroup.com',
-        pass:'autoin2020$',
-    }
+  service: 'Lineworks',
+  host:'smtp.worksmobile.com',
+  secure: true,
+  port:'465',
+  tls: {
+      rejectUnauthorized: false,
+      ignoreTLS: false,
+      requireTLS: true,
+      secureProtocol: "TLSv1_method"
+  },
+  auth:{
+      user:'service@autoingroup.com',
+      pass:'autoin2020$',
+  }
 }));
 
 
@@ -154,11 +154,8 @@ exports.gosign_up = (req, res, next) => {
                   company_id: company_id,
                   createdAt: moment.utc().format(format)
                 };
-                connection.query(
-                  'INSERT INTO users SET ?',
-                  user, 
-                  function (err, result) {
-                    if (err) throw err;
+                connection.query('INSERT INTO users SET ?', user, function (err, result) {
+                    if (err) console.log(err);
                     else {
                       var url = 'http://' + req.get('host') + '/user/confirmEmail'+'?key=' + key_for_verify; //local에서 테스트 할 때 http로 해주셔야합니다!
                       //var url = 'https://' + req.get('host') + '/user/confirmEmail'+'?key=' + key_for_verify;
@@ -179,7 +176,7 @@ exports.gosign_up = (req, res, next) => {
                           }
                           smtpTransport.close();
                       });
-                      res.send('');
+                      res.send("success");
                     }
                 });
               }

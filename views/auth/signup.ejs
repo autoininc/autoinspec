@@ -120,9 +120,11 @@ function signup() {
             console.log("SUCCESS : ", data);
             if (data == 'exist') {
               alert("already exists email!");
-            } else {
+            } else if (data == 'success') {
               alert("please check your mailbox!");
               window.location.href = '/';
+            } else {
+              alert("Unknown Error with data = " + data);
             }
         },
         error: function (e) {
