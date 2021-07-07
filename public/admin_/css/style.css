@@ -9963,7 +9963,7 @@ pre code {
 
 .table th,
 .table td {
-  padding: 1.25rem 0.9375rem;
+  padding: 0.75rem;
   vertical-align: top;
   border-top: 1px solid #f3f3f3;
 }
@@ -10794,7 +10794,7 @@ textarea.form-control {
   user-select: none;
   background-color: transparent;
   border: 1px solid transparent;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 0.5rem;
   font-size: 0.875rem;
   line-height: 1;
   border-radius: 0.1875rem;

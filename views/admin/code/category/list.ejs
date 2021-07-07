@@ -63,11 +63,11 @@
                           <thead>
                             <tr>
                                 <th>depth</th>
-                                <th></th>
+                                <th ></th>
                                 <th>카테고리명</th>
-                                <th class="text-center" style="width: 10%;">사용여부</th>
-                                <th class="text-center" style="width: 10%;">수정</th>
-                                <th class="text-center" style="width: 10%;">삭제</th>
+                                <th class="text-center" style="width: 100px;">사용여부</th>
+                                <th class="text-center" style="width: 80px; ">수정</th>
+                                <th class="text-center" style="width: 80px;">삭제</th>
                             </tr>
                           </thead>
                           <tbody id="tbd">	                                        
@@ -81,9 +81,9 @@
                                   <span style="color: chocolate;"><%=model.contents[i].p2_name %></span> 
                                   <span style="color: fuchsia"><%=model.contents[i].p3_name %></span></th>
                                 <th><%=model.contents[i].category_name %></th>
-                                <th class="text-center"><button type="button" class="btn btn-link" onclick="modUseOption('<%=model.contents[i].id %>','<%=model.contents[i].useYN %>');"><%=model.contents[i].useYN %></button></th>
-                                <th class="text-center"><button type="button" class="btn btn-info" onclick="location.href='/admin/category/modForm/<%=model.contents[i].id %>'" >수정</button></th>
-                                <th class="text-center"><button type="button" class="btn btn-danger" onclick="delBtn('<%=model.contents[i].id %>');" >삭제</button></th>
+                                <th><button type="button" class="btn btn-link" style="padding: 0px 0px;" onclick="modUseOption('<%=model.contents[i].id %>','<%=model.contents[i].useYN %>');"><%=model.contents[i].useYN %></button></th>
+                                <th><button type="button" class="btn btn-info" onclick="location.href='/admin/category/modForm/<%=model.contents[i].id %>'" >수정</button></th>
+                                <th><button type="button" class="btn btn-danger" onclick="delBtn('<%=model.contents[i].id %>');" >삭제</button></th>
                                 
                             </tr>                   
                             <%  
