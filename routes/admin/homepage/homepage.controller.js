@@ -85,7 +85,6 @@ exports.delItem = (req, res) => {
 
 // main GET
 exports.main = (req, res) => {
-    
     let model = {};
 
     connection.query('SELECT id, title, title_size, title_color, contents, contents_size, contents_color, file_name_org, file_name_new, size, order_, useYN FROM homepage WHERE type = 1 ORDER BY order_', (err,rs) => {   
