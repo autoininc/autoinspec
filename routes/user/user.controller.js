@@ -181,7 +181,7 @@ exports.gosign_up = (req, res, next) => {
                       //autoingroup으로 메일 알림
                       var alertmailOpt = {
                         from: 'service@autoinspec.com',
-                        to: 'ramtk6726@naver.com',
+                        to: 'service@autoingroup.com',
                         subject: '[AUTOINSPEC] 사용자 가입',
                         html: header_mail.getData(req.protocol + '://' + req.headers.host) + alert_content_html.getData(user.last_name, user.first_name, user.company_id)
                         + footer_mail.getData(req.protocol + '://' + req.headers.host)
