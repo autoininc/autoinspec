@@ -81,7 +81,7 @@
                                   <span style="color: chocolate;"><%=model.contents[i].p2_name %></span> 
                                   <span style="color: fuchsia"><%=model.contents[i].p3_name %></span></th>
                                 <th><%=model.contents[i].category_name %></th>
-                                <th><button type="button" class="btn btn-link" style="padding: 0px 0px;" onclick="modUseOption('<%=model.contents[i].id %>','<%=model.contents[i].useYN %>');"><%=model.contents[i].useYN %></button></th>
+                                <th><button type="button" class="btn btn-link" onclick="modUseOption('<%=model.contents[i].id %>','<%=model.contents[i].useYN %>');"><%=model.contents[i].useYN %></button></th>
                                 <th><button type="button" class="btn btn-info" onclick="location.href='/admin/category/modForm/<%=model.contents[i].id %>'" >수정</button></th>
                                 <th><button type="button" class="btn btn-danger" onclick="delBtn('<%=model.contents[i].id %>');" >삭제</button></th>
                                 
