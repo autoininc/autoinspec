@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const header_mail = require('../../public/js/mail_template/header');
 const footer_mail = require('../../public/js/mail_template/footer');
 const content_html = require('../../public/js/mail_template/auth_content');
+const alert_content_html = require('../../public/js/mail_template/alert_newAccount');
 const findPassword_content_html = require('../../public/js/mail_template/findPassword_content');
 var bkfd2Password = require("pbkdf2-password");
 var hasher = bkfd2Password();
@@ -138,7 +139,7 @@ exports.gosign_up = (req, res, next) => {
           var company_id = (req.body.company_id == '') ? 0: req.body.company_id;
           const format = 'YYYY-MM-DD HH:mm:ss';
 
-          //비밀번호 머시기
+          //비밀번호
           hasher(
               { password: req.body.password },
               function (err, pass, salt, hash) {
@@ -157,7 +158,7 @@ exports.gosign_up = (req, res, next) => {
                 connection.query('INSERT INTO users SET ?', user, function (err, result) {
                     if (err) console.log(err);
                     else {
-                      var url = 'http://' + req.get('host') + '/user/confirmEmail'+'?key=' + key_for_verify; //local에서 테스트 할 때 http로 해주셔야합니다!
+                      var url = 'http://' + req.get('host') + '/user/confirmEmail'+'?key=' + key_for_verify;
                       //var url = 'https://' + req.get('host') + '/user/confirmEmail'+'?key=' + key_for_verify;
 
                       //메일 옵션
@@ -176,6 +177,24 @@ exports.gosign_up = (req, res, next) => {
                           }
                           smtpTransport.close();
                       });
+
+                      //autoingroup으로 메일 알림
+                      var alertmailOpt = {
+                        from: 'service@autoinspec.com',
+                        to: 'ramtk6726@naver.com',
+                        subject: '[AUTOINSPEC] 사용자 가입',
+                        html: header_mail.getData(req.protocol + '://' + req.headers.host) + alert_content_html.getData(user.last_name, user.first_name, user.company_id)
+                        + footer_mail.getData(req.protocol + '://' + req.headers.host)
+                      };
+
+                      //전송
+                      smtpTransport.sendMail(alertmailOpt, function(err, res) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        smtpTransport.close();
+                    });
+
                       res.send("success");
                     }
                 });

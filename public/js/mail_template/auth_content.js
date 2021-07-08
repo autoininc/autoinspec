@@ -1,4 +1,4 @@
-//Q&A 폼
+//이메일 인증
 exports.getData = function(url){
 
     return html = '<tr>' + 
