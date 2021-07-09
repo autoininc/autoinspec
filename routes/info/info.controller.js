@@ -2,10 +2,36 @@ const config = require('../../conf/environments');
 const mysql = require('mysql');
 const connection = mysql.createConnection(config.info);
 const common = require('../../public/js/common');
+const header_mail = require('../../public/js/mail_template/header');
+const footer_mail = require('../../public/js/mail_template/footer');
+const content_html = require('../../public/js/mail_template/new_qna_content');
 
 var moment = require('moment');
 require('moment-timezone');
 const format = 'YYYY-MM-DD HH:mm:ss';
+
+//메일 관련
+var nodemailer = require('nodemailer');
+var smtpTransporter = require('nodemailer-smtp-transport');
+
+//메일 서버
+var smtpTransport = nodemailer.createTransport(smtpTransporter({
+    service: 'Lineworks',
+    host:'smtp.worksmobile.com',
+    secure: true,
+    port:'465',
+    tls: {
+        rejectUnauthorized: false,
+        ignoreTLS: false,
+        requireTLS: true,
+        secureProtocol: "TLSv1_method"
+    },
+    auth:{
+        user:'service@autoingroup.com',
+        pass:'autoin2020$',
+    }
+}));
+
 
 // about GET
 exports.about = (req, res) => {
@@ -66,6 +92,24 @@ exports.qnaAdd = (req, res) => {
         } else {
             res.status(200).json({ 'msg': "success" });
         }
+    });
+
+    //새로운 질문이 등록되었을 때 알림 메일 전송
+    //메일 옵션
+    var mailOpt = {
+        from: 'service@autoinspec.com',
+        to: 'service@autoingroup.com',
+        subject: '[AUTOINSPEC] Q&A가 등록되었습니다.',
+        html: header_mail.getData(req.protocol + '://' + req.headers.host) + content_html.getData(req.protocol + '://' + req.headers.host, req.body.email, req.body.type, req.body.companyId, req.body.title, req.body.contents)
+            + footer_mail.getData(req.protocol + '://' + req.headers.host)
+    };
+
+    //메일 전송
+    smtpTransport.sendMail(mailOpt, function(err, res) {
+    if (err) {
+        console.log(err);
+    } 
+    smtpTransport.close();
     });
 };
   
