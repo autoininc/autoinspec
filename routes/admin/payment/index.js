@@ -17,7 +17,6 @@ router.get('/wireTransfer_setting', controller.wireTransfer_setting);
 router.post('/modWireTransfer_setting', controller.modWireTransfer_setting);
 
 router.get('/paymentList', controller.list);
-router.get('/waitingList', controller.waitingList);
 router.post('/changeStatus/:id', controller.changeStatus);
 
 module.exports = router;

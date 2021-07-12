@@ -274,8 +274,16 @@
 
     function search(num)
     {
+      if (getParameterByName("status") != "") {
+        $("#status").val(getParameterByName("status"))
+        var status = $("#status").val();
+        var url = "/admin/payment/paymentList?status=" + status + "&pageNum=" + num;
+        window.location.href = url;
+      }
+      else {
         var url = "/admin/payment/paymentList?pageNum=" + num;
         window.location.href = url;
+      }      
     }
 
     function cancel(id) {
