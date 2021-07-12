@@ -234,6 +234,20 @@
 
     });
 
+    function search(num)
+    {
+      if (getParameterByName("status") != "") {
+        $("#status").val(getParameterByName("status"))
+        var status = $("#status").val();
+        var url = "/admin/creditReport/reportList?status=" + status + "&pageNum=" + num;
+        window.location.href = url;
+      }
+      else {
+        var url = "/admin/creditReport/reportList?pageNum=" + num;
+        window.location.href = url;
+      }      
+    }
+
     function openModal(id, itemType, date) {
 
       var url = "";
