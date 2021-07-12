@@ -167,12 +167,16 @@
               alert(e.responseJSON.msg)
           }
       });
-    }
+     }
 
+    function search(num)
+    {
+        var url = "/admin/payment/paymentList?pageNum=" + num;
+        window.location.href = url;
+    }
 </script>
  
 <style>
-
     .bd_pg{text-align:center}
     .bd_pg a,.bd_pg strong{display:inline-block;min-width:12px;height:24px;padding:0 6px;border:1px solid transparent;border-radius:0px;font:700 12px/2em Tahoma,AppleGothic,sans-serif;letter-spacing:-1px;*display:inline;*zoom:1}
     .bd_pg a{color:#558421;text-decoration:none !important}

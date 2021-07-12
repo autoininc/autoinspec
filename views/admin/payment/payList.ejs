@@ -188,8 +188,6 @@
                                             </div>
                                             <% } %> 
                                         </div>
-        
-                              
                         </div>
                     </div>
                   </div>
@@ -241,7 +239,6 @@
             if(data.data.method == '02') {
               document.getElementById('invoiceDownload').style.display = 'block';
               $('#invoiceDownload').append('<a href="/download/payment/' + data.data.id + '" >' + data.data.filename + '</a>')
-              
 
             }
             
@@ -273,6 +270,12 @@
           location.reload(true);
         });
       }
+    }
+
+    function search(num)
+    {
+        var url = "/admin/payment/paymentList?pageNum=" + num;
+        window.location.href = url;
     }
 
     function cancel(id) {
