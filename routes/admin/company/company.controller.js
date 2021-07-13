@@ -752,6 +752,132 @@ exports.excelUpload = (req, res) => {
 
 };
 
+exports.excelDownloadPage = (req, res) => {
+
+    let model = {};
+
+    var sql1 = 'SELECT id, country_name, showYN, detailYN FROM countries WHERE showYN = "Y" ORDER BY id DESC; '; // 나라 목록
+    var sql2 = 'SELECT id, name_kor, name_eng, field_code, order_ FROM field WHERE useYN = "Y" AND delYN = "N" ORDER BY order_ ASC; '; // 필드 목록
+
+    connection.query(sql1 + sql2, function(err, results){
+        var sql1_result = results[0];	//sql1 의 결과값
+        var sql2_result = results[1];	//sql2 의 결과값
+
+        if (err) {   
+            console.log(err);
+            res.end();
+        } else {
+
+            model.countriesList = sql1_result;
+            model.fieldList = sql2_result;
+            res.render('admin/company/excelDownload', { model: model , userObj: req.cookies.userObj});
+        }
+    });
+};
+
+//엑셀 데이터 다운로드
+exports.excelDownload = (req, res) => {
+
+    var fieldList = req.body.field;
+
+    //서브 필드 항목 담기
+    var map = {};
+    for (var i=0; i<fieldList.length; i++) {
+        map[fieldList[i].name_kor] = fieldList[i];
+    }
+
+    var data = req.body.data;
+    var unit = Math.round((data.length)/4);
+    var cnt = unit;
+    var all_arr = [];
+    var arr = [];
+    var all_sub_arr = [];
+    var sub_arr = [];
+    var que = [];
+
+    var obj;
+    var company_eng, company_kor, brn, ceo, established, email, website, headOfficeNumber, address, fax, main_product, NoOfEmployees, unique_key, createdAt;
+    var country_id = req.body.country;
+
+    //엑셀 한줄 읽으면서 데이터 세팅!
+    for (var i=0; i<data.length; i++) {
+        obj = data[i];
+        company_eng = common.removeBlankExcelData(data[i].회사명);
+
+        //항목 중 회사명(영어)이 공백이거나 undefined 이면 등록안함
+        if (company_eng != '' && company_eng != undefined) {
+            company_kor = common.removeBlankExcelData(data[i].회사명한글);
+            brn = common.removeBlankExcelData(common.replaceAll(data[i].사업자번호, '-', ''));
+            ceo = common.removeBlankExcelData(data[i].대표자);
+            established = common.removeBlankExcelData(data[i].설립일자);
+            email = common.removeBlankExcelData(data[i].이메일);
+            website = common.removeBlankExcelData(data[i].홈페이지);
+            headOfficeNumber = common.removeBlankExcelData(data[i].대표전화);
+            address = common.removeBlankExcelData(data[i].주소);
+            fax = common.removeBlankExcelData(data[i].팩스);
+            main_product = common.removeBlankExcelData(data[i].주요제품);
+            NoOfEmployees = common.removeBlankExcelData(data[i].직원수);
+            unique_key = country_id + '_' + brn + '_' + company_eng;
+            createdAt = moment.utc().format(format); 
+
+            arr.push([company_kor, company_eng, country_id, brn, ceo, established, email, website, headOfficeNumber, 
+                address, fax, main_product, NoOfEmployees, createdAt, req.cookies.userObj.id, unique_key]);
+
+            //sub
+            for (var key in map) {
+                sub_arr.push([unique_key, map[key].id,  common.removeBlankExcelData(obj[map[key].name_kor]), unique_key + "_" +  map[key].id]);
+            }
+            cnt--;
+        }
+
+        if (cnt == 0 || (i == data.length-1)) {
+            all_arr.push(arr);
+            all_sub_arr.push(sub_arr);
+            cnt = unit;
+            arr = [];
+            sub_arr = [];
+        }
+
+        //이제 등록
+        if (i == data.length-1) {
+
+            for (var j=0;j<all_arr.length; j++) {
+
+                 var sql1 = "INSERT INTO company (name_kor, name_eng, country_id, brn, ceo, established, email, website,"  +
+                     " headOfficeNumber, address, fax, main_product, NoOfEmployees, createdAt, create_id, unique_key) VALUES ? " +
+                     " ON DUPLICATE KEY UPDATE ceo = VALUES(ceo)," +
+                     " established = VALUES(established), email = VALUES(email), website = VALUES(website), " +
+                     " headOfficeNumber = VALUES(headOfficeNumber), address = VALUES(address), fax = VALUES(fax), " +
+                     " main_product = VALUES(main_product), NoOfEmployees = VALUES(NoOfEmployees), updatedAt = VALUES(createdAt), update_id = VALUES(create_id);";
+                que.push(queryExec(sql1, [all_arr[j]]));
+
+                
+                var sql2 = " INSERT INTO company_sub (company_id, field_id, value_, unique_key) VALUES ? " +
+                  " ON DUPLICATE KEY UPDATE value_ = VALUES(value_);";
+                que.push(queryExec(sql2, [all_sub_arr[j]]));
+
+                //데이터 넣기 시작
+                if(j == all_arr.length-1) {
+                    (async () => {
+                        try {
+                          Promise
+                            .all(que)
+                            .then(values => {
+                                res.json({ 'msg': '완료되었습니다.' });
+                            })
+                        } catch (err) {
+                            console.log(err)
+                            res.status(400).json({ 'status': 400, 'msg': '오류로 중지되었습니다.' });
+                        }
+                      })()
+                }
+               
+            }
+        }
+    }
+
+};
+
  exports.modForm = (req, res) => {
 
     let model = {};

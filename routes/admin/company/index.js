@@ -9,6 +9,7 @@ router.get('/addForm', controller.addForm);
 router.post('/add', controller.add);
 router.get('/excelUploadForm', controller.excelUploadForm);
 router.post('/excelUpload', controller.excelUpload);
+router.get('/excelDownloadPage', controller.excelDownloadPage);
 router.get('/modForm/:id', controller.modForm);
 router.post('/modify/:id', controller.modify);
 
